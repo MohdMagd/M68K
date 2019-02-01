@@ -1,0 +1,115 @@
+
+
+C:/M68kV6.0 - 640by480/lpm_bustri0.vhd
+
+Jun 29 07PM:46:50>: Megafunction LPM_BUSTRI is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/lpm_bustri0.vhd
+
+Jun 29 07PM:46:52>: Megafunction LPM_BUSTRI is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/lpm_bustri0.vhd
+
+Jun 29 07PM:46:59>: Megafunction LPM_BUSTRI is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/lpm_bustri0.vhd
+
+Jun 29 07PM:56:35>: Megafunction LPM_BUSTRI is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/lpm_bustri0.vhd
+
+Jun 29 07PM:56:37>: Megafunction LPM_BUSTRI is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0-640by480/lpm_bustri0.vhd
+
+Oct 01 04PM:57:44>: Megafunction LPM_BUSTRI is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0-640by480/lpm_bustri0.vhd
+
+Oct 01 04PM:57:52>: Megafunction LPM_BUSTRI is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0-640by480/lpm_bustri0.vhd
+
+Oct 01 05PM:34:09>: Megafunction LPM_BUSTRI is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/VGAClockGen.vhd
+
+May 28 10AM:52:49>: Error in CNX file format.
+
+Error messages are listed in file
+C:/M68kV6.0 - 640by480/VGAClockGen.cnxerr.
+
+Can't create the custom megafunction variation file(s)
+
+C:/M68kV6.0 - 640by480/lpm_bustri0.vhd
+
+May 29 07AM:59:24>: Megafunction LPM_BUSTRI is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/lpm_bustri0.vhd
+
+May 29 07AM:59:27>: Megafunction LPM_BUSTRI is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/ClockGen.vhd
+
+May 30 06PM:16:06>: Megafunction Altera PLL v16.0 is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/ClockGen.vhd
+
+May 30 06PM:49:30>: Megafunction Altera PLL v16.0 is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/ClockGen.vhd
+
+May 30 06PM:49:45>: Megafunction Altera PLL v16.0 is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/ClockGen.vhd
+
+May 30 06PM:49:57>: Megafunction Altera PLL v16.0 is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/ClockGen.vhd
+
+May 30 06PM:50:54>: Megafunction Altera PLL v16.0 is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/ClockGen.vhd
+
+May 30 06PM:51:13>: Megafunction Altera PLL v16.0 is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/ClockGen.vhd
+
+May 30 06PM:51:39>: Megafunction Altera PLL v16.0 is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/ClockGen.vhd
+
+May 30 06PM:51:43>: Megafunction Altera PLL v16.0 is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/ClockGen.vhd
+
+May 30 06PM:51:49>: Megafunction Altera PLL v16.0 is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/ClockGen.vhd
+
+Jun 01 06PM:48:34>: Megafunction Altera PLL v16.0 is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+C:/M68kV6.0 - 640by480/ClockGen.vhd
+
+Jun 01 06PM:48:39>: Megafunction Altera PLL v16.0 is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted

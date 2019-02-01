@@ -1,0 +1,2 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (Release\) contains files shared from another project (._SRecord_to_MIF_Converter.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  SRecord_to_MIF_Converter.vcxproj -> C:\M68kV6.0 - 800by480 - (Verilog) For Students 2\Programs\SRecord_to_MIF_Converter\SRecord_to_MIF_Converter\Release\SRecord_to_MIF_Converter.exe

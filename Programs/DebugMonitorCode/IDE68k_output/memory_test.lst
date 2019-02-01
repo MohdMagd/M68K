@@ -1,0 +1,137 @@
+680x0 MACRO ASSEMBLER   Version 5.00   (c) 1992-2005 Peter J. Fondse
+
+Date: 27 Jan 2019      Time: 14:10:15          Source: C:\M68KV6.0 - 800BY480 - (VERILOG) FOR STUDENTS 2\PROGRAMS\DEBUGMONITORCODE\IDE68K_OUTPUT\MEMORY_TEST.SRC
+
+                       1          section   code
+                       2   **********************************************************************************************************
+                       3   * CSTART.ASM  -  C startup-code
+                       4   *
+                       5   *          Initialises the system prior to running the users main() program
+                       6   *
+                       7   *          1) Sets up the user program stack pointer
+                       8   *          2) Switches to User mode in the 68000
+                       9   *          3) Enables All Interrupts 1-7 on 68000
+                      10   *          4) Copies all initialised C program variables from Rom to Ram prior to running main()
+                      11   *
+                      12   **********************************************************************************************************
+00000000              13                   align
+                      14   
+                      15   
+                      16   **********************************************************************************************************
+                      17   * The Following ORG Statement marks the address of the start of the this CStart Program
+                      18   *
+                      19   * The debug Monitor and Flash Load and Program routines assume your program lives here
+                      20   **********************************************************************************************************
+08000000              21                   org       $08000000
+08000000  46FC 2000   22   start:          move.w    #$2000,SR             clear interrupts to enable all, move to supervisor mode
+                      23   
+                      24   ******************************************************************************************
+                      25   * Set unitialised global variables to 0 at startup
+                      26   ******************************************************************************************
+08000004  207C 0800   27   mainloop        movea.l   #BssStart,a0          point a0 to the start of the initialised data section held in ROM
+08000008  0092      
+0800000A  203C 0000   28                   move.l    #BssLength,d0         figure out how many bytes of C program variables data to copy
+0800000E  0000      
+08000010  6700 0024   29                   beq       go_main               if no data to copy go straight to program
+08000014  10FC 0000   30   Zeroinit        move.b    #0,(a0)+              copy the C program initialise variables from rom to ram
+08000018  5380        31                   subq.l    #1,d0
+0800001A  66F8        32                   bne       Zeroinit
+                      33   
+                      34   *******************************************************************************************
+                      35   * last minute initialisation before calling main
+                      36   *******************************************************************************************
+                      37   
+0800001C  23FC FFFF   38                   move.l    #-1,__ungetbuf         required for use of scanf() etc in C programs
+08000020  FFFF 0800 
+08000024  0086      
+08000026  42B9 0800   39                   clr.l     __allocp               used by malloc() in C
+0800002A  008A      
+0800002C  23FC 0800   40                   move.l    #heap,__heap           pointer to free memory
+08000030  0092 0800 
+08000034  008E      
+08000036  4EB9 0800   41   go_main         jsr       _main
+0800003A  0058      
+0800003C  60C2        42                   bra       start
+                      43   
+                      44   ; C:\M68KV6.0 - 800BY480 - (VERILOG) FOR STUDENTS 2\PROGRAMS\DEBUGMONITORCODE\MEMORY_TEST.C - Compiled by CC68K  Version 5.00 (c) 1991-2005  Peter J. Fondse
+                      45   ; #include <stdio.h>
+                      46   ; int SumOfTwo(int a, int b){
+                      47   _SumOfTwo:
+0800003E  4E56 0000   48          link      A6,#0
+08000042  2F02        49          move.l    D2,-(A7)
+                      50   ; int c = 0;
+08000044  4282        51          clr.l     D2
+                      52   ; c = a + b;
+08000046  202E 0008   53          move.l    8(A6),D0
+0800004A  D0AE 000C   54          add.l     12(A6),D0
+0800004E  2400        55          move.l    D0,D2
+                      56   ; return c;
+08000050  2002        57          move.l    D2,D0
+08000052  241F        58          move.l    (A7)+,D2
+08000054  4E5E        59          unlk      A6
+08000056  4E75        60          rts
+                      61   ; }
+                      62   ; int main(void){
+                      63   _main:
+08000058  4E56 FFF4   64          link      A6,#-12
+                      65   ; int a = 5;
+0800005C  2D7C 0000   66          move.l    #5,-12(A6)
+08000060  0005 FFF4 
+                      67   ; int b = 4;
+08000064  2D7C 0000   68          move.l    #4,-8(A6)
+08000068  0004 FFF8 
+                      69   ; int c = SumOfTwo(a, b);
+0800006C  2F2E FFF8   70          move.l    -8(A6),-(A7)
+08000070  2F2E FFF4   71          move.l    -12(A6),-(A7)
+08000074  4EB9 0800   72          jsr       _SumOfTwo
+08000078  003E      
+0800007A  504F        73          addq.w    #8,A7
+0800007C  2D40 FFFC   74          move.l    D0,-4(A6)
+                      75   ; return 0;
+08000080  4280        76          clr.l     D0
+08000082  4E5E        77          unlk      A6
+08000084  4E75        78          rts
+                      79   ; }
+                      80          section   const
+08000086              81                   align
+                      82   
+                      83   
+                      84          section   data
+08000086              85                   align
+                      86   
+                      87   *********************************************************************************************************************************************************
+                      88   * Section for Initialised Data (in theory should be copied to Ram at startup) but is part of program code as we copy whole program to ram at startup
+                      89   ********************************************************************************************************************************************************
+                      90   
+          0800 0086   91   DataStart       equ       *
+08000086              92   __ungetbuf:     ds.l      1                    ungetbuffer for stdio functions
+0800008A              93   __allocp:       ds.l      1                    start of free memory block list
+0800008E              94   __heap:         ds.l      1                    begin of free memory
+                      95   
+                      96   
+                      97          section   bss
+08000092              98                   align
+                      99   
+          0800 0092  100   DataEnd         equ       *                    this label will equate to the address of the last byte of global variable in it
+          0000 000C  101   DataLength      equ       DataEnd-DataStart    length of data needed to copy to Ram on bootup
+                     102   
+                     103   *********************************************************************************************************
+                     104   * Section for uninitialised Data which is set to zero, i.e. we should set this space to zero at starup
+                     105   *********************************************************************************************************
+          0800 0092  106   BssStart       equ       *
+                     107   
+                     108          section   heap
+08000092             109                  align
+                     110   
+          0800 0092  111   BssEnd         equ       *
+          0000 0000  112   BssLength      equ       BssEnd-BssStart       length of zeroed data needed to copy to Ram on bootup
+                     113   
+                     114   *********************************************************************************************************
+                     115   * Section for Heap
+                     116   *********************************************************************************************************
+                     117   
+          0800 0092  118   heap           equ       *
+08000092             119                  align
+          0800 0000
+
+Assembly errors: 0
