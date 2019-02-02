@@ -55,7 +55,8 @@ module M68kDramController_Verilog (
 
 		reg   unsigned [4:0] CurrentState;					// holds the current state of the dram controller
 		reg   unsigned [4:0] NextState;						// holds the next state of the dram controller
-		
+		reg   unsigned [4:0] FutureState;		
+
 		reg  	unsigned [1:0] BankAddress;
 		reg  	unsigned [12:0] DramAddress;
 		
@@ -64,7 +65,11 @@ module M68kDramController_Verilog (
 		
 		reg  FPGAWritingtoSDram_H;								// When '1' enables FPGA data out lines leading to SDRAM to allow writing, otherwise they are set to Tri-State "Z"
 		reg  CPU_Dtack_L;											// Dtack back to CPU
-		reg  CPUReset_L;		
+		reg  CPUReset_L;	
+		reg  NOPCount;
+		reg  ARCCount;
+
+
 
 		// PARAMETERS
 
@@ -91,9 +96,20 @@ module M68kDramController_Verilog (
 	
 		parameter InitialisingState = 5'b00000;			// power on initialising state
 		parameter WaitingForPowerUpState = 5'b00001;		// waiting for power up state to complete
-		parameter IssueFirstNOP = 5'b00010;					// issuing 1st NOP after power up
-		parameter PrechargingAllBanks = 5'b00011;			// issuing precharge all command after power up
-		
+		parameter IssueFirstNOP = 5'b00010;	
+		parameter IssueSecondNOP = 5'b0011;				// issuing 1st NOP after power up		// issuing precharge all command after power up
+		parameter Initialize10AutoRefresh = 5'b00100;
+		parameter AutoRefreshState = 5'b00101;
+		parameter AutoRefreshNOPOne = 5'b00110;
+		parameter AutoRefreshNOPTwo = 5'b00111;
+		parameter AutoRefreshNOPThree = 5'b01000;
+		parameter ModeRegisterState = 5'b01001;
+		parameter ModeRegisterThreeNOP = 5'b01010;
+		parameter LoadRefreshIntervalTimerState = 5'b01011;
+		parameter IdleState = 5'b01100;
+		parameter IdleNOP = 5'b01101;
+		parameter IdleRefresh = 5'b01110;
+		parameter IdleThreeNOP = 5'b01111;
 		// TODO - Add your own states as per your own design
 		
 
@@ -197,7 +213,7 @@ module M68kDramController_Verilog (
 // next state and output logic
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	
-	always@(posedge Clock)
+	always@(*)
 	begin
 	
 	// In Verilog/VHDL - you will recall - that combinational logic (i.e. logic with no storage) is created as long as you
@@ -223,7 +239,7 @@ module M68kDramController_Verilog (
 		DramDataLatch_H <= 0;										// don't latch data yet
 		CPU_Dtack_L <= 1 ;											// don't acknowledge back to 68000
 		SDramWriteData <= 16'b0000000000000000 ;				// nothing to write in particular
-		CPUReset_L <= 0 ;												// default is reset to CPU (for the moment, though this will change when design is complete so that reset-out goes high at the end of the dram initialisation phase to allow CPU to resume)
+		// CPUReset_L <= 0 ;												// default is reset to CPU (for the moment, though this will change when design is complete so that reset-out goes high at the end of the dram initialisation phase to allow CPU to resume)
 		FPGAWritingtoSDram_H <= 0 ;								// default is to tri-state the FPGA data lines leading to bi-directional SDRam data lines, i.e. assume a read operation
 
 		// put your current state/next state decision making logic here - here are a few states to get you started
@@ -232,26 +248,112 @@ module M68kDramController_Verilog (
 	
 		if(CurrentState == InitialisingState ) begin
 			TimerValue <= 16'b0000000000001000;					// chose a value equivalent to 100us at 50Mhz clock - you might want to shorten it to somthing small for simulation purposes
-			TimerLoad_H <= 1 ;										// on next edge of clock, timer will be loaded and start to time out
-			Command <= PoweringUp ;									// clock enable and chip select to the Zentel Dram chip must be held low (disabled) during a power up phase
+			TimerLoad_H <= 1;										// on next edge of clock, timer will be loaded and start to time out
+			CPUReset_L <= 0;
+			Command <= PoweringUp ;	
 			NextState <= WaitingForPowerUpState ;				// once we have loaded the timer, go to a new state where we wait for the 100us to elapse
 		end
 		
 		else if(CurrentState == WaitingForPowerUpState) begin
-			Command <= PoweringUp ;									// no DRam clock enable or CS while witing for 100us timer
-			
-			if(TimerDone_H == 1) 								// if timer has timed out i.e. 100us have elapsed
-				NextState <= IssueFirstNOP ;						// take CKE and CS to active and issue a 1st NOP command
+			TimerLoad_H <= 0;
+			Command <= PoweringUp ;	
+
+			if(TimerDone_H == 1) 	// if timer has timed out i.e. 100us have elapsed
+				NextState <= IssueFirstNOP ;	
 			else
 				NextState <= WaitingForPowerUpState ;			// otherwise stay here until power up time delay finished
 		end
 		
 		else if(CurrentState == IssueFirstNOP) begin	 			// issue a valid NOP
 			Command <= NOP ;											// send a valid NOP command to to the dram chip
-			NextState <= PrechargingAllBanks;
+			NextState <= IssueSecondNOP;
 		end		
-		
-		// add your other states and conditions here
-		
-	end	// always@ block
+
+		else if(CurrentState == IssueSecondNOP) begin	 			// issue a valid NOP
+			Command <= NOP ;										// send a valid NOP command to to the dram chip
+			NextState <= Initialize10AutoRefresh;
+
+		end		
+
+		if(CurrentState == Initialize10AutoRefresh ) begin
+			TimerValue <= 16'b0000000000101000;					// 40 cycles intialization
+			TimerLoad_H <= 1;									// on next edge of clock, timer will be loaded and start to time out
+			NextState <= AutoRefreshState;	
+		end
+
+		else if(CurrentState == AutoRefreshState) begin
+				TimerLoad_H <= 0;
+				Command <= AutoRefresh;	
+				NextState <= AutoRefreshNOPOne;
+		end		
+
+		else if(CurrentState == AutoRefreshNOPOne) begin
+				Command <= NOP;
+				NextState <= AutoRefreshNOPTwo;
+		end		
+
+		else if(CurrentState == AutoRefreshNOPTwo) begin
+				Command <= NOP;	
+				NextState <= AutoRefreshNOPThree;
+		end		
+
+		else if(CurrentState == AutoRefreshNOPThree) begin
+				Command <= NOP;	
+
+				if(TimerDone_H == 1) 								
+				NextState <= ModeRegisterState ;	
+			else
+				NextState <= AutoRefreshState ;
+		end		
+
+		else if(CurrentState == ModeRegisterState) begin
+			Command <= ModeRegisterSet;
+			NextState <= ModeRegisterThreeNOP;
+			TimerValue <= 16'b0000000000000011;
+			TimerLoad_H <= 1;
+		end
+
+		else if(CurrentState == ModeRegisterThreeNOP) begin
+			TimerLoad_H <= 0;
+			if (TimerDone_H == 1)
+				NextState <= LoadRefreshIntervalTimerState;
+			else NextState <= ModeRegisterThreeNOP;
+		end
+
+		else if(CurrentState == LoadRefreshIntervalTimerState) begin
+			RefreshTimerValue <= 16'b0000000101110111;					// 7.5us
+			RefreshTimerLoad_H <= 1 ;									// on next edge of clock, timer will be loaded and start to time out
+	
+			NextState <= IdleState ;				
+		end
+
+		else if(CurrentState == IdleState) begin
+			CPUReset_L <= 1;
+			RefreshTimerLoad_H <= 0;
+			if(RefreshTimerDone_H == 1) begin		
+				Command <= PrechargeAllBanks;	
+				NextState <= IdleNOP;
+			end else NextState <= IdleState ;
+		end
+
+		else if(CurrentState == IdleNOP) begin
+			Command <= NOP;
+			NextState <= IdleRefresh;
+		end
+
+		else if(CurrentState == IdleRefresh) begin
+			Command <= AutoRefresh;
+			NextState <= IdleThreeNOP;
+			TimerValue <= 16'b0000000000000011;
+			TimerLoad_H <= 1;
+		end 
+
+		else if(CurrentState == IdleThreeNOP) begin
+			TimerLoad_H <= 0;
+			if (TimerDone_H == 1)
+				NextState <= LoadRefreshIntervalTimerState;
+			else NextState <= IdleThreeNOP;
+		end
+
+	end
 endmodule

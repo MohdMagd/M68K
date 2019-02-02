@@ -1145,6 +1145,7 @@ agreement for further details.
 		(line (pt 82 8)(pt 78 12))
 		(line (pt 78 12)(pt 82 8))
 	)
+	(annotation_block (location)(rect 2280 1456 2344 1472))
 )
 (pin
 	(output)
@@ -1884,7 +1885,7 @@ agreement for further details.
 	)
 )
 (symbol
-	(rect 1528 1696 1776 1920)
+	(rect 1536 1696 1784 1920)
 	(text "OnChipM68xxIO" (rect 5 0 95 14)(font "Arial" (font_size 8)))
 	(text "inst11" (rect 8 206 37 218)(font "Arial" ))
 	(port
@@ -3470,10 +3471,6 @@ agreement for further details.
 	(pt -176 224)
 )
 (connector
-	(pt -272 240)
-	(pt -176 240)
-)
-(connector
 	(pt -240 272)
 	(pt -176 272)
 )
@@ -3787,92 +3784,12 @@ agreement for further details.
 	(pt 616 2192)
 )
 (connector
-	(pt 1472 1680)
-	(pt 1472 1728)
-)
-(connector
-	(text "Address[31..0]" (rect 938 1744 1009 1756)(font "Arial" )(invisible))
-	(pt 792 1760)
-	(pt 1528 1760)
-	(bus)
-)
-(connector
-	(pt 1224 1776)
-	(pt 1528 1776)
-)
-(connector
 	(pt -528 1616)
 	(pt 1808 1616)
 )
 (connector
-	(pt 1808 1616)
-	(pt 1808 1744)
-)
-(connector
-	(pt 1776 1744)
-	(pt 1808 1744)
-)
-(connector
-	(pt 1776 1760)
-	(pt 1808 1760)
-)
-(connector
-	(pt 1472 1872)
-	(pt 1528 1872)
-)
-(connector
-	(pt 1160 1176)
-	(pt 1160 1824)
-)
-(connector
-	(pt 1528 1824)
-	(pt 1160 1824)
-)
-(connector
-	(pt 1128 1304)
-	(pt 1128 1856)
-)
-(connector
-	(pt 1528 1856)
-	(pt 1128 1856)
-)
-(connector
-	(pt 1144 1272)
-	(pt 1144 1840)
-)
-(connector
-	(pt 1528 1840)
-	(pt 1144 1840)
-)
-(connector
-	(pt 1528 1808)
-	(pt 1176 1808)
-)
-(connector
-	(pt 1176 1208)
-	(pt 1176 1808)
-)
-(connector
-	(pt 1192 1192)
-	(pt 1192 1792)
-)
-(connector
-	(pt 1528 1792)
-	(pt 1192 1792)
-)
-(connector
 	(pt 1808 1920)
 	(pt 2088 1920)
-)
-(connector
-	(pt 1808 1760)
-	(pt 1808 1920)
-)
-(connector
-	(text "DataBusOut[15..8]" (rect 1346 1728 1438 1740)(font "Arial" ))
-	(pt 1528 1744)
-	(pt 1248 1744)
-	(bus)
 )
 (connector
 	(text "InPortB[7..2],InPortB[0]" (rect 1432 1259 1444 1374)(font "Arial" )(vertical))
@@ -4299,42 +4216,12 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(pt 792 1144)
-	(pt 792 1760)
-	(bus)
-)
-(connector
 	(pt 1224 656)
 	(pt 1224 1160)
 )
 (connector
-	(pt 776 1176)
-	(pt 1160 1176)
-)
-(connector
-	(pt 736 1192)
-	(pt 1192 1192)
-)
-(connector
-	(pt 616 1208)
-	(pt 1176 1208)
-)
-(connector
-	(pt -256 1272)
-	(pt 1144 1272)
-)
-(connector
-	(pt -272 1304)
-	(pt 1128 1304)
-)
-(connector
 	(pt 1248 976)
 	(pt 1248 1320)
-	(bus)
-)
-(connector
-	(pt 1248 1320)
-	(pt 1248 1744)
 	(bus)
 )
 (connector
@@ -4347,30 +4234,10 @@ agreement for further details.
 	(pt 1520 1160)
 )
 (connector
-	(pt 1160 1176)
-	(pt 1520 1176)
-)
-(connector
-	(pt 1192 1192)
-	(pt 1520 1192)
-)
-(connector
-	(pt 1176 1208)
-	(pt 1520 1208)
-)
-(connector
 	(text "InPortB[7..0]" (rect 1480 1208 1542 1220)(font "Arial" )(invisible))
 	(pt 1456 1224)
 	(pt 1520 1224)
 	(bus)
-)
-(connector
-	(pt 1144 1272)
-	(pt 1520 1272)
-)
-(connector
-	(pt 1128 1304)
-	(pt 1520 1304)
 )
 (connector
 	(text "DataBusOut[15..8]" (rect 1290 1304 1382 1316)(font "Arial" ))
@@ -4392,14 +4259,6 @@ agreement for further details.
 (connector
 	(pt -272 -664)
 	(pt 576 -664)
-)
-(connector
-	(pt -272 -664)
-	(pt -272 240)
-)
-(connector
-	(pt -272 240)
-	(pt -272 1304)
 )
 (connector
 	(pt 1360 280)
@@ -4460,11 +4319,6 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(text "Clock50Mhz" (rect 1416 1688 1475 1700)(font "Arial" ))
-	(pt 1472 1728)
-	(pt 1528 1728)
-)
-(connector
 	(pt 1160 -680)
 	(pt 1456 -680)
 )
@@ -4493,10 +4347,6 @@ agreement for further details.
 	(pt 1920 112)
 )
 (connector
-	(pt 1904 -64)
-	(pt 1904 96)
-)
-(connector
 	(pt 600 2728)
 	(pt 1856 2728)
 )
@@ -4504,12 +4354,6 @@ agreement for further details.
 	(text "DataBusIn[15..8]" (rect 1858 1320 1941 1332)(font "Arial" ))
 	(pt 1776 1336)
 	(pt 1952 1336)
-	(bus)
-)
-(connector
-	(text "DataBusIn[15..0]" (rect 1936 1623 1948 1706)(font "Arial" )(vertical)(invisible))
-	(pt 1952 1336)
-	(pt 1952 1728)
 	(bus)
 )
 (connector
@@ -4538,12 +4382,6 @@ agreement for further details.
 	(text "DataBusIn[15..0]" (rect 2290 240 2373 252)(font "Arial" ))
 	(pt 1200 256)
 	(pt 1952 256)
-	(bus)
-)
-(connector
-	(text "DataBusIn[15..8]" (rect 1850 1712 1933 1724)(font "Arial" ))
-	(pt 1776 1728)
-	(pt 1952 1728)
 	(bus)
 )
 (connector
@@ -4634,10 +4472,6 @@ agreement for further details.
 (connector
 	(pt 1472 1936)
 	(pt 2088 1936)
-)
-(connector
-	(pt 1472 1872)
-	(pt 1472 1936)
 )
 (connector
 	(pt 1544 2968)
@@ -5013,14 +4847,6 @@ agreement for further details.
 	(pt 2080 -80)
 )
 (connector
-	(pt 1760 -64)
-	(pt 1904 -64)
-)
-(connector
-	(pt 1904 -64)
-	(pt 2080 -64)
-)
-(connector
 	(pt 1160 -256)
 	(pt 2080 -256)
 )
@@ -5318,14 +5144,6 @@ agreement for further details.
 	(pt 1432 2880)
 )
 (connector
-	(pt 1224 1160)
-	(pt 1224 1776)
-)
-(connector
-	(pt 1224 1776)
-	(pt 1224 2432)
-)
-(connector
 	(pt 1848 2528)
 	(pt 1848 2568)
 	(bus)
@@ -5451,19 +5269,8 @@ agreement for further details.
 	(pt 1544 2128)
 )
 (connector
-	(text "Address[31..0]" (rect 776 2038 788 2109)(font "Arial" )(vertical)(invisible))
-	(pt 792 1760)
-	(pt 792 2144)
-	(bus)
-)
-(connector
 	(pt 792 2144)
 	(pt 792 2416)
-	(bus)
-)
-(connector
-	(pt 1248 1744)
-	(pt 1248 2160)
 	(bus)
 )
 (connector
@@ -5478,11 +5285,6 @@ agreement for further details.
 (connector
 	(pt 1432 2192)
 	(pt 1544 2192)
-)
-(connector
-	(pt 1952 1728)
-	(pt 1952 2224)
-	(bus)
 )
 (connector
 	(pt 1952 2224)
@@ -5504,6 +5306,209 @@ agreement for further details.
 (connector
 	(pt 1448 2240)
 	(pt 1544 2240)
+)
+(connector
+	(pt 1472 1680)
+	(pt 1472 1728)
+)
+(connector
+	(pt 1808 1616)
+	(pt 1808 1744)
+)
+(connector
+	(pt 1808 1744)
+	(pt 1784 1744)
+)
+(connector
+	(pt 1808 1760)
+	(pt 1784 1760)
+)
+(connector
+	(pt 1160 1176)
+	(pt 1160 1824)
+)
+(connector
+	(pt 1128 1304)
+	(pt 1128 1856)
+)
+(connector
+	(pt 1144 1272)
+	(pt 1144 1840)
+)
+(connector
+	(pt 1176 1208)
+	(pt 1176 1808)
+)
+(connector
+	(pt 1192 1192)
+	(pt 1192 1792)
+)
+(connector
+	(pt 1808 1920)
+	(pt 1808 1760)
+)
+(connector
+	(text "DataBusIn[15..8]" (rect 1858 1712 1941 1724)(font "Arial" ))
+	(pt 1952 1728)
+	(pt 1784 1728)
+	(bus)
+)
+(connector
+	(pt 1472 1936)
+	(pt 1472 1872)
+)
+(connector
+	(pt 792 1144)
+	(pt 792 1760)
+	(bus)
+)
+(connector
+	(text "Address[31..0]" (rect 776 2038 788 2109)(font "Arial" )(vertical)(invisible))
+	(pt 792 1760)
+	(pt 792 2144)
+	(bus)
+)
+(connector
+	(pt 1224 1160)
+	(pt 1224 1776)
+)
+(connector
+	(pt 1224 1776)
+	(pt 1224 2432)
+)
+(connector
+	(pt 776 1176)
+	(pt 1160 1176)
+)
+(connector
+	(pt 1160 1176)
+	(pt 1520 1176)
+)
+(connector
+	(pt -272 1304)
+	(pt 1128 1304)
+)
+(connector
+	(pt 1128 1304)
+	(pt 1520 1304)
+)
+(connector
+	(pt -256 1272)
+	(pt 1144 1272)
+)
+(connector
+	(pt 1144 1272)
+	(pt 1520 1272)
+)
+(connector
+	(pt 616 1208)
+	(pt 1176 1208)
+)
+(connector
+	(pt 1176 1208)
+	(pt 1520 1208)
+)
+(connector
+	(pt 736 1192)
+	(pt 1192 1192)
+)
+(connector
+	(pt 1192 1192)
+	(pt 1520 1192)
+)
+(connector
+	(text "DataBusIn[15..0]" (rect 1936 1623 1948 1706)(font "Arial" )(vertical)(invisible))
+	(pt 1952 1336)
+	(pt 1952 1728)
+	(bus)
+)
+(connector
+	(pt 1952 1728)
+	(pt 1952 2224)
+	(bus)
+)
+(connector
+	(pt 1248 1320)
+	(pt 1248 1744)
+	(bus)
+)
+(connector
+	(pt 1248 1744)
+	(pt 1248 2160)
+	(bus)
+)
+(connector
+	(text "Clock50Mhz" (rect 1424 1688 1483 1700)(font "Arial" ))
+	(pt 1472 1728)
+	(pt 1536 1728)
+)
+(connector
+	(text "DataBusOut[15..8]" (rect 1354 1728 1446 1740)(font "Arial" ))
+	(pt 1248 1744)
+	(pt 1536 1744)
+	(bus)
+)
+(connector
+	(text "Address[31..0]" (rect 946 1744 1017 1756)(font "Arial" )(invisible))
+	(pt 792 1760)
+	(pt 1536 1760)
+	(bus)
+)
+(connector
+	(pt 1224 1776)
+	(pt 1536 1776)
+)
+(connector
+	(pt 1192 1792)
+	(pt 1536 1792)
+)
+(connector
+	(pt 1176 1808)
+	(pt 1536 1808)
+)
+(connector
+	(pt 1160 1824)
+	(pt 1536 1824)
+)
+(connector
+	(pt 1144 1840)
+	(pt 1536 1840)
+)
+(connector
+	(pt 1128 1856)
+	(pt 1536 1856)
+)
+(connector
+	(pt 1472 1872)
+	(pt 1536 1872)
+)
+(connector
+	(pt -272 -664)
+	(pt -272 1304)
+)
+(connector
+	(pt -176 240)
+	(pt -200 240)
+)
+(connector
+	(pt 1904 -64)
+	(pt 1904 160)
+)
+(connector
+	(pt 1904 160)
+	(pt -200 160)
+)
+(connector
+	(pt -200 240)
+	(pt -200 160)
+)
+(connector
+	(pt 1760 -64)
+	(pt 1904 -64)
+)
+(connector
+	(pt 1904 -64)
+	(pt 2080 -64)
 )
 (junction (pt 1280 224))
 (junction (pt 1376 224))
@@ -5577,7 +5582,6 @@ agreement for further details.
 (junction (pt 1248 -664))
 (junction (pt 576 -664))
 (junction (pt -272 -664))
-(junction (pt -272 240))
 (junction (pt 1224 656))
 (junction (pt 1112 688))
 (junction (pt 1096 720))
