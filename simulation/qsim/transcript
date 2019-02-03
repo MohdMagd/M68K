@@ -2,16 +2,16 @@
 # ** Warning: (vlib-34) Library already exists at "work".
 # 
 # Model Technology ModelSim ALTERA vlog 10.3d Compiler 2014.10 Oct  7 2014
-# Start time: 15:38:56 on Jan 27,2019
+# Start time: 13:00:38 on Feb 03,2019
 # vlog -work work MC68K.vo 
 # -- Compiling module MC68K
 # 
 # Top level modules:
 # 	MC68K
-# End time: 15:38:58 on Jan 27,2019, Elapsed time: 0:00:02
+# End time: 13:00:40 on Feb 03,2019, Elapsed time: 0:00:02
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim ALTERA vlog 10.3d Compiler 2014.10 Oct  7 2014
-# Start time: 15:38:58 on Jan 27,2019
+# Start time: 13:00:40 on Feb 03,2019
 # vlog -work work Waveform68k-V15.0-DE1SoC_Short7us.vwf.vt 
 # -- Compiling module MC68K_vlg_sample_tst
 # -- Compiling module MC68K_vlg_check_tst
@@ -19,10 +19,10 @@
 # 
 # Top level modules:
 # 	MC68K_vlg_vec_tst
-# End time: 15:38:59 on Jan 27,2019, Elapsed time: 0:00:01
+# End time: 13:00:40 on Feb 03,2019, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # vsim -c -do "MC68K.do" 
-# Start time: 15:38:59 on Jan 27,2019
+# Start time: 13:00:40 on Feb 03,2019
 # Loading work.MC68K_vlg_vec_tst
 # Loading work.MC68K
 # Loading altera_ver.dffeas
@@ -49,23 +49,23 @@
 # 
 # ** Warning: (vsim-3722) Waveform68k-V15.0-DE1SoC_Short7us.vwf.vt(2305): [TFMPC] - Missing connection for port 'altera_reserved_tdo'.
 # 
-# ** Warning: (vsim-3017) MC68K.vo(10393): [TFMPC] - Too few port connections. Expected 15, found 14.
+# ** Warning: (vsim-3017) MC68K.vo(10438): [TFMPC] - Too few port connections. Expected 15, found 14.
 # 
 #         Region: /MC68K_vlg_vec_tst/i1/\inst7|clockgen_inst|altera_pll_i|general[0].gpll~PLL_REFCLK_SELECT 
-# ** Warning: (vsim-3722) MC68K.vo(10393): [TFMPC] - Missing connection for port 'pllen'.
+# ** Warning: (vsim-3722) MC68K.vo(10438): [TFMPC] - Missing connection for port 'pllen'.
 # 
-# ** Warning: (vsim-3017) MC68K.vo(10431): [TFMPC] - Too few port connections. Expected 24, found 23.
+# ** Warning: (vsim-3017) MC68K.vo(10476): [TFMPC] - Too few port connections. Expected 24, found 23.
 # 
 #         Region: /MC68K_vlg_vec_tst/i1/\inst7|clockgen_inst|altera_pll_i|general[0].gpll~FRACTIONAL_PLL 
-# ** Warning: (vsim-3722) MC68K.vo(10431): [TFMPC] - Missing connection for port 'vsspl'.
+# ** Warning: (vsim-3722) MC68K.vo(10476): [TFMPC] - Missing connection for port 'vsspl'.
 # 
 # Loading altera_ver.PRIM_GDFF_LOW
-# ** Warning: (vsim-3017) MC68K.vo(11043): [TFMPC] - Too few port connections. Expected 15, found 14.
+# ** Warning: (vsim-3017) MC68K.vo(15109): [TFMPC] - Too few port connections. Expected 15, found 14.
 # 
 #         Region: /MC68K_vlg_vec_tst/i1/altera_internal_jtag
-# ** Warning: (vsim-3722) MC68K.vo(11043): [TFMPC] - Missing connection for port 'ntrst'.
+# ** Warning: (vsim-3722) MC68K.vo(15109): [TFMPC] - Missing connection for port 'ntrst'.
 # 
-# ** Warning: Design size of 57316 statements exceeds ModelSim Altera Starter recommended capacity.
+# ** Warning: Design size of 57791 statements exceeds ModelSim Altera Starter recommended capacity.
 # Expect performance to be adversely affected.
 # 
 # Warning: por to CB BFM is not connected, internal por is used.
@@ -292,17 +292,20 @@
 # ERROR! Vector Mismatch for output port DRAM_CLK :: @time = 100000.000 ps
 #      Expected value = 0
 #      Real value = 1
-# ERROR! Vector Mismatch for output port DRAM_CKE :: @time = 190000.000 ps
+# ERROR! Vector Mismatch for output port DRAM_CKE :: @time = 310000.000 ps
 #      Expected value = 0
 #      Real value = 1
-# ERROR! Vector Mismatch for output port DRAM_RAS_N :: @time = 190000.000 ps
+# ERROR! Vector Mismatch for output port DRAM_RAS_N :: @time = 310000.000 ps
 #      Expected value = 0
 #      Real value = 1
-# ERROR! Vector Mismatch for output port DRAM_WE_N :: @time = 190000.000 ps
+# ERROR! Vector Mismatch for output port DRAM_WE_N :: @time = 310000.000 ps
 #      Expected value = 0
 #      Real value = 1
-#          60 mismatched vectors : Simulation failed !
+# ERROR! Vector Mismatch for output port ResetOut :: @time = 1350000.000 ps
+#      Expected value = 0
+#      Real value = 1
+#          61 mismatched vectors : Simulation failed !
 # ** Note: $finish    : Waveform68k-V15.0-DE1SoC_Short7us.vwf.vt(2220)
 #    Time: 7 us  Iteration: 0  Instance: /MC68K_vlg_vec_tst/tb_out
-# End time: 15:40:57 on Jan 27,2019, Elapsed time: 0:01:58
+# End time: 13:02:00 on Feb 03,2019, Elapsed time: 0:01:20
 # Errors: 0, Warnings: 12

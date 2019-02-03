@@ -54,8 +54,7 @@ module M68kDramController_Verilog (
 		reg 	unsigned	[15:0] RefreshTimerValue;			// 16 bit refresh timer preload value
 
 		reg   unsigned [4:0] CurrentState;					// holds the current state of the dram controller
-		reg   unsigned [4:0] NextState;						// holds the next state of the dram controller
-		reg   unsigned [4:0] FutureState;		
+		reg   unsigned [4:0] NextState;						// holds the next state of the dram controller	
 
 		reg  	unsigned [1:0] BankAddress;
 		reg  	unsigned [12:0] DramAddress;
@@ -66,10 +65,6 @@ module M68kDramController_Verilog (
 		reg  FPGAWritingtoSDram_H;								// When '1' enables FPGA data out lines leading to SDRAM to allow writing, otherwise they are set to Tri-State "Z"
 		reg  CPU_Dtack_L;											// Dtack back to CPU
 		reg  CPUReset_L;	
-		reg  NOPCount;
-		reg  ARCCount;
-
-
 
 		// PARAMETERS
 
@@ -97,7 +92,7 @@ module M68kDramController_Verilog (
 		parameter InitialisingState = 5'b00000;			// power on initialising state
 		parameter WaitingForPowerUpState = 5'b00001;		// waiting for power up state to complete
 		parameter IssueFirstNOP = 5'b00010;	
-		parameter IssueSecondNOP = 5'b0011;				// issuing 1st NOP after power up		// issuing precharge all command after power up
+		parameter IssueSecondNOPInit10AutoRefresh = 5'b0011;				// issuing 1st NOP after power up		// issuing precharge all command after power up
 		parameter Initialize10AutoRefresh = 5'b00100;
 		parameter AutoRefreshState = 5'b00101;
 		parameter AutoRefreshNOPOne = 5'b00110;
@@ -239,7 +234,6 @@ module M68kDramController_Verilog (
 		DramDataLatch_H <= 0;										// don't latch data yet
 		CPU_Dtack_L <= 1 ;											// don't acknowledge back to 68000
 		SDramWriteData <= 16'b0000000000000000 ;				// nothing to write in particular
-		// CPUReset_L <= 0 ;												// default is reset to CPU (for the moment, though this will change when design is complete so that reset-out goes high at the end of the dram initialisation phase to allow CPU to resume)
 		FPGAWritingtoSDram_H <= 0 ;								// default is to tri-state the FPGA data lines leading to bi-directional SDRam data lines, i.e. assume a read operation
 
 		// put your current state/next state decision making logic here - here are a few states to get you started
@@ -248,14 +242,13 @@ module M68kDramController_Verilog (
 	
 		if(CurrentState == InitialisingState ) begin
 			TimerValue <= 16'b0000000000001000;					// chose a value equivalent to 100us at 50Mhz clock - you might want to shorten it to somthing small for simulation purposes
-			TimerLoad_H <= 1;										// on next edge of clock, timer will be loaded and start to time out
+			TimerLoad_H <= 1;									// on next edge of clock, timer will be loaded and start to time out
 			CPUReset_L <= 0;
 			Command <= PoweringUp ;	
 			NextState <= WaitingForPowerUpState ;				// once we have loaded the timer, go to a new state where we wait for the 100us to elapse
 		end
 		
 		else if(CurrentState == WaitingForPowerUpState) begin
-			TimerLoad_H <= 0;
 			Command <= PoweringUp ;	
 
 			if(TimerDone_H == 1) 	// if timer has timed out i.e. 100us have elapsed
@@ -266,23 +259,19 @@ module M68kDramController_Verilog (
 		
 		else if(CurrentState == IssueFirstNOP) begin	 			// issue a valid NOP
 			Command <= NOP ;											// send a valid NOP command to to the dram chip
-			NextState <= IssueSecondNOP;
+			NextState <= IssueSecondNOPInit10AutoRefresh;
 		end		
 
-		else if(CurrentState == IssueSecondNOP) begin	 			// issue a valid NOP
-			Command <= NOP ;										// send a valid NOP command to to the dram chip
-			NextState <= Initialize10AutoRefresh;
+		else if(CurrentState == IssueSecondNOPInit10AutoRefresh) begin	 			
+			Command <= NOP ;									// send a valid NOP command to to the dram chip
 
-		end		
-
-		if(CurrentState == Initialize10AutoRefresh ) begin
 			TimerValue <= 16'b0000000000101000;					// 40 cycles intialization
 			TimerLoad_H <= 1;									// on next edge of clock, timer will be loaded and start to time out
 			NextState <= AutoRefreshState;	
+
 		end
 
 		else if(CurrentState == AutoRefreshState) begin
-				TimerLoad_H <= 0;
 				Command <= AutoRefresh;	
 				NextState <= AutoRefreshNOPOne;
 		end		
@@ -301,7 +290,7 @@ module M68kDramController_Verilog (
 				Command <= NOP;	
 
 				if(TimerDone_H == 1) 								
-				NextState <= ModeRegisterState ;	
+				NextState <= ModeRegisterState ;
 			else
 				NextState <= AutoRefreshState ;
 		end		
@@ -314,14 +303,16 @@ module M68kDramController_Verilog (
 		end
 
 		else if(CurrentState == ModeRegisterThreeNOP) begin
-			TimerLoad_H <= 0;
+			Command <= NOP;
+
 			if (TimerDone_H == 1)
 				NextState <= LoadRefreshIntervalTimerState;
 			else NextState <= ModeRegisterThreeNOP;
 		end
 
 		else if(CurrentState == LoadRefreshIntervalTimerState) begin
-			RefreshTimerValue <= 16'b0000000101110111;					// 7.5us
+			// RefreshTimerValue <= 16'b0000000101110111;					// 7.5us
+			RefreshTimerValue <= 16'b000000000000001000; // 8 cycles wait!!!!
 			RefreshTimerLoad_H <= 1 ;									// on next edge of clock, timer will be loaded and start to time out
 	
 			NextState <= IdleState ;				
@@ -329,16 +320,18 @@ module M68kDramController_Verilog (
 
 		else if(CurrentState == IdleState) begin
 			CPUReset_L <= 1;
-			RefreshTimerLoad_H <= 0;
+
 			if(RefreshTimerDone_H == 1) begin		
 				Command <= PrechargeAllBanks;	
 				NextState <= IdleNOP;
+
 			end else NextState <= IdleState ;
 		end
 
 		else if(CurrentState == IdleNOP) begin
 			Command <= NOP;
 			NextState <= IdleRefresh;
+
 		end
 
 		else if(CurrentState == IdleRefresh) begin
@@ -346,13 +339,16 @@ module M68kDramController_Verilog (
 			NextState <= IdleThreeNOP;
 			TimerValue <= 16'b0000000000000011;
 			TimerLoad_H <= 1;
-		end 
+
+		end
 
 		else if(CurrentState == IdleThreeNOP) begin
-			TimerLoad_H <= 0;
+			Command <= NOP;
+
 			if (TimerDone_H == 1)
 				NextState <= LoadRefreshIntervalTimerState;
 			else NextState <= IdleThreeNOP;
+
 		end
 
 	end
