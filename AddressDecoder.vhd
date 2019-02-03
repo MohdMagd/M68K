@@ -45,6 +45,10 @@ Begin
 			IOSelect_H <= '1' ;														-- DO NOT CHANGE - debugger expects IO at this address
 		end if ;
 		
+		if(Address(31 downto 26) = B"1111_00") then 							-- address hex F000 0000 - F3FF FFFF Partial decoding - 64M Partial Decoding
+			DramSelect_H <= '1' ;													-- DO NOT CHANGE - debugger expects IO at this address
+		end if ;
+		
 		---------------------------------------------------------------------------------
 		-- add other decoder signals here as we work through assignments and labs
 		---------------------------------------------------------------------------------
