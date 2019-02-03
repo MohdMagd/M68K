@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deploy
- date="2019.01.28.13:44:16"
- outputDirectory="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/">
+ date="2019.02.03.12:50:38"
+ outputDirectory="C:/M68K/db/ip/sldbe7d4d23/">
  <perimeter>
   <parameter
      name="AUTO_DEVICE_FAMILY"
@@ -47,34 +47,31 @@
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
   <parameter name="AUTO_DEVICE_SPEEDGRADE" value="" />
   <generatedFiles>
-   <file
-       path="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/alt_sld_fab.v"
-       type="VERILOG" />
+   <file path="C:/M68K/db/ip/sldbe7d4d23/alt_sld_fab.v" type="VERILOG" />
   </generatedFiles>
   <childGeneratedFiles>
    <file
-       path="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab.v"
+       path="C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab.v"
        type="VERILOG" />
    <file
-       path="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_presplit.sv"
+       path="C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_presplit.sv"
        type="SYSTEM_VERILOG"
        attributes="TOP_LEVEL_FILE" />
    <file
-       path="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_splitter.sv"
+       path="C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_splitter.sv"
        type="SYSTEM_VERILOG"
        attributes="TOP_LEVEL_FILE" />
    <file
-       path="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_sldfabric.vhd"
+       path="C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_sldfabric.vhd"
        type="VHDL"
        attributes="" />
    <file
-       path="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_ident.sv"
+       path="C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_ident.sv"
        type="SYSTEM_VERILOG"
        attributes="TOP_LEVEL_FILE" />
   </childGeneratedFiles>
   <sourceFiles>
-   <file
-       path="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/alt_sld_fab_wrapper_hw.tcl" />
+   <file path="C:/M68K/db/ip/sldbe7d4d23/alt_sld_fab_wrapper_hw.tcl" />
   </sourceFiles>
   <childSourceFiles>
    <file
@@ -165,24 +162,24 @@
   <parameter name="MIRROR" value="0" />
   <generatedFiles>
    <file
-       path="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab.v"
+       path="C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab.v"
        type="VERILOG" />
   </generatedFiles>
   <childGeneratedFiles>
    <file
-       path="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_presplit.sv"
+       path="C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_presplit.sv"
        type="SYSTEM_VERILOG"
        attributes="TOP_LEVEL_FILE" />
    <file
-       path="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_splitter.sv"
+       path="C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_splitter.sv"
        type="SYSTEM_VERILOG"
        attributes="TOP_LEVEL_FILE" />
    <file
-       path="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_sldfabric.vhd"
+       path="C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_sldfabric.vhd"
        type="VHDL"
        attributes="" />
    <file
-       path="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_ident.sv"
+       path="C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_ident.sv"
        type="SYSTEM_VERILOG"
        attributes="TOP_LEVEL_FILE" />
   </childGeneratedFiles>
@@ -251,7 +248,7 @@
   <parameter name="RECEIVE_WIDTHS" value="28" />
   <generatedFiles>
    <file
-       path="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_presplit.sv"
+       path="C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_presplit.sv"
        type="SYSTEM_VERILOG"
        attributes="TOP_LEVEL_FILE" />
   </generatedFiles>
@@ -281,7 +278,7 @@
   <parameter name="ADD_INTERFACE_ASGN" value="0" />
   <generatedFiles>
    <file
-       path="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_splitter.sv"
+       path="C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_splitter.sv"
        type="SYSTEM_VERILOG"
        attributes="TOP_LEVEL_FILE" />
   </generatedFiles>
@@ -320,7 +317,7 @@
   <parameter name="FORCE_IR_CAPTURE_FEATURE" value="1" />
   <generatedFiles>
    <file
-       path="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_sldfabric.vhd"
+       path="C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_sldfabric.vhd"
        type="VHDL"
        attributes="" />
   </generatedFiles>
@@ -348,7 +345,7 @@
   <parameter name="DESIGN_HASH" value="4bcb1d37ecbda20af753" />
   <generatedFiles>
    <file
-       path="C:/M68kV6.0 - 800by480 - (Verilog) For Students 2/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_ident.sv"
+       path="C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_ident.sv"
        type="SYSTEM_VERILOG"
        attributes="TOP_LEVEL_FILE" />
   </generatedFiles>
