@@ -311,8 +311,8 @@ module M68kDramController_Verilog (
 		end
 
 		else if(CurrentState == LoadRefreshIntervalTimerState) begin
-			// RefreshTimerValue <= 16'b0000000101110111;					// 7.5us
-			RefreshTimerValue <= 16'b000000000000001000; // 8 cycles wait!!!!
+			RefreshTimerValue <= 16'b0000000101110111;					// 7.5us
+			//RefreshTimerValue <= 16'b000000000000001000; // 8 cycles wait!!!!
 			RefreshTimerLoad_H <= 1 ;									// on next edge of clock, timer will be loaded and start to time out
 	
 			NextState <= IdleState ;				
@@ -320,6 +320,7 @@ module M68kDramController_Verilog (
 
 		else if(CurrentState == IdleState) begin
 			CPUReset_L <= 1;
+			//Command <= NOP;
 
 			if(RefreshTimerDone_H == 1) begin		
 				Command <= PrechargeAllBanks;	
