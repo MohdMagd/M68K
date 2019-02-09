@@ -1,5 +1,4 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (Release\) contains files shared from another project (._SRecord_to_MIF_Converter.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  StoMifConverterV6.cpp
+﻿  StoMifConverterV6.cpp
 c:\m68k\programs\srecord_to_mif_converter\srecord_to_mif_converter\srecord_to_mif_converter\stomifconverterv6.cpp(18): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(208): note: see declaration of 'fopen'
 c:\m68k\programs\srecord_to_mif_converter\srecord_to_mif_converter\srecord_to_mif_converter\stomifconverterv6.cpp(21): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _getch. See online help for details.

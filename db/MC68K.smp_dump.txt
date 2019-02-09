@@ -105,22 +105,27 @@ micro_state.div14 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 micro_state.div15 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
 
 State Machine - |MC68K|Dram:inst2|M68kDramController_Verilog:inst1|CurrentState
-Name CurrentState.IdleThreeNOP CurrentState.IdleRefresh CurrentState.IdleNOP CurrentState.IdleState CurrentState.LoadRefreshIntervalTimerState CurrentState.ModeRegisterThreeNOP CurrentState.ModeRegisterState CurrentState.AutoRefreshNOPThree CurrentState.AutoRefreshNOPTwo CurrentState.AutoRefreshNOPOne CurrentState.AutoRefreshState CurrentState.IssueSecondNOPInit10AutoRefresh CurrentState.IssueFirstNOP CurrentState.WaitingForPowerUpState CurrentState.InitialisingState 
-CurrentState.InitialisingState 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-CurrentState.WaitingForPowerUpState 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 
-CurrentState.IssueFirstNOP 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 
-CurrentState.IssueSecondNOPInit10AutoRefresh 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 
-CurrentState.AutoRefreshState 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 
-CurrentState.AutoRefreshNOPOne 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 
-CurrentState.AutoRefreshNOPTwo 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 
-CurrentState.AutoRefreshNOPThree 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 
-CurrentState.ModeRegisterState 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 
-CurrentState.ModeRegisterThreeNOP 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 
-CurrentState.LoadRefreshIntervalTimerState 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 
-CurrentState.IdleState 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 
-CurrentState.IdleNOP 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 
-CurrentState.IdleRefresh 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 
-CurrentState.IdleThreeNOP 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+Name CurrentState.TerminateCurrentBusCycle CurrentState.WaitForCAS CurrentState.ReadSDramState CurrentState.SDramWriteWait CurrentState.WriteSDramState CurrentState.IdleThreeNOP CurrentState.IdleRefresh CurrentState.IdleNOP CurrentState.IdleState CurrentState.LoadRefreshIntervalTimerState CurrentState.ModeRegisterThreeNOP CurrentState.ModeRegisterState CurrentState.AutoRefreshNOPThree CurrentState.AutoRefreshNOPTwo CurrentState.AutoRefreshNOPOne CurrentState.AutoRefreshState CurrentState.IssueSecondNOPInit10AutoRefresh CurrentState.IssueFirstNOP CurrentState.WaitingForPowerUpState CurrentState.InitialisingState 
+CurrentState.InitialisingState 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+CurrentState.WaitingForPowerUpState 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 
+CurrentState.IssueFirstNOP 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 
+CurrentState.IssueSecondNOPInit10AutoRefresh 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 
+CurrentState.AutoRefreshState 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 
+CurrentState.AutoRefreshNOPOne 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 
+CurrentState.AutoRefreshNOPTwo 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 
+CurrentState.AutoRefreshNOPThree 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 
+CurrentState.ModeRegisterState 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 
+CurrentState.ModeRegisterThreeNOP 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 
+CurrentState.LoadRefreshIntervalTimerState 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 
+CurrentState.IdleState 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 
+CurrentState.IdleNOP 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 
+CurrentState.IdleRefresh 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 
+CurrentState.IdleThreeNOP 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+CurrentState.WriteSDramState 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+CurrentState.SDramWriteWait 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+CurrentState.ReadSDramState 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+CurrentState.WaitForCAS 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+CurrentState.TerminateCurrentBusCycle 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
 
 State Machine - |MC68K|OnChipM68xxIO:inst11|ACIA_6850:inst16|DCDState
 Name DCDState.DCD_State_Reset DCDState.DCD_State_Int DCDState.DCD_State_Idle 

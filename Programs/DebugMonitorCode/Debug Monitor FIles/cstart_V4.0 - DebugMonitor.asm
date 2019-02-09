@@ -1,14 +1,14 @@
 ; for initial stack use $08040000 if your system uses SRAM for main memory (top of 256kbyte SRAM space)
 ; When your system is converted to use DRAM for main memory set this constant to $0C000000 (top of 64MByte DRAM space
 
-StackPointerVal     equ $08040000      when using sram
-;StackPointerVal     equ $0C000000      when using dram
+;StackPointerVal     equ $08040000      when using sram
+StackPointerVal     equ $0C000000      when using dram
 
 ; define RamVectorTable as $0803000 if your system uses SRAM for main memory
 ; When your system is converted to use DRAM for main memory define RamVectorTable constant as $0B000000 (top of 64MByte DRAM space)
 
-RamVectorTable      equ $08030000      when using sram
-;RamVectorTable      equ $0B000000      when using dram
+;RamVectorTable      equ $08030000      when using sram
+RamVectorTable      equ $0B000000      when using dram
 
 
 

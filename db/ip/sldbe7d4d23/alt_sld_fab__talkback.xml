@@ -11,7 +11,7 @@
    <SOPCModuleParameter>
     <C>2</C>
     <Name>DESIGN_HASH</Name>
-    <Value>4bcb1d37ecbda20af753</Value>
+    <Value>5a3983ae73a5275ac0a9</Value>
    </SOPCModuleParameter>
    <SOPCModuleParameter>
     <C>3</C>
@@ -41,7 +41,7 @@
    <SOPCModuleParameter>
     <C>8</C>
     <Name>EP_INFOS</Name>
-    <Value>{hpath {OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_i764:auto_generated|sld_mod_ram_rom:mgl_prim2} } </Value>
+    <Value>{hpath {OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2} } </Value>
    </SOPCModuleParameter>
    <SOPCModuleParameter>
     <C>9</C>
@@ -69,7 +69,7 @@
     <Value>Unknown</Value>
    </SOPCModuleParameter>
   </SOPCModule>
-  <SystemID>895149372</SystemID>
+  <SystemID>1411444942</SystemID>
  </SOPCSystem>
  <SchemaVersion>schema_2013-01-18</SchemaVersion>
 </ProgramExecution>

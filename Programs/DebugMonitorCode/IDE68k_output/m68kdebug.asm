@@ -1,11 +1,11 @@
-; C:\M68KV6.0 - 800BY480 - (VERILOG) FOR STUDENTS 2\PROGRAMS\DEBUGMONITORCODE\M68KDEBUG.C - Compiled by CC68K  Version 5.00 (c) 1991-2005  Peter J. Fondse
+; C:\M68K\PROGRAMS\DEBUGMONITORCODE\DEBUG MONITOR FILES\M68KDEBUG.C - Compiled by CC68K  Version 5.00 (c) 1991-2005  Peter J. Fondse
 ; #include "DebugMonitor.h"
 ; // use 08030000 for a system running from sram or 0B000000 for system running from dram
-; #define StartOfExceptionVectorTable 0x08030000
-; //#define StartOfExceptionVectorTable 0x0B000000
+; //#define StartOfExceptionVectorTable 0x08030000
+; #define StartOfExceptionVectorTable 0x0B000000
 ; // use 0C000000 for dram or hex 08040000 for sram
-; #define TopOfStack 0x08040000
-; //#define TopOfStack 0x0C000000
+; //#define TopOfStack 0x08040000
+; #define TopOfStack 0x0C000000
 ; /* DO NOT INITIALISE GLOBAL VARIABLES - DO IT in MAIN() */
 ; unsigned int i, x, y, z, PortA_Count;
 ; int     Trace, GoFlag, Echo;                       // used in tracing/single stepping
@@ -213,7 +213,7 @@ _Oline1:
 _InstallExceptionHandler:
        link      A6,#-4
 ; volatile long int *RamVectorAddress = (volatile long int *)(StartOfExceptionVectorTable) ;   // pointer to the Ram based interrupt vector table created in Cstart in debug monitor
-       move.l    #134414336,-4(A6)
+       move.l    #184549376,-4(A6)
 ; RamVectorAddress[level] = (long int *)(function_ptr);
        move.l    -4(A6),A0
        move.l    12(A6),D0
@@ -4035,7 +4035,7 @@ MemoryTest_1:
        addq.l    #4,D2
        bra       MemoryTest_1
 MemoryTest_3:
-; } 
+; }
 ; // Read from Memory & Validate Data
 ; for(RamPtr=Start; RamPtr <= End; RamPtr+=0x1){
        move.l    D4,D2
@@ -4146,8 +4146,8 @@ _main:
        clr.l     _a0.L
 ; PC = ProgramStart, SSP=TopOfStack, USP = TopOfStack;
        move.l    #134217728,_PC.L
-       move.l    #134479872,_SSP.L
-       move.l    #134479872,_USP.L
+       move.l    #201326592,_SSP.L
+       move.l    #201326592,_USP.L
 ; SR = 0x2000;                            // clear interrupts enable tracing  uses IRQ6
        move.w    #8192,_SR.L
 ; // Initialise Breakpoint variables

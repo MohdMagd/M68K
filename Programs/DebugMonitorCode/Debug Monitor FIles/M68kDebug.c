@@ -1,12 +1,12 @@
 #include "DebugMonitor.h"
 
 // use 08030000 for a system running from sram or 0B000000 for system running from dram
-#define StartOfExceptionVectorTable 0x08030000
-//#define StartOfExceptionVectorTable 0x0B000000
+//#define StartOfExceptionVectorTable 0x08030000
+#define StartOfExceptionVectorTable 0x0B000000
 
 // use 0C000000 for dram or hex 08040000 for sram
-#define TopOfStack 0x08040000
-//#define TopOfStack 0x0C000000
+//#define TopOfStack 0x08040000
+#define TopOfStack 0x0C000000
 
 /* DO NOT INITIALISE GLOBAL VARIABLES - DO IT in MAIN() */
 unsigned int i, x, y, z, PortA_Count;
@@ -1419,7 +1419,7 @@ void MemoryTest(void)
     // Write to Memory
     for(RamPtr=Start; RamPtr <= End; RamPtr+=0x1){
         *RamPtr = 0xDEADBEEF;
-    } 
+    }
 
     // Read from Memory & Validate Data
     for(RamPtr=Start; RamPtr <= End; RamPtr+=0x1){

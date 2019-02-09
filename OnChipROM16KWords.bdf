@@ -219,6 +219,11 @@ agreement for further details.
 	(bus)
 )
 (connector
+	(pt 624 136)
+	(pt 752 136)
+	(bus)
+)
+(connector
 	(pt 256 216)
 	(pt 264 216)
 )
@@ -233,11 +238,6 @@ agreement for further details.
 (connector
 	(pt 264 72)
 	(pt 792 72)
-)
-(connector
-	(pt 624 136)
-	(pt 752 136)
-	(bus)
 )
 (junction (pt 264 216))
 (junction (pt 264 72))
