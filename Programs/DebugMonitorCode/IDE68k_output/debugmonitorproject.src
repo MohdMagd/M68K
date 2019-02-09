@@ -4429,7 +4429,7 @@ MemoryTest_1:
        addq.l    #4,D2
        bra       MemoryTest_1
 MemoryTest_3:
-; } 
+; }
 ; // Read from Memory & Validate Data
 ; for(RamPtr=Start; RamPtr <= End; RamPtr+=0x1){
        move.l    D4,D2

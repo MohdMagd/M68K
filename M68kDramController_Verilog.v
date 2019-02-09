@@ -226,28 +226,28 @@ module M68kDramController_Verilog (
 	// Let's start with default values for every signal and override as necessary, 
 	//
 	
-		Command 	<= NOP ;								// assume no operation command for Dram chip
+		Command 	<= NOP ;										// assume no operation command for Dram chip
 		NextState <= InitialisingState ;					// assume next state will always be idle state unless overridden the value used here is not important, we cimple have to assign something to prevent storage on the signal so anything will do
 		
-		TimerValue <= 16'b0000000000000000;						// no timer value 
-		RefreshTimerValue <= 16'b0000000000000000 ;				// no refresh timer value
+		TimerValue <= 16'b0000000000000000;				// no timer value 
+		RefreshTimerValue <= 16'b0000000000000000 ;	// no refresh timer value
 		TimerLoad_H <= 0;										// don't load Timer
-		RefreshTimerLoad_H <= 0 ;								// don't load refresh timer
-		DramAddress <= 13'b0000000000000 ;						// no particular dram address
-		BankAddress <= 2'b00 ;									// no particular dram bank address
-		DramDataLatch_H <= 0;									// don't latch data yet
-		CPU_Dtack_L <= 1 ;										// don't acknowledge back to 68000
-		SDramWriteData <= 16'b0000000000000000 ;				// nothing to write in particular
-		FPGAWritingtoSDram_H <= 0 ;								// default is to tri-state the FPGA data lines leading to bi-directional SDRam data lines, i.e. assume a read operation
+		RefreshTimerLoad_H <= 0 ;							// don't load refresh timer
+		DramAddress <= 13'b0000000000000 ;				// no particular dram address
+		BankAddress <= 2'b00 ;								// no particular dram bank address
+		DramDataLatch_H <= 0;								// don't latch data yet
+		CPU_Dtack_L <= 1 ;									// don't acknowledge back to 68000
+		SDramWriteData <= 16'b0000000000000000 ;		// nothing to write in particular
+		FPGAWritingtoSDram_H <= 0 ;						// default is to tri-state the FPGA data lines leading to bi-directional SDRam data lines, i.e. assume a read operation
 
 		// put your current state/next state decision making logic here - here are a few states to get you started
 		// during the initialising state, the drams have to power up and we cannot access them for a specified period of time (100 us)
 		// we are going to load the timer above with a value equiv to 100us and then wait for timer to time out
 	
 		if(CurrentState == InitialisingState) begin
-			// TimerValue <= 16'b0001001110001000;		// chose a value equivalent to 100us at 50Mhz clock
-			TimerValue <= 16'b0000000000100000;			// 16 cycles
-			TimerLoad_H <= 1;							// on next edge of clock, timer will be loaded and start to time out
+			TimerValue <= 16'b0001001110001000;			// chose a value equivalent to 100us at 50Mhz clock
+			// TimerValue <= 16'b0000000000100000;		// 16 cycles - for simulation purposes!
+			TimerLoad_H <= 1;									// on next edge of clock, timer will be loaded and start to time out
 			CPUReset_L <= 0;
 			Command <= PoweringUp ;	
 			NextState <= WaitingForPowerUpState ;		// once we have loaded the timer, go to a new state where we wait for the 100us to elapse
@@ -257,22 +257,22 @@ module M68kDramController_Verilog (
 			Command <= PoweringUp ;
 			CPUReset_L <= 0;	
 
-			if(TimerDone_H == 1) 						// if timer has timed out i.e. 100us have elapsed
+			if(TimerDone_H == 1) 							// if timer has timed out i.e. 100us have elapsed
 				NextState <= IssueFirstNOP ;	
 			else
 				NextState <= WaitingForPowerUpState ;	// otherwise stay here until power up time delay finished
 		end
 		
-		else if(CurrentState == IssueFirstNOP) begin	// issue a valid NOP
-			Command <= NOP ;							// send a valid NOP command to to the dram chip
+		else if(CurrentState == IssueFirstNOP) begin			// issue a valid NOP
+			Command <= NOP ;											// send a valid NOP command to to the dram chip
 			NextState <= IssueSecondNOPInit10AutoRefresh;
 		end		
 
 		else if(CurrentState == IssueSecondNOPInit10AutoRefresh) begin	 			
-			Command <= NOP ;							// send a valid NOP command to to the dram chip
+			Command <= NOP ;									// send a valid NOP command to to the dram chip
 
 			TimerValue <= 16'b0000000000101000;			// 40 cycles intialization
-			TimerLoad_H <= 1;							// on next edge of clock, timer will be loaded and start to time out
+			TimerLoad_H <= 1;									// on next edge of clock, timer will be loaded and start to time out
 			NextState <= AutoRefreshState;	
 
 		end
@@ -317,9 +317,9 @@ module M68kDramController_Verilog (
 		end
 
 		else if(CurrentState == LoadRefreshIntervalTimerState) begin
-			RefreshTimerValue <= 16'b000000000000100000; 				
-			// RefreshTimerValue <= 16'b0000000101110111;				// 7.5us
-			RefreshTimerLoad_H <= 1 ;									// on next edge of clock, timer will be loaded and start to time out
+			// RefreshTimerValue <= 16'b000000000000100000; 		// 32 cycles - for simulation purposes!		
+			RefreshTimerValue <= 16'b0000000101110111;				// 7.5us
+			RefreshTimerLoad_H <= 1 ;										// on next edge of clock, timer will be loaded and start to time out
 	
 			NextState <= IdleState ;				
 		end
@@ -348,13 +348,15 @@ module M68kDramController_Verilog (
 
 			if (UDS_L == 0 || LDS_L == 0) begin
 
-				DramAddress[9:0] <= Address[10:1]; 
 				// Column Address
+				DramAddress[9:0] <= Address[10:1]; 
 				DramAddress[10] <= 1;
+				
 				BankAddress <= Address[25:24];
+				
 				Command <= WriteAutoPrecharge;
 				CPU_Dtack_L <= 0;
-
+				
 				SDramWriteData <= DataIn;
 				FPGAWritingtoSDram_H <= 1;
 
@@ -377,16 +379,17 @@ module M68kDramController_Verilog (
 
 		else if (CurrentState == ReadSDramState) begin 
 			CPUReset_L <= 1;
+			
 			// Column Address
 			DramAddress[9:0] <= Address[10:1];
 			DramAddress[10] <= 1;
+			
 			BankAddress <= Address[25:24];
 			Command <= ReadAutoPrecharge;
 
 			TimerLoad_H <= 1;
 			TimerValue <= 16'b0000000000000010;
 			NextState <= WaitForCAS;
-
 		end
 
 		else if (CurrentState == WaitForCAS) begin
@@ -397,6 +400,7 @@ module M68kDramController_Verilog (
 			if(TimerDone_H == 1) begin
 				DramDataLatch_H <= 1;								
 				NextState <= TerminateCurrentBusCycle;
+				
 			end else NextState <= WaitForCAS;
 		end
 

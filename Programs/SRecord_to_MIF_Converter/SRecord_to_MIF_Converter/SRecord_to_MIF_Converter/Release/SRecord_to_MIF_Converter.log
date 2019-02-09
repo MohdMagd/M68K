@@ -26,8 +26,8 @@ c:\m68k\programs\srecord_to_mif_converter\srecord_to_mif_converter\srecord_to_mi
 c:\m68k\programs\srecord_to_mif_converter\srecord_to_mif_converter\srecord_to_mif_converter\stomifconverterv6.cpp(119): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(2263): note: see declaration of 'sscanf'
   Generating code
-  Finished generating code
-  0 of 8 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  1 of 8 functions (12.5%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
   SRecord_to_MIF_Converter.vcxproj -> C:\M68K\Programs\SRecord_to_MIF_Converter\SRecord_to_MIF_Converter\Release\SRecord_to_MIF_Converter.exe

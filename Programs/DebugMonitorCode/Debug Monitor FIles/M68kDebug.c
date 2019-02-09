@@ -1419,7 +1419,7 @@ void MemoryTest(void)
     // Write to Memory
     for(RamPtr=Start; RamPtr <= End; RamPtr+=0x1){
         *RamPtr = 0xDEADBEEF;
-    } 
+    }
 
     // Read from Memory & Validate Data
     for(RamPtr=Start; RamPtr <= End; RamPtr+=0x1){

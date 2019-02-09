@@ -1,5 +1,5 @@
 Analysis & Synthesis report for MC68K
-Fri Feb 08 21:20:03 2019
+Sat Feb 09 13:22:05 2019
 Quartus II 64-Bit Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
 
 
@@ -31,7 +31,7 @@ Quartus II 64-Bit Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
  23. Registers Packed Into Inferred Megafunctions
  24. Multiplexer Restructuring Statistics (No Restructuring Performed)
  25. Source assignments for Video_Controller800x480:inst1|ColourPallette_2PortRam:inst3|altsyncram:altsyncram_component|altsyncram_b634:auto_generated
- 26. Source assignments for OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|altsyncram_h163:altsyncram1
+ 26. Source assignments for OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1
  27. Source assignments for OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated
  28. Source assignments for OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated
  29. Source assignments for M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_low_rtl_0|altsyncram_uvj1:auto_generated
@@ -46,7 +46,7 @@ Quartus II 64-Bit Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
  38. Parameter Settings for User Entity Instance: Video_Controller800x480:inst1|ColourPallette_2PortRam:inst3|altsyncram:altsyncram_component
  39. Parameter Settings for User Entity Instance: Video_Controller800x480:inst1|GraphicsController_Verilog:inst1
  40. Parameter Settings for User Entity Instance: OnChipROM16KWords:inst16|lpm_bustri0:inst|lpm_bustri:lpm_bustri_component
- 41. Parameter Settings for User Entity Instance: OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component
+ 41. Parameter Settings for User Entity Instance: OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component
  42. Parameter Settings for User Entity Instance: lpm_bustri:inst22
  43. Parameter Settings for User Entity Instance: OnChipRam256kbyte:inst6|lpm_bustri2:inst1|lpm_bustri:lpm_bustri_component
  44. Parameter Settings for User Entity Instance: OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component
@@ -95,7 +95,7 @@ agreement for further details.
 +------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                 ;
 +---------------------------------+--------------------------------------------+
-; Analysis & Synthesis Status     ; Successful - Fri Feb 08 21:20:03 2019      ;
+; Analysis & Synthesis Status     ; Successful - Sat Feb 09 13:22:04 2019      ;
 ; Quartus II 64-Bit Version       ; 15.0.0 Build 145 04/22/2015 SJ Web Edition ;
 ; Revision Name                   ; MC68K                                      ;
 ; Top-level Entity Name           ; MC68K                                      ;
@@ -283,9 +283,9 @@ agreement for further details.
 ; ColourPallette_2PortRam.mif                                        ; yes             ; Auto-Found Memory Initialization File        ; C:/M68K/ColourPallette_2PortRam.mif                                              ;             ;
 ; graphicscontroller_verilog.v                                       ; yes             ; Auto-Found Verilog HDL File                  ; C:/M68K/graphicscontroller_verilog.v                                             ;             ;
 ; vgadatamux_verilog.v                                               ; yes             ; Auto-Found Verilog HDL File                  ; C:/M68K/vgadatamux_verilog.v                                                     ;             ;
-; db/altsyncram_6c54.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/altsyncram_6c54.tdf                                                   ;             ;
-; db/altsyncram_h163.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/altsyncram_h163.tdf                                                   ;             ;
-; ../M68kdebugmonitor.mif                                            ; yes             ; Auto-Found Memory Initialization File        ; C:/M68K/M68kdebugmonitor.mif                                                     ;             ;
+; db/altsyncram_3l64.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/altsyncram_3l64.tdf                                                   ;             ;
+; db/altsyncram_ea73.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/altsyncram_ea73.tdf                                                   ;             ;
+; ./Programs/debugmonitorproject.mif                                 ; yes             ; Auto-Found Memory Initialization File        ; C:/M68K/Programs/debugmonitorproject.mif                                         ;             ;
 ; db/decode_5la.tdf                                                  ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/decode_5la.tdf                                                        ;             ;
 ; db/decode_u0a.tdf                                                  ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/decode_u0a.tdf                                                        ;             ;
 ; db/mux_4hb.tdf                                                     ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/mux_4hb.tdf                                                           ;             ;
@@ -314,14 +314,14 @@ agreement for further details.
 +---------------------------------------------+-----------------------------------------------------------------------------------+
 ; Resource                                    ; Usage                                                                             ;
 +---------------------------------------------+-----------------------------------------------------------------------------------+
-; Estimate of Logic utilization (ALMs needed) ; 2660                                                                              ;
+; Estimate of Logic utilization (ALMs needed) ; 2619                                                                              ;
 ;                                             ;                                                                                   ;
-; Combinational ALUT usage for logic          ; 4071                                                                              ;
-;     -- 7 input functions                    ; 125                                                                               ;
-;     -- 6 input functions                    ; 1082                                                                              ;
-;     -- 5 input functions                    ; 992                                                                               ;
-;     -- 4 input functions                    ; 656                                                                               ;
-;     -- <=3 input functions                  ; 1216                                                                              ;
+; Combinational ALUT usage for logic          ; 4023                                                                              ;
+;     -- 7 input functions                    ; 136                                                                               ;
+;     -- 6 input functions                    ; 1037                                                                              ;
+;     -- 5 input functions                    ; 1009                                                                              ;
+;     -- 4 input functions                    ; 659                                                                               ;
+;     -- <=3 input functions                  ; 1182                                                                              ;
 ;                                             ;                                                                                   ;
 ; Dedicated logic registers                   ; 1211                                                                              ;
 ;                                             ;                                                                                   ;
@@ -336,8 +336,8 @@ agreement for further details.
 ;                                             ;                                                                                   ;
 ; Maximum fan-out node                        ; ClockGen:inst7|ClockGen_0002:clockgen_inst|altera_pll:altera_pll_i|outclk_wire[0] ;
 ; Maximum fan-out                             ; 1277                                                                              ;
-; Total fan-out                               ; 28978                                                                             ;
-; Average fan-out                             ; 4.70                                                                              ;
+; Total fan-out                               ; 28784                                                                             ;
+; Average fan-out                             ; 4.71                                                                              ;
 +---------------------------------------------+-----------------------------------------------------------------------------------+
 
 
@@ -346,21 +346,21 @@ agreement for further details.
 +-----------------------------------------------------------------------------------------------------+-------------------+--------------+-------------------+------------+------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
 ; Compilation Hierarchy Node                                                                          ; LC Combinationals ; LC Registers ; Block Memory Bits ; DSP Blocks ; Pins ; Virtual Pins ; Full Hierarchy Name                                                                                                                                                                                                                                                        ; Library Name ;
 +-----------------------------------------------------------------------------------------------------+-------------------+--------------+-------------------+------------+------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-; |MC68K                                                                                              ; 4071 (6)          ; 1211 (0)     ; 2360432           ; 0          ; 238  ; 0            ; |MC68K                                                                                                                                                                                                                                                                     ; work         ;
-;    |AddressDecoder:inst3|                                                                           ; 14 (14)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|AddressDecoder:inst3                                                                                                                                                                                                                                                ; work         ;
+; |MC68K                                                                                              ; 4023 (6)          ; 1211 (0)     ; 2360432           ; 0          ; 238  ; 0            ; |MC68K                                                                                                                                                                                                                                                                     ; work         ;
+;    |AddressDecoder:inst3|                                                                           ; 15 (15)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|AddressDecoder:inst3                                                                                                                                                                                                                                                ; work         ;
 ;    |ClockGen:inst7|                                                                                 ; 0 (0)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|ClockGen:inst7                                                                                                                                                                                                                                                      ; clockgen     ;
 ;       |ClockGen_0002:clockgen_inst|                                                                 ; 0 (0)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|ClockGen:inst7|ClockGen_0002:clockgen_inst                                                                                                                                                                                                                          ; ClockGen     ;
 ;          |altera_pll:altera_pll_i|                                                                  ; 0 (0)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|ClockGen:inst7|ClockGen_0002:clockgen_inst|altera_pll:altera_pll_i                                                                                                                                                                                                  ; work         ;
-;    |Dram:inst2|                                                                                     ; 166 (1)           ; 121 (0)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|Dram:inst2                                                                                                                                                                                                                                                          ; work         ;
+;    |Dram:inst2|                                                                                     ; 160 (1)           ; 121 (0)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|Dram:inst2                                                                                                                                                                                                                                                          ; work         ;
 ;       |M68kDramController_Verilog:inst1|                                                            ; 139 (139)         ; 121 (121)    ; 0                 ; 0          ; 0    ; 0            ; |MC68K|Dram:inst2|M68kDramController_Verilog:inst1                                                                                                                                                                                                                         ; work         ;
-;       |lpm_bustri0:inst2|                                                                           ; 26 (0)            ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|Dram:inst2|lpm_bustri0:inst2                                                                                                                                                                                                                                        ; work         ;
-;          |lpm_bustri:lpm_bustri_component|                                                          ; 26 (26)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|Dram:inst2|lpm_bustri0:inst2|lpm_bustri:lpm_bustri_component                                                                                                                                                                                                        ; work         ;
+;       |lpm_bustri0:inst2|                                                                           ; 20 (0)            ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|Dram:inst2|lpm_bustri0:inst2                                                                                                                                                                                                                                        ; work         ;
+;          |lpm_bustri:lpm_bustri_component|                                                          ; 20 (20)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|Dram:inst2|lpm_bustri0:inst2|lpm_bustri:lpm_bustri_component                                                                                                                                                                                                        ; work         ;
 ;    |Dtack_Generator:inst|                                                                           ; 1 (1)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|Dtack_Generator:inst                                                                                                                                                                                                                                                ; work         ;
 ;    |InterruptPriorityEncoder:inst28|                                                                ; 3 (3)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|InterruptPriorityEncoder:inst28                                                                                                                                                                                                                                     ; work         ;
-;    |M68000CPU:inst17|                                                                               ; 2582 (0)          ; 478 (0)      ; 1088              ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17                                                                                                                                                                                                                                                    ; work         ;
+;    |M68000CPU:inst17|                                                                               ; 2527 (0)          ; 478 (0)      ; 1088              ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17                                                                                                                                                                                                                                                    ; work         ;
 ;       |BusRequestLogic:inst1|                                                                       ; 3 (3)             ; 3 (3)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|BusRequestLogic:inst1                                                                                                                                                                                                                              ; work         ;
-;       |TG68:inst|                                                                                   ; 2579 (20)         ; 475 (14)     ; 1088              ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst                                                                                                                                                                                                                                          ; work         ;
-;          |TG68_fast:TG68_fast_inst|                                                                 ; 2559 (2559)       ; 461 (461)    ; 1088              ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst                                                                                                                                                                                                                 ; work         ;
+;       |TG68:inst|                                                                                   ; 2524 (20)         ; 475 (14)     ; 1088              ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst                                                                                                                                                                                                                                          ; work         ;
+;          |TG68_fast:TG68_fast_inst|                                                                 ; 2504 (2504)       ; 461 (461)    ; 1088              ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst                                                                                                                                                                                                                 ; work         ;
 ;             |altsyncram:regfile_high_rtl_0|                                                         ; 0 (0)             ; 0 (0)        ; 272               ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_high_rtl_0                                                                                                                                                                                   ; work         ;
 ;                |altsyncram_uvj1:auto_generated|                                                     ; 0 (0)             ; 0 (0)        ; 272               ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_high_rtl_0|altsyncram_uvj1:auto_generated                                                                                                                                                    ; work         ;
 ;             |altsyncram:regfile_high_rtl_1|                                                         ; 0 (0)             ; 0 (0)        ; 272               ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_high_rtl_1                                                                                                                                                                                   ; work         ;
@@ -369,7 +369,7 @@ agreement for further details.
 ;                |altsyncram_uvj1:auto_generated|                                                     ; 0 (0)             ; 0 (0)        ; 272               ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_low_rtl_0|altsyncram_uvj1:auto_generated                                                                                                                                                     ; work         ;
 ;             |altsyncram:regfile_low_rtl_1|                                                          ; 0 (0)             ; 0 (0)        ; 272               ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_low_rtl_1                                                                                                                                                                                    ; work         ;
 ;                |altsyncram_uvj1:auto_generated|                                                     ; 0 (0)             ; 0 (0)        ; 272               ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_low_rtl_1|altsyncram_uvj1:auto_generated                                                                                                                                                     ; work         ;
-;    |OnChipIO:inst8|                                                                                 ; 707 (0)           ; 335 (0)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8                                                                                                                                                                                                                                                      ; work         ;
+;    |OnChipIO:inst8|                                                                                 ; 714 (0)           ; 335 (0)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8                                                                                                                                                                                                                                                      ; work         ;
 ;       |HexTo7SegmentDisplay:inst10|                                                                 ; 14 (14)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst10                                                                                                                                                                                                                          ; work         ;
 ;       |HexTo7SegmentDisplay:inst11|                                                                 ; 14 (14)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst11                                                                                                                                                                                                                          ; work         ;
 ;       |HexTo7SegmentDisplay:inst21|                                                                 ; 14 (14)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst21                                                                                                                                                                                                                          ; work         ;
@@ -380,7 +380,7 @@ agreement for further details.
 ;       |Latch8Bit:inst4|                                                                             ; 0 (0)             ; 8 (8)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|Latch8Bit:inst4                                                                                                                                                                                                                                      ; work         ;
 ;       |Latch8Bit:inst8|                                                                             ; 0 (0)             ; 2 (2)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|Latch8Bit:inst8                                                                                                                                                                                                                                      ; work         ;
 ;       |Latch8Bit:inst|                                                                              ; 0 (0)             ; 8 (8)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|Latch8Bit:inst                                                                                                                                                                                                                                       ; work         ;
-;       |Timer:Timer1|                                                                                ; 113 (113)         ; 35 (35)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|Timer:Timer1                                                                                                                                                                                                                                         ; work         ;
+;       |Timer:Timer1|                                                                                ; 123 (123)         ; 35 (35)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|Timer:Timer1                                                                                                                                                                                                                                         ; work         ;
 ;       |Timer:Timer2|                                                                                ; 69 (69)           ; 35 (35)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|Timer:Timer2                                                                                                                                                                                                                                         ; work         ;
 ;       |Timer:Timer3|                                                                                ; 69 (69)           ; 35 (35)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|Timer:Timer3                                                                                                                                                                                                                                         ; work         ;
 ;       |Timer:Timer4|                                                                                ; 67 (67)           ; 35 (35)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|Timer:Timer4                                                                                                                                                                                                                                         ; work         ;
@@ -389,8 +389,8 @@ agreement for further details.
 ;       |Timer:Timer7|                                                                                ; 66 (66)           ; 35 (35)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|Timer:Timer7                                                                                                                                                                                                                                         ; work         ;
 ;       |Timer:Timer8|                                                                                ; 67 (67)           ; 35 (35)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|Timer:Timer8                                                                                                                                                                                                                                         ; work         ;
 ;       |TraceExceptionControlBit:inst16|                                                             ; 1 (1)             ; 1 (1)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|TraceExceptionControlBit:inst16                                                                                                                                                                                                                      ; work         ;
-;       |lpm_bustri2:inst15|                                                                          ; 13 (0)            ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|lpm_bustri2:inst15                                                                                                                                                                                                                                   ; work         ;
-;          |lpm_bustri:lpm_bustri_component|                                                          ; 13 (13)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|lpm_bustri2:inst15|lpm_bustri:lpm_bustri_component                                                                                                                                                                                                   ; work         ;
+;       |lpm_bustri2:inst15|                                                                          ; 10 (0)            ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|lpm_bustri2:inst15                                                                                                                                                                                                                                   ; work         ;
+;          |lpm_bustri:lpm_bustri_component|                                                          ; 10 (10)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|lpm_bustri2:inst15|lpm_bustri:lpm_bustri_component                                                                                                                                                                                                   ; work         ;
 ;       |lpm_bustri2:inst17|                                                                          ; 7 (0)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|lpm_bustri2:inst17                                                                                                                                                                                                                                   ; work         ;
 ;          |lpm_bustri:lpm_bustri_component|                                                          ; 7 (7)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|lpm_bustri2:inst17|lpm_bustri:lpm_bustri_component                                                                                                                                                                                                   ; work         ;
 ;    |OnChipM68xxIO:inst11|                                                                           ; 143 (0)           ; 115 (0)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipM68xxIO:inst11                                                                                                                                                                                                                                                ; work         ;
@@ -401,17 +401,17 @@ agreement for further details.
 ;          |ACIA_Clock:inst20|                                                                        ; 44 (44)           ; 13 (13)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipM68xxIO:inst11|ACIA_BaudRate_Generator:inst1|ACIA_Clock:inst20                                                                                                                                                                                                ; work         ;
 ;          |Latch3Bit:inst1|                                                                          ; 0 (0)             ; 3 (3)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipM68xxIO:inst11|ACIA_BaudRate_Generator:inst1|Latch3Bit:inst1                                                                                                                                                                                                  ; work         ;
 ;       |M68xxIODecoder:inst|                                                                         ; 4 (4)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipM68xxIO:inst11|M68xxIODecoder:inst                                                                                                                                                                                                                            ; work         ;
-;    |OnChipROM16KWords:inst16|                                                                       ; 134 (0)           ; 51 (0)       ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16                                                                                                                                                                                                                                            ; work         ;
-;       |OnChipRom16KWord:inst3|                                                                      ; 112 (0)           ; 51 (0)       ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst3                                                                                                                                                                                                                     ; work         ;
-;          |altsyncram:altsyncram_component|                                                          ; 112 (0)           ; 51 (0)       ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component                                                                                                                                                                                     ; work         ;
-;             |altsyncram_6c54:auto_generated|                                                        ; 112 (0)           ; 51 (0)       ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated                                                                                                                                                      ; work         ;
-;                |altsyncram_h163:altsyncram1|                                                        ; 2 (0)             ; 1 (1)        ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|altsyncram_h163:altsyncram1                                                                                                                          ; work         ;
-;                   |decode_5la:decode5|                                                              ; 2 (2)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|altsyncram_h163:altsyncram1|decode_5la:decode5                                                                                                       ; work         ;
-;                |sld_mod_ram_rom:mgl_prim2|                                                          ; 110 (92)          ; 50 (41)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|sld_mod_ram_rom:mgl_prim2                                                                                                                            ; work         ;
-;                   |sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr|                              ; 18 (18)           ; 9 (9)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr                                                                         ; work         ;
-;       |lpm_bustri0:inst|                                                                            ; 22 (0)            ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|lpm_bustri0:inst                                                                                                                                                                                                                           ; work         ;
-;          |lpm_bustri:lpm_bustri_component|                                                          ; 22 (22)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|lpm_bustri0:inst|lpm_bustri:lpm_bustri_component                                                                                                                                                                                           ; work         ;
-;    |OnChipRam256kbyte:inst6|                                                                        ; 134 (2)           ; 4 (0)        ; 2097152           ; 0          ; 0    ; 0            ; |MC68K|OnChipRam256kbyte:inst6                                                                                                                                                                                                                                             ; work         ;
+;    |OnChipROM16KWords:inst16|                                                                       ; 138 (0)           ; 51 (0)       ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16                                                                                                                                                                                                                                            ; work         ;
+;       |OnChipRom16KWord:inst1|                                                                      ; 112 (0)           ; 51 (0)       ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1                                                                                                                                                                                                                     ; work         ;
+;          |altsyncram:altsyncram_component|                                                          ; 112 (0)           ; 51 (0)       ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component                                                                                                                                                                                     ; work         ;
+;             |altsyncram_3l64:auto_generated|                                                        ; 112 (0)           ; 51 (0)       ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated                                                                                                                                                      ; work         ;
+;                |altsyncram_ea73:altsyncram1|                                                        ; 2 (0)             ; 1 (1)        ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1                                                                                                                          ; work         ;
+;                   |decode_5la:decode5|                                                              ; 2 (2)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1|decode_5la:decode5                                                                                                       ; work         ;
+;                |sld_mod_ram_rom:mgl_prim2|                                                          ; 110 (92)          ; 50 (41)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2                                                                                                                            ; work         ;
+;                   |sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr|                              ; 18 (18)           ; 9 (9)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr                                                                         ; work         ;
+;       |lpm_bustri0:inst|                                                                            ; 26 (0)            ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|lpm_bustri0:inst                                                                                                                                                                                                                           ; work         ;
+;          |lpm_bustri:lpm_bustri_component|                                                          ; 26 (26)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|lpm_bustri0:inst|lpm_bustri:lpm_bustri_component                                                                                                                                                                                           ; work         ;
+;    |OnChipRam256kbyte:inst6|                                                                        ; 135 (2)           ; 4 (0)        ; 2097152           ; 0          ; 0    ; 0            ; |MC68K|OnChipRam256kbyte:inst6                                                                                                                                                                                                                                             ; work         ;
 ;       |Ram128kByte:inst12|                                                                          ; 73 (0)            ; 0 (0)        ; 1048576           ; 0          ; 0    ; 0            ; |MC68K|OnChipRam256kbyte:inst6|Ram128kByte:inst12                                                                                                                                                                                                                          ; work         ;
 ;          |altsyncram:altsyncram_component|                                                          ; 73 (0)            ; 0 (0)        ; 1048576           ; 0          ; 0    ; 0            ; |MC68K|OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component                                                                                                                                                                                          ; work         ;
 ;             |altsyncram_hb04:auto_generated|                                                        ; 73 (0)            ; 0 (0)        ; 1048576           ; 0          ; 0    ; 0            ; |MC68K|OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated                                                                                                                                                           ; work         ;
@@ -424,6 +424,8 @@ agreement for further details.
 ;                |decode_m2a:rden_decode|                                                             ; 1 (1)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|decode_m2a:rden_decode                                                                                                                                    ; work         ;
 ;                |decode_tma:decode3|                                                                 ; 18 (18)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|decode_tma:decode3                                                                                                                                        ; work         ;
 ;                |mux_dhb:mux2|                                                                       ; 40 (40)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|mux_dhb:mux2                                                                                                                                              ; work         ;
+;       |lpm_bustri2:inst1|                                                                           ; 1 (0)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipRam256kbyte:inst6|lpm_bustri2:inst1                                                                                                                                                                                                                           ; work         ;
+;          |lpm_bustri:lpm_bustri_component|                                                          ; 1 (1)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipRam256kbyte:inst6|lpm_bustri2:inst1|lpm_bustri:lpm_bustri_component                                                                                                                                                                                           ; work         ;
 ;    |TraceExceptionGenerator:inst30|                                                                 ; 4 (4)             ; 1 (1)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|TraceExceptionGenerator:inst30                                                                                                                                                                                                                                      ; work         ;
 ;    |Video_Controller800x480:inst1|                                                                  ; 77 (0)            ; 26 (0)       ; 48                ; 0          ; 0    ; 0            ; |MC68K|Video_Controller800x480:inst1                                                                                                                                                                                                                                       ; work         ;
 ;       |ColourPallette_2PortRam:inst3|                                                               ; 0 (0)             ; 0 (0)        ; 48                ; 0          ; 0    ; 0            ; |MC68K|Video_Controller800x480:inst1|ColourPallette_2PortRam:inst3                                                                                                                                                                                                         ; work         ;
@@ -433,29 +435,29 @@ agreement for further details.
 ;    |sld_hub:auto_hub|                                                                               ; 100 (1)           ; 80 (0)       ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub                                                                                                                                                                                                                                                    ; altera_sld   ;
 ;       |alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric| ; 99 (0)            ; 80 (0)       ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric                                                                                                                                                        ; alt_sld_fab  ;
 ;          |alt_sld_fab_alt_sld_fab:alt_sld_fab|                                                      ; 99 (1)            ; 80 (5)       ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab                                                                                                                    ; alt_sld_fab  ;
-;             |alt_sld_fab_alt_sld_fab_ident:ident|                                                   ; 2 (2)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_ident:ident                                                                                ; alt_sld_fab  ;
-;             |alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|                                           ; 96 (0)            ; 75 (0)       ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric                                                                        ; alt_sld_fab  ;
-;                |sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub|                                       ; 96 (60)           ; 75 (47)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub                           ; work         ;
+;             |alt_sld_fab_alt_sld_fab_ident:ident|                                                   ; 3 (3)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_ident:ident                                                                                ; alt_sld_fab  ;
+;             |alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|                                           ; 95 (0)            ; 75 (0)       ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric                                                                        ; alt_sld_fab  ;
+;                |sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub|                                       ; 95 (59)           ; 75 (47)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub                           ; work         ;
 ;                   |sld_rom_sr:hub_info_reg|                                                         ; 17 (17)           ; 9 (9)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub|sld_rom_sr:hub_info_reg   ; work         ;
 ;                   |sld_shadow_jsm:shadow_jsm|                                                       ; 19 (19)           ; 19 (19)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub|sld_shadow_jsm:shadow_jsm ; altera_sld   ;
 +-----------------------------------------------------------------------------------------------------+-------------------+--------------+-------------------+------------+------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
 Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
 
 
-+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis RAM Summary                                                                                                                                                                                                                                                    ;
-+-------------------------------------------------------------------------------------------------------------------------------------------------------+------+------------------+--------------+--------------+--------------+--------------+---------+-----------------------------+
-; Name                                                                                                                                                  ; Type ; Mode             ; Port A Depth ; Port A Width ; Port B Depth ; Port B Width ; Size    ; MIF                         ;
-+-------------------------------------------------------------------------------------------------------------------------------------------------------+------+------------------+--------------+--------------+--------------+--------------+---------+-----------------------------+
-; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_high_rtl_0|altsyncram_uvj1:auto_generated|ALTSYNCRAM                           ; AUTO ; Simple Dual Port ; 17           ; 16           ; 17           ; 16           ; 272     ; None                        ;
-; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_high_rtl_1|altsyncram_uvj1:auto_generated|ALTSYNCRAM                           ; AUTO ; Simple Dual Port ; 17           ; 16           ; 17           ; 16           ; 272     ; None                        ;
-; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_low_rtl_0|altsyncram_uvj1:auto_generated|ALTSYNCRAM                            ; AUTO ; Simple Dual Port ; 17           ; 16           ; 17           ; 16           ; 272     ; None                        ;
-; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_low_rtl_1|altsyncram_uvj1:auto_generated|ALTSYNCRAM                            ; AUTO ; Simple Dual Port ; 17           ; 16           ; 17           ; 16           ; 272     ; None                        ;
-; OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|altsyncram_h163:altsyncram1|ALTSYNCRAM ; AUTO ; True Dual Port   ; 16384        ; 16           ; 16384        ; 16           ; 262144  ; ../M68kdebugmonitor.mif     ;
-; OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|ALTSYNCRAM                                  ; AUTO ; Single Port      ; 131072       ; 8            ; --           ; --           ; 1048576 ; None                        ;
-; OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|ALTSYNCRAM                                  ; AUTO ; Single Port      ; 131072       ; 8            ; --           ; --           ; 1048576 ; None                        ;
-; Video_Controller800x480:inst1|ColourPallette_2PortRam:inst3|altsyncram:altsyncram_component|altsyncram_b634:auto_generated|ALTSYNCRAM                 ; AUTO ; Simple Dual Port ; 64           ; 24           ; 64           ; 24           ; 1536    ; ColourPallette_2PortRam.mif ;
-+-------------------------------------------------------------------------------------------------------------------------------------------------------+------+------------------+--------------+--------------+--------------+--------------+---------+-----------------------------+
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis RAM Summary                                                                                                                                                                                                                                                           ;
++-------------------------------------------------------------------------------------------------------------------------------------------------------+------+------------------+--------------+--------------+--------------+--------------+---------+------------------------------------+
+; Name                                                                                                                                                  ; Type ; Mode             ; Port A Depth ; Port A Width ; Port B Depth ; Port B Width ; Size    ; MIF                                ;
++-------------------------------------------------------------------------------------------------------------------------------------------------------+------+------------------+--------------+--------------+--------------+--------------+---------+------------------------------------+
+; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_high_rtl_0|altsyncram_uvj1:auto_generated|ALTSYNCRAM                           ; AUTO ; Simple Dual Port ; 17           ; 16           ; 17           ; 16           ; 272     ; None                               ;
+; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_high_rtl_1|altsyncram_uvj1:auto_generated|ALTSYNCRAM                           ; AUTO ; Simple Dual Port ; 17           ; 16           ; 17           ; 16           ; 272     ; None                               ;
+; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_low_rtl_0|altsyncram_uvj1:auto_generated|ALTSYNCRAM                            ; AUTO ; Simple Dual Port ; 17           ; 16           ; 17           ; 16           ; 272     ; None                               ;
+; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_low_rtl_1|altsyncram_uvj1:auto_generated|ALTSYNCRAM                            ; AUTO ; Simple Dual Port ; 17           ; 16           ; 17           ; 16           ; 272     ; None                               ;
+; OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1|ALTSYNCRAM ; AUTO ; True Dual Port   ; 16384        ; 16           ; 16384        ; 16           ; 262144  ; ./Programs/debugmonitorproject.mif ;
+; OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|ALTSYNCRAM                                  ; AUTO ; Single Port      ; 131072       ; 8            ; --           ; --           ; 1048576 ; None                               ;
+; OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|ALTSYNCRAM                                  ; AUTO ; Single Port      ; 131072       ; 8            ; --           ; --           ; 1048576 ; None                               ;
+; Video_Controller800x480:inst1|ColourPallette_2PortRam:inst3|altsyncram:altsyncram_component|altsyncram_b634:auto_generated|ALTSYNCRAM                 ; AUTO ; Simple Dual Port ; 64           ; 24           ; 64           ; 24           ; 1536    ; ColourPallette_2PortRam.mif        ;
++-------------------------------------------------------------------------------------------------------------------------------------------------------+------+------------------+--------------+--------------+--------------+--------------+---------+------------------------------------+
 
 
 +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -479,7 +481,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; Altera ; LPM_BUSTRI   ; 9.0     ; N/A          ; N/A          ; |MC68K|OnChipIO:inst8|lpm_bustri2:inst13                                                                                                                                                            ; lpm_bustri2.vhd      ;
 ; Altera ; LPM_BUSTRI   ; 9.0     ; N/A          ; N/A          ; |MC68K|OnChipIO:inst8|lpm_bustri2:inst15                                                                                                                                                            ; lpm_bustri2.vhd      ;
 ; Altera ; LPM_BUSTRI   ; 9.0     ; N/A          ; N/A          ; |MC68K|OnChipIO:inst8|lpm_bustri2:inst17                                                                                                                                                            ; lpm_bustri2.vhd      ;
-; Altera ; ROM: 1-PORT  ; 15.0    ; N/A          ; N/A          ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst3                                                                                                                                              ; OnChipRom16KWord.vhd ;
+; Altera ; ROM: 1-PORT  ; 15.0    ; N/A          ; N/A          ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1                                                                                                                                              ; OnChipRom16KWord.vhd ;
 ; Altera ; LPM_BUSTRI   ; 9.0     ; N/A          ; N/A          ; |MC68K|IIC_SPI_Interface:inst32|lpm_bustri2:inst21                                                                                                                                                  ; lpm_bustri2.vhd      ;
 +--------+--------------+---------+--------------+--------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------+
 
@@ -724,7 +726,7 @@ Note: All latches listed above may not be present at the end of synthesis due to
 ; OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[3]                                  ; Merged with OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[3] ;
 ; OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[2]                                  ; Merged with OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[2] ;
 ; OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[1]                                  ; Merged with OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[1] ;
-; OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|altsyncram_h163:altsyncram1|address_reg_a[0] ; Merged with OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[0] ;
+; OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1|address_reg_a[0] ; Merged with OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[0] ;
 ; OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[0]                                  ; Merged with OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[0] ;
 ; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|trap_vector[1]                                                                                          ; Merged with M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|trap_vector[0]                                                         ;
 ; OnChipM68xxIO:inst11|ACIA_6850:inst16|ACIA_RX:RxDev|RxClkDel                                                                                                ; Merged with OnChipM68xxIO:inst11|ACIA_6850:inst16|ACIA_TX:TxDev|TxClkDel                                                               ;
@@ -828,7 +830,7 @@ Note: All latches listed above may not be present at the end of synthesis due to
 ; Number of registers using Synchronous Load   ; 118   ;
 ; Number of registers using Asynchronous Clear ; 689   ;
 ; Number of registers using Asynchronous Load  ; 0     ;
-; Number of registers using Clock Enable       ; 712   ;
+; Number of registers using Clock Enable       ; 714   ;
 ; Number of registers using Preset             ; 0     ;
 +----------------------------------------------+-------+
 
@@ -839,20 +841,20 @@ Note: All latches listed above may not be present at the end of synthesis due to
 ; Inverted Register                                                  ; Fan out ;
 +--------------------------------------------------------------------+---------+
 ; OnChipM68xxIO:inst11|ACIA_6850:inst16|ACIA_TX:TxDev|TxDat          ; 1       ;
-; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|opcode[12]     ; 80      ;
+; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|opcode[12]     ; 82      ;
 ; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|SVmode         ; 25      ;
-; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|opcode[7]      ; 101     ;
-; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|opcode[14]     ; 101     ;
-; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|opcode[13]     ; 60      ;
+; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|opcode[7]      ; 103     ;
+; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|opcode[14]     ; 100     ;
+; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|opcode[13]     ; 56      ;
 ; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|trap_interrupt ; 3       ;
 ; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|state[0]       ; 67      ;
-; M68000CPU:inst17|TG68:inst|uds_s                                   ; 8       ;
-; M68000CPU:inst17|TG68:inst|uds_e                                   ; 8       ;
+; M68000CPU:inst17|TG68:inst|uds_s                                   ; 9       ;
+; M68000CPU:inst17|TG68:inst|uds_e                                   ; 9       ;
 ; M68000CPU:inst17|TG68:inst|lds_s                                   ; 3       ;
 ; M68000CPU:inst17|TG68:inst|lds_e                                   ; 3       ;
-; M68000CPU:inst17|TG68:inst|as_s                                    ; 13      ;
-; M68000CPU:inst17|TG68:inst|as_e                                    ; 13      ;
-; M68000CPU:inst17|TG68:inst|rw_s                                    ; 14      ;
+; M68000CPU:inst17|TG68:inst|as_s                                    ; 12      ;
+; M68000CPU:inst17|TG68:inst|as_e                                    ; 12      ;
+; M68000CPU:inst17|TG68:inst|rw_s                                    ; 11      ;
 ; OnChipM68xxIO:inst11|ACIA_6850:inst16|Reset                        ; 98      ;
 ; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|Flags[8]       ; 6       ;
 ; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|Flags[13]      ; 7       ;
@@ -964,11 +966,13 @@ Note: All latches listed above may not be present at the end of synthesis due to
 ; 3:1                ; 6 bits    ; 12 LEs        ; 12 LEs               ; 0 LEs                  ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|exec_ROT                                                                                                                                                                                                                      ;
 ; 3:1                ; 10 bits   ; 20 LEs        ; 0 LEs                ; 20 LEs                 ; Yes        ; |MC68K|Video_Controller800x480:inst1|GraphicsLCD_Controller_Verilog:inst5|HCount[7]                                                                                                                                                                                                      ;
 ; 3:1                ; 10 bits   ; 20 LEs        ; 0 LEs                ; 20 LEs                 ; Yes        ; |MC68K|Video_Controller800x480:inst1|GraphicsLCD_Controller_Verilog:inst5|VCount[5]                                                                                                                                                                                                      ;
-; 3:1                ; 5 bits    ; 10 LEs        ; 5 LEs                ; 5 LEs                  ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|sld_mod_ram_rom:mgl_prim2|ram_rom_data_shift_cntr_reg[1]                                                                                                           ;
-; 3:1                ; 14 bits   ; 28 LEs        ; 0 LEs                ; 28 LEs                 ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|sld_mod_ram_rom:mgl_prim2|ram_rom_addr_reg[11]                                                                                                                     ;
-; 3:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; Yes        ; |MC68K|OnChipM68xxIO:inst11|ACIA_6850:inst16|WriteTR                                                                                                                                                                                                                                     ;
-; 3:1                ; 12 bits   ; 24 LEs        ; 0 LEs                ; 24 LEs                 ; Yes        ; |MC68K|Dram:inst2|M68kDramController_Verilog:inst1|Timer[12]                                                                                                                                                                                                                             ;
-; 3:1                ; 15 bits   ; 30 LEs        ; 0 LEs                ; 30 LEs                 ; Yes        ; |MC68K|Dram:inst2|M68kDramController_Verilog:inst1|RefreshTimer[0]                                                                                                                                                                                                                       ;
+; 3:1                ; 5 bits    ; 10 LEs        ; 5 LEs                ; 5 LEs                  ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|ram_rom_data_shift_cntr_reg[1]                                                                                                           ;
+; 3:1                ; 14 bits   ; 28 LEs        ; 0 LEs                ; 28 LEs                 ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|ram_rom_addr_reg[11]                                                                                                                     ;
+; 3:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; Yes        ; |MC68K|OnChipM68xxIO:inst11|ACIA_6850:inst16|ReadRR                                                                                                                                                                                                                                      ;
+; 3:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |MC68K|Dram:inst2|M68kDramController_Verilog:inst1|Timer[12]                                                                                                                                                                                                                             ;
+; 3:1                ; 8 bits    ; 16 LEs        ; 0 LEs                ; 16 LEs                 ; Yes        ; |MC68K|Dram:inst2|M68kDramController_Verilog:inst1|Timer[2]                                                                                                                                                                                                                              ;
+; 3:1                ; 7 bits    ; 14 LEs        ; 7 LEs                ; 7 LEs                  ; Yes        ; |MC68K|Dram:inst2|M68kDramController_Verilog:inst1|RefreshTimer[0]                                                                                                                                                                                                                       ;
+; 3:1                ; 9 bits    ; 18 LEs        ; 0 LEs                ; 18 LEs                 ; Yes        ; |MC68K|Dram:inst2|M68kDramController_Verilog:inst1|RefreshTimer[3]                                                                                                                                                                                                                       ;
 ; 3:1                ; 2 bits    ; 4 LEs         ; 2 LEs                ; 2 LEs                  ; Yes        ; |MC68K|OnChipM68xxIO:inst11|ACIA_6850:inst16|ACIA_TX:TxDev|TxBitCount[1]                                                                                                                                                                                                                 ;
 ; 3:1                ; 8 bits    ; 16 LEs        ; 0 LEs                ; 16 LEs                 ; Yes        ; |MC68K|OnChipM68xxIO:inst11|ACIA_6850:inst16|ACIA_TX:TxDev|TxShiftReg[3]                                                                                                                                                                                                                 ;
 ; 4:1                ; 3 bits    ; 6 LEs         ; 6 LEs                ; 0 LEs                  ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|opcode[8]                                                                                                                                                                                                                     ;
@@ -977,15 +981,15 @@ Note: All latches listed above may not be present at the end of synthesis due to
 ; 3:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|Flags[14]                                                                                                                                                                                                                     ;
 ; 4:1                ; 3 bits    ; 6 LEs         ; 3 LEs                ; 3 LEs                  ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|Flags[5]                                                                                                                                                                                                                      ;
 ; 4:1                ; 32 bits   ; 64 LEs        ; 64 LEs               ; 0 LEs                  ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|TG68_PC[9]                                                                                                                                                                                                                    ;
-; 4:1                ; 16 bits   ; 32 LEs        ; 32 LEs               ; 0 LEs                  ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|sld_mod_ram_rom:mgl_prim2|ram_rom_data_reg[11]                                                                                                                     ;
+; 4:1                ; 16 bits   ; 32 LEs        ; 32 LEs               ; 0 LEs                  ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|ram_rom_data_reg[11]                                                                                                                     ;
 ; 3:1                ; 2 bits    ; 4 LEs         ; 2 LEs                ; 2 LEs                  ; Yes        ; |MC68K|OnChipM68xxIO:inst11|ACIA_6850:inst16|ACIA_RX:RxDev|RxBitCount[2]                                                                                                                                                                                                                 ;
 ; 4:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; Yes        ; |MC68K|Dram:inst2|M68kDramController_Verilog:inst1|Timer[5]                                                                                                                                                                                                                              ;
-; 5:1                ; 5 bits    ; 15 LEs        ; 10 LEs               ; 5 LEs                  ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr|word_counter[0]                                                                       ;
+; 5:1                ; 5 bits    ; 15 LEs        ; 10 LEs               ; 5 LEs                  ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr|word_counter[0]                                                                       ;
 ; 5:1                ; 8 bits    ; 24 LEs        ; 0 LEs                ; 24 LEs                 ; Yes        ; |MC68K|OnChipM68xxIO:inst11|ACIA_6850:inst16|ACIA_RX:RxDev|RxShiftReg[5]                                                                                                                                                                                                                 ;
 ; 8:1                ; 8 bits    ; 40 LEs        ; 32 LEs               ; 8 LEs                  ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|data_write_tmp[0]                                                                                                                                                                                                             ;
 ; 8:1                ; 16 bits   ; 80 LEs        ; 64 LEs               ; 16 LEs                 ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|data_write_tmp[28]                                                                                                                                                                                                            ;
 ; 9:1                ; 8 bits    ; 48 LEs        ; 40 LEs               ; 8 LEs                  ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|data_write_tmp[15]                                                                                                                                                                                                            ;
-; 24:1               ; 4 bits    ; 64 LEs        ; 48 LEs               ; 16 LEs                 ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr|WORD_SR[2]                                                                            ;
+; 24:1               ; 4 bits    ; 64 LEs        ; 48 LEs               ; 16 LEs                 ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr|WORD_SR[2]                                                                            ;
 ; 9:1                ; 3 bits    ; 18 LEs        ; 15 LEs               ; 3 LEs                  ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|trap_vector[3]                                                                                                                                                                                                                ;
 ; 15:1               ; 2 bits    ; 20 LEs        ; 20 LEs               ; 0 LEs                  ; Yes        ; |MC68K|Dram:inst2|M68kDramController_Verilog:inst1|SDram_Addr[12]                                                                                                                                                                                                                        ;
 ; 19:1               ; 2 bits    ; 24 LEs        ; 18 LEs               ; 6 LEs                  ; Yes        ; |MC68K|Dram:inst2|M68kDramController_Verilog:inst1|SDram_BA[1]                                                                                                                                                                                                                           ;
@@ -1088,7 +1092,7 @@ Note: All latches listed above may not be present at the end of synthesis due to
 
 
 +-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Source assignments for OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|altsyncram_h163:altsyncram1 ;
+; Source assignments for OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1 ;
 +---------------------------------+--------------------+------+-----------------------------------------------------------------------------------------------------+
 ; Assignment                      ; Value              ; From ; To                                                                                                  ;
 +---------------------------------+--------------------+------+-----------------------------------------------------------------------------------------------------+
@@ -1581,63 +1585,63 @@ Note: In order to hide this table in the UI and the text report file, please set
 
 
 +------------------------------------------------------------------------------------------------------------------------------+
-; Parameter Settings for User Entity Instance: OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component ;
-+------------------------------------+-------------------------+---------------------------------------------------------------+
-; Parameter Name                     ; Value                   ; Type                                                          ;
-+------------------------------------+-------------------------+---------------------------------------------------------------+
-; BYTE_SIZE_BLOCK                    ; 8                       ; Untyped                                                       ;
-; AUTO_CARRY_CHAINS                  ; ON                      ; AUTO_CARRY                                                    ;
-; IGNORE_CARRY_BUFFERS               ; OFF                     ; IGNORE_CARRY                                                  ;
-; AUTO_CASCADE_CHAINS                ; ON                      ; AUTO_CASCADE                                                  ;
-; IGNORE_CASCADE_BUFFERS             ; OFF                     ; IGNORE_CASCADE                                                ;
-; WIDTH_BYTEENA                      ; 1                       ; Untyped                                                       ;
-; OPERATION_MODE                     ; ROM                     ; Untyped                                                       ;
-; WIDTH_A                            ; 16                      ; Signed Integer                                                ;
-; WIDTHAD_A                          ; 14                      ; Signed Integer                                                ;
-; NUMWORDS_A                         ; 16384                   ; Signed Integer                                                ;
-; OUTDATA_REG_A                      ; UNREGISTERED            ; Untyped                                                       ;
-; ADDRESS_ACLR_A                     ; NONE                    ; Untyped                                                       ;
-; OUTDATA_ACLR_A                     ; NONE                    ; Untyped                                                       ;
-; WRCONTROL_ACLR_A                   ; NONE                    ; Untyped                                                       ;
-; INDATA_ACLR_A                      ; NONE                    ; Untyped                                                       ;
-; BYTEENA_ACLR_A                     ; NONE                    ; Untyped                                                       ;
-; WIDTH_B                            ; 1                       ; Signed Integer                                                ;
-; WIDTHAD_B                          ; 1                       ; Signed Integer                                                ;
-; NUMWORDS_B                         ; 0                       ; Signed Integer                                                ;
-; INDATA_REG_B                       ; CLOCK1                  ; Untyped                                                       ;
-; WRCONTROL_WRADDRESS_REG_B          ; CLOCK1                  ; Untyped                                                       ;
-; RDCONTROL_REG_B                    ; CLOCK1                  ; Untyped                                                       ;
-; ADDRESS_REG_B                      ; CLOCK1                  ; Untyped                                                       ;
-; OUTDATA_REG_B                      ; UNREGISTERED            ; Untyped                                                       ;
-; BYTEENA_REG_B                      ; CLOCK1                  ; Untyped                                                       ;
-; INDATA_ACLR_B                      ; NONE                    ; Untyped                                                       ;
-; WRCONTROL_ACLR_B                   ; NONE                    ; Untyped                                                       ;
-; ADDRESS_ACLR_B                     ; NONE                    ; Untyped                                                       ;
-; OUTDATA_ACLR_B                     ; NONE                    ; Untyped                                                       ;
-; RDCONTROL_ACLR_B                   ; NONE                    ; Untyped                                                       ;
-; BYTEENA_ACLR_B                     ; NONE                    ; Untyped                                                       ;
-; WIDTH_BYTEENA_A                    ; 1                       ; Signed Integer                                                ;
-; WIDTH_BYTEENA_B                    ; 1                       ; Signed Integer                                                ;
-; RAM_BLOCK_TYPE                     ; AUTO                    ; Untyped                                                       ;
-; BYTE_SIZE                          ; 8                       ; Signed Integer                                                ;
-; READ_DURING_WRITE_MODE_MIXED_PORTS ; DONT_CARE               ; Untyped                                                       ;
-; READ_DURING_WRITE_MODE_PORT_A      ; NEW_DATA_NO_NBE_READ    ; Untyped                                                       ;
-; READ_DURING_WRITE_MODE_PORT_B      ; NEW_DATA_NO_NBE_READ    ; Untyped                                                       ;
-; INIT_FILE                          ; ../M68kdebugmonitor.mif ; Untyped                                                       ;
-; INIT_FILE_LAYOUT                   ; PORT_A                  ; Untyped                                                       ;
-; MAXIMUM_DEPTH                      ; 0                       ; Signed Integer                                                ;
-; CLOCK_ENABLE_INPUT_A               ; BYPASS                  ; Untyped                                                       ;
-; CLOCK_ENABLE_INPUT_B               ; NORMAL                  ; Untyped                                                       ;
-; CLOCK_ENABLE_OUTPUT_A              ; BYPASS                  ; Untyped                                                       ;
-; CLOCK_ENABLE_OUTPUT_B              ; NORMAL                  ; Untyped                                                       ;
-; CLOCK_ENABLE_CORE_A                ; USE_INPUT_CLKEN         ; Untyped                                                       ;
-; CLOCK_ENABLE_CORE_B                ; USE_INPUT_CLKEN         ; Untyped                                                       ;
-; ENABLE_ECC                         ; FALSE                   ; Untyped                                                       ;
-; ECC_PIPELINE_STAGE_ENABLED         ; FALSE                   ; Untyped                                                       ;
-; WIDTH_ECCSTATUS                    ; 3                       ; Signed Integer                                                ;
-; DEVICE_FAMILY                      ; Cyclone V               ; Untyped                                                       ;
-; CBXI_PARAMETER                     ; altsyncram_6c54         ; Untyped                                                       ;
-+------------------------------------+-------------------------+---------------------------------------------------------------+
+; Parameter Settings for User Entity Instance: OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component ;
++------------------------------------+------------------------------------+----------------------------------------------------+
+; Parameter Name                     ; Value                              ; Type                                               ;
++------------------------------------+------------------------------------+----------------------------------------------------+
+; BYTE_SIZE_BLOCK                    ; 8                                  ; Untyped                                            ;
+; AUTO_CARRY_CHAINS                  ; ON                                 ; AUTO_CARRY                                         ;
+; IGNORE_CARRY_BUFFERS               ; OFF                                ; IGNORE_CARRY                                       ;
+; AUTO_CASCADE_CHAINS                ; ON                                 ; AUTO_CASCADE                                       ;
+; IGNORE_CASCADE_BUFFERS             ; OFF                                ; IGNORE_CASCADE                                     ;
+; WIDTH_BYTEENA                      ; 1                                  ; Untyped                                            ;
+; OPERATION_MODE                     ; ROM                                ; Untyped                                            ;
+; WIDTH_A                            ; 16                                 ; Signed Integer                                     ;
+; WIDTHAD_A                          ; 14                                 ; Signed Integer                                     ;
+; NUMWORDS_A                         ; 16384                              ; Signed Integer                                     ;
+; OUTDATA_REG_A                      ; UNREGISTERED                       ; Untyped                                            ;
+; ADDRESS_ACLR_A                     ; NONE                               ; Untyped                                            ;
+; OUTDATA_ACLR_A                     ; NONE                               ; Untyped                                            ;
+; WRCONTROL_ACLR_A                   ; NONE                               ; Untyped                                            ;
+; INDATA_ACLR_A                      ; NONE                               ; Untyped                                            ;
+; BYTEENA_ACLR_A                     ; NONE                               ; Untyped                                            ;
+; WIDTH_B                            ; 1                                  ; Signed Integer                                     ;
+; WIDTHAD_B                          ; 1                                  ; Signed Integer                                     ;
+; NUMWORDS_B                         ; 0                                  ; Signed Integer                                     ;
+; INDATA_REG_B                       ; CLOCK1                             ; Untyped                                            ;
+; WRCONTROL_WRADDRESS_REG_B          ; CLOCK1                             ; Untyped                                            ;
+; RDCONTROL_REG_B                    ; CLOCK1                             ; Untyped                                            ;
+; ADDRESS_REG_B                      ; CLOCK1                             ; Untyped                                            ;
+; OUTDATA_REG_B                      ; UNREGISTERED                       ; Untyped                                            ;
+; BYTEENA_REG_B                      ; CLOCK1                             ; Untyped                                            ;
+; INDATA_ACLR_B                      ; NONE                               ; Untyped                                            ;
+; WRCONTROL_ACLR_B                   ; NONE                               ; Untyped                                            ;
+; ADDRESS_ACLR_B                     ; NONE                               ; Untyped                                            ;
+; OUTDATA_ACLR_B                     ; NONE                               ; Untyped                                            ;
+; RDCONTROL_ACLR_B                   ; NONE                               ; Untyped                                            ;
+; BYTEENA_ACLR_B                     ; NONE                               ; Untyped                                            ;
+; WIDTH_BYTEENA_A                    ; 1                                  ; Signed Integer                                     ;
+; WIDTH_BYTEENA_B                    ; 1                                  ; Signed Integer                                     ;
+; RAM_BLOCK_TYPE                     ; AUTO                               ; Untyped                                            ;
+; BYTE_SIZE                          ; 8                                  ; Signed Integer                                     ;
+; READ_DURING_WRITE_MODE_MIXED_PORTS ; DONT_CARE                          ; Untyped                                            ;
+; READ_DURING_WRITE_MODE_PORT_A      ; NEW_DATA_NO_NBE_READ               ; Untyped                                            ;
+; READ_DURING_WRITE_MODE_PORT_B      ; NEW_DATA_NO_NBE_READ               ; Untyped                                            ;
+; INIT_FILE                          ; ./Programs/debugmonitorproject.mif ; Untyped                                            ;
+; INIT_FILE_LAYOUT                   ; PORT_A                             ; Untyped                                            ;
+; MAXIMUM_DEPTH                      ; 0                                  ; Signed Integer                                     ;
+; CLOCK_ENABLE_INPUT_A               ; BYPASS                             ; Untyped                                            ;
+; CLOCK_ENABLE_INPUT_B               ; NORMAL                             ; Untyped                                            ;
+; CLOCK_ENABLE_OUTPUT_A              ; BYPASS                             ; Untyped                                            ;
+; CLOCK_ENABLE_OUTPUT_B              ; NORMAL                             ; Untyped                                            ;
+; CLOCK_ENABLE_CORE_A                ; USE_INPUT_CLKEN                    ; Untyped                                            ;
+; CLOCK_ENABLE_CORE_B                ; USE_INPUT_CLKEN                    ; Untyped                                            ;
+; ENABLE_ECC                         ; FALSE                              ; Untyped                                            ;
+; ECC_PIPELINE_STAGE_ENABLED         ; FALSE                              ; Untyped                                            ;
+; WIDTH_ECCSTATUS                    ; 3                                  ; Signed Integer                                     ;
+; DEVICE_FAMILY                      ; Cyclone V                          ; Untyped                                            ;
+; CBXI_PARAMETER                     ; altsyncram_3l64                    ; Untyped                                            ;
++------------------------------------+------------------------------------+----------------------------------------------------+
 Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
 
 
@@ -2114,7 +2118,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 ;     -- OUTDATA_REG_B                      ; UNREGISTERED                                                                                ;
 ;     -- RAM_BLOCK_TYPE                     ; AUTO                                                                                        ;
 ;     -- READ_DURING_WRITE_MODE_MIXED_PORTS ; DONT_CARE                                                                                   ;
-; Entity Instance                           ; OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component             ;
+; Entity Instance                           ; OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component             ;
 ;     -- OPERATION_MODE                     ; ROM                                                                                         ;
 ;     -- WIDTH_A                            ; 16                                                                                          ;
 ;     -- NUMWORDS_A                         ; 16384                                                                                       ;
@@ -2208,7 +2212,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 +----------------+-------------+-------+-------+------------+----------------------------------------------------------------------------------------------------------------+
 ; Instance Index ; Instance ID ; Width ; Depth ; Mode       ; Hierarchy Location                                                                                             ;
 +----------------+-------------+-------+-------+------------+----------------------------------------------------------------------------------------------------------------+
-; 0              ; ROM1        ; 16    ; 16384 ; Read/Write ; OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated ;
+; 0              ; ROM1        ; 16    ; 16384 ; Read/Write ; OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated ;
 +----------------+-------------+-------+-------+------------+----------------------------------------------------------------------------------------------------------------+
 
 
@@ -2231,7 +2235,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 ;     SLD               ; 2                           ;
 ;     plain             ; 60                          ;
 ; arriav_io_obuf        ; 34                          ;
-; arriav_lcell_comb     ; 3983                        ;
+; arriav_lcell_comb     ; 3935                        ;
 ;     arith             ; 610                         ;
 ;         0 data inputs ; 14                          ;
 ;         1 data inputs ; 285                         ;
@@ -2239,16 +2243,16 @@ Note: In order to hide this table in the UI and the text report file, please set
 ;         3 data inputs ; 60                          ;
 ;         4 data inputs ; 22                          ;
 ;         5 data inputs ; 207                         ;
-;     extend            ; 123                         ;
-;         7 data inputs ; 123                         ;
-;     normal            ; 3246                        ;
+;     extend            ; 135                         ;
+;         7 data inputs ; 135                         ;
+;     normal            ; 3186                        ;
 ;         0 data inputs ; 2                           ;
 ;         1 data inputs ; 28                          ;
-;         2 data inputs ; 367                         ;
-;         3 data inputs ; 404                         ;
-;         4 data inputs ; 615                         ;
-;         5 data inputs ; 768                         ;
-;         6 data inputs ; 1062                        ;
+;         2 data inputs ; 363                         ;
+;         3 data inputs ; 373                         ;
+;         4 data inputs ; 619                         ;
+;         5 data inputs ; 786                         ;
+;         6 data inputs ; 1015                        ;
 ;     shared            ; 4                           ;
 ;         0 data inputs ; 1                           ;
 ;         3 data inputs ; 3                           ;
@@ -2256,8 +2260,8 @@ Note: In order to hide this table in the UI and the text report file, please set
 ; generic_pll           ; 4                           ;
 ; stratixv_ram_block    ; 376                         ;
 ;                       ;                             ;
-; Max LUT depth         ; 18.40                       ;
-; Average LUT depth     ; 9.29                        ;
+; Max LUT depth         ; 20.00                       ;
+; Average LUT depth     ; 9.43                        ;
 +-----------------------+-----------------------------+
 
 
@@ -2268,22 +2272,22 @@ Note: In order to hide this table in the UI and the text report file, please set
 +-----------------------+------------------------------------------+
 ; arriav_ff             ; 80                                       ;
 ;     CLR               ; 5                                        ;
-;     ENA               ; 16                                       ;
+;     ENA               ; 18                                       ;
 ;     ENA CLR           ; 22                                       ;
 ;     ENA CLR SLD       ; 1                                        ;
 ;     SCLR              ; 7                                        ;
-;     plain             ; 29                                       ;
+;     plain             ; 27                                       ;
 ; arriav_lcell_comb     ; 100                                      ;
-;     extend            ; 2                                        ;
-;         7 data inputs ; 2                                        ;
-;     normal            ; 98                                       ;
+;     extend            ; 1                                        ;
+;         7 data inputs ; 1                                        ;
+;     normal            ; 99                                       ;
 ;         0 data inputs ; 1                                        ;
 ;         1 data inputs ; 5                                        ;
-;         2 data inputs ; 19                                       ;
-;         3 data inputs ; 17                                       ;
-;         4 data inputs ; 19                                       ;
-;         5 data inputs ; 17                                       ;
-;         6 data inputs ; 20                                       ;
+;         2 data inputs ; 21                                       ;
+;         3 data inputs ; 16                                       ;
+;         4 data inputs ; 18                                       ;
+;         5 data inputs ; 16                                       ;
+;         6 data inputs ; 22                                       ;
 ; boundary_port         ; 96                                       ;
 ;                       ;                                          ;
 ; Max LUT depth         ; 2.00                                     ;
@@ -2296,8 +2300,8 @@ Note: In order to hide this table in the UI and the text report file, please set
 +------------------+--------------+
 ; Partition Name   ; Elapsed Time ;
 +------------------+--------------+
-; Top              ; 00:01:55     ;
-; sld_hub:auto_hub ; 00:00:00     ;
+; Top              ; 00:02:35     ;
+; sld_hub:auto_hub ; 00:00:01     ;
 +------------------+--------------+
 
 
@@ -2307,7 +2311,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus II 64-Bit Analysis & Synthesis
     Info: Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
-    Info: Processing started: Fri Feb 08 21:17:13 2019
+    Info: Processing started: Sat Feb 09 13:18:26 2019
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off MC68K -c MC68K
 Warning (125092): Tcl Script File VideoRamFrameBuffer.qip not found
     Info (125063): set_global_assignment -name QIP_FILE VideoRamFrameBuffer.qip
@@ -2663,10 +2667,10 @@ Warning (12125): Using design file vgadatamux_verilog.v, which is not specified 
     Info (12023): Found entity 1: VGADataMux_Verilog
 Info (12128): Elaborating entity "VGADataMux_Verilog" for hierarchy "Video_Controller800x480:inst1|VGADataMux_Verilog:inst2"
 Info (12128): Elaborating entity "OnChipROM16KWords" for hierarchy "OnChipROM16KWords:inst16"
-Info (12128): Elaborating entity "OnChipRom16KWord" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst3"
-Info (12128): Elaborating entity "altsyncram" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component"
-Info (12130): Elaborated megafunction instantiation "OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component"
-Info (12133): Instantiated megafunction "OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component" with the following parameter:
+Info (12128): Elaborating entity "OnChipRom16KWord" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1"
+Info (12128): Elaborating entity "altsyncram" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component"
+Info (12130): Elaborated megafunction instantiation "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component"
+Info (12133): Instantiated megafunction "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component" with the following parameter:
     Info (12134): Parameter "address_aclr_a" = "NONE"
     Info (12134): Parameter "address_aclr_b" = "NONE"
     Info (12134): Parameter "address_reg_b" = "CLOCK1"
@@ -2687,7 +2691,7 @@ Info (12133): Instantiated megafunction "OnChipROM16KWords:inst16|OnChipRom16KWo
     Info (12134): Parameter "indata_aclr_a" = "UNUSED"
     Info (12134): Parameter "indata_aclr_b" = "NONE"
     Info (12134): Parameter "indata_reg_b" = "CLOCK1"
-    Info (12134): Parameter "init_file" = "../M68kdebugmonitor.mif"
+    Info (12134): Parameter "init_file" = "./Programs/debugmonitorproject.mif"
     Info (12134): Parameter "init_file_layout" = "PORT_A"
     Info (12134): Parameter "maximum_depth" = "0"
     Info (12134): Parameter "numwords_a" = "16384"
@@ -2717,27 +2721,27 @@ Info (12133): Instantiated megafunction "OnChipROM16KWords:inst16|OnChipRom16KWo
     Info (12134): Parameter "wrcontrol_wraddress_reg_b" = "CLOCK1"
     Info (12134): Parameter "lpm_hint" = "ENABLE_RUNTIME_MOD=YES,INSTANCE_NAME=ROM1"
     Info (12134): Parameter "lpm_type" = "altsyncram"
-Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_6c54.tdf
-    Info (12023): Found entity 1: altsyncram_6c54
-Info (12128): Elaborating entity "altsyncram_6c54" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated"
-Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_h163.tdf
-    Info (12023): Found entity 1: altsyncram_h163
-Info (12128): Elaborating entity "altsyncram_h163" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|altsyncram_h163:altsyncram1"
+Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_3l64.tdf
+    Info (12023): Found entity 1: altsyncram_3l64
+Info (12128): Elaborating entity "altsyncram_3l64" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated"
+Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_ea73.tdf
+    Info (12023): Found entity 1: altsyncram_ea73
+Info (12128): Elaborating entity "altsyncram_ea73" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1"
 Warning (113028): 1645 out of 16384 addresses are uninitialized. The Quartus II software will initialize them to "0". There are 2 warnings found, and 2 warnings are reported.
     Warning (113027): Addresses ranging from 96 to 511 are not initialized
     Warning (113027): Addresses ranging from 15155 to 16383 are not initialized
 Info (12021): Found 1 design units, including 1 entities, in source file db/decode_5la.tdf
     Info (12023): Found entity 1: decode_5la
-Info (12128): Elaborating entity "decode_5la" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|altsyncram_h163:altsyncram1|decode_5la:decode4"
+Info (12128): Elaborating entity "decode_5la" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1|decode_5la:decode4"
 Info (12021): Found 1 design units, including 1 entities, in source file db/decode_u0a.tdf
     Info (12023): Found entity 1: decode_u0a
-Info (12128): Elaborating entity "decode_u0a" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|altsyncram_h163:altsyncram1|decode_u0a:rden_decode_a"
+Info (12128): Elaborating entity "decode_u0a" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1|decode_u0a:rden_decode_a"
 Info (12021): Found 1 design units, including 1 entities, in source file db/mux_4hb.tdf
     Info (12023): Found entity 1: mux_4hb
-Info (12128): Elaborating entity "mux_4hb" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|altsyncram_h163:altsyncram1|mux_4hb:mux6"
-Info (12128): Elaborating entity "sld_mod_ram_rom" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|sld_mod_ram_rom:mgl_prim2"
-Info (12130): Elaborated megafunction instantiation "OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|sld_mod_ram_rom:mgl_prim2"
-Info (12133): Instantiated megafunction "OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|sld_mod_ram_rom:mgl_prim2" with the following parameter:
+Info (12128): Elaborating entity "mux_4hb" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1|mux_4hb:mux6"
+Info (12128): Elaborating entity "sld_mod_ram_rom" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2"
+Info (12130): Elaborated megafunction instantiation "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2"
+Info (12133): Instantiated megafunction "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2" with the following parameter:
     Info (12134): Parameter "CVALUE" = "0000000000000000"
     Info (12134): Parameter "IS_DATA_IN_RAM" = "1"
     Info (12134): Parameter "IS_READABLE" = "1"
@@ -2746,9 +2750,9 @@ Info (12133): Instantiated megafunction "OnChipROM16KWords:inst16|OnChipRom16KWo
     Info (12134): Parameter "SHIFT_COUNT_BITS" = "5"
     Info (12134): Parameter "WIDTH_WORD" = "16"
     Info (12134): Parameter "WIDTHAD" = "14"
-Info (12128): Elaborating entity "sld_jtag_endpoint_adapter" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_jtag_endpoint_adapter:jtag_signal_adapter"
-Info (12128): Elaborating entity "sld_jtag_endpoint_adapter_impl" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_jtag_endpoint_adapter:jtag_signal_adapter|sld_jtag_endpoint_adapter_impl:sld_jtag_endpoint_adapter_impl_inst"
-Info (12128): Elaborating entity "sld_rom_sr" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst3|altsyncram:altsyncram_component|altsyncram_6c54:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr"
+Info (12128): Elaborating entity "sld_jtag_endpoint_adapter" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_jtag_endpoint_adapter:jtag_signal_adapter"
+Info (12128): Elaborating entity "sld_jtag_endpoint_adapter_impl" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_jtag_endpoint_adapter:jtag_signal_adapter|sld_jtag_endpoint_adapter_impl:sld_jtag_endpoint_adapter_impl_inst"
+Info (12128): Elaborating entity "sld_rom_sr" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr"
 Info (12128): Elaborating entity "lpm_bustri" for hierarchy "lpm_bustri:inst22"
 Info (12130): Elaborated megafunction instantiation "lpm_bustri:inst22"
 Info (12133): Instantiated megafunction "lpm_bustri:inst22" with the following parameter:
@@ -2844,7 +2848,7 @@ Warning (275009): Pin "DataIn" not connected
 Info (12128): Elaborating entity "InterruptPriorityEncoder" for hierarchy "InterruptPriorityEncoder:inst28"
 Info (12128): Elaborating entity "TraceExceptionGenerator" for hierarchy "TraceExceptionGenerator:inst30"
 Info (11170): Start IP generation for the debug fabric within sld_hub.
-Info (11172): 2019.02.08.21:17:52 Progress: Loading sldbe7d4d23/alt_sld_fab_wrapper_hw.tcl
+Info (11172): 2019.02.09.13:19:10 Progress: Loading sldbe7d4d23/alt_sld_fab_wrapper_hw.tcl
 Info (11172): Alt_sld_fab.alt_sld_fab: SLD fabric agents which did not specify prefer_host were connected to JTAG
 Info (11172): Alt_sld_fab: Generating alt_sld_fab "alt_sld_fab" for QUARTUS_SYNTH
 Info (11172): Alt_sld_fab: "alt_sld_fab" instantiated alt_sld_fab "alt_sld_fab"
@@ -3044,17 +3048,17 @@ Warning (21074): Design contains 3 input pin(s) that do not drive logic
     Warning (15610): No output dependent on input pin "Can0_RX"
     Warning (15610): No output dependent on input pin "Can1_RX"
     Warning (15610): No output dependent on input pin "miso_i"
-Info (21057): Implemented 5068 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 5020 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 22 input pins
     Info (21059): Implemented 202 output pins
     Info (21060): Implemented 18 bidirectional pins
-    Info (21061): Implemented 4445 logic cells
+    Info (21061): Implemented 4397 logic cells
     Info (21064): Implemented 376 RAM segments
     Info (21065): Implemented 4 PLLs
 Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 170 warnings
-    Info: Peak virtual memory: 5009 megabytes
-    Info: Processing ended: Fri Feb 08 21:20:03 2019
-    Info: Elapsed time: 00:02:50
-    Info: Total CPU time (on all processors): 00:03:08
+    Info: Peak virtual memory: 5015 megabytes
+    Info: Processing ended: Sat Feb 09 13:22:05 2019
+    Info: Elapsed time: 00:03:39
+    Info: Total CPU time (on all processors): 00:03:47
 
 

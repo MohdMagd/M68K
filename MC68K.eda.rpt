@@ -1,5 +1,5 @@
 EDA Netlist Writer report for MC68K
-Fri Feb 08 21:27:30 2019
+Sat Feb 09 13:28:13 2019
 Quartus II 64-Bit Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
 
 
@@ -37,7 +37,7 @@ agreement for further details.
 +-------------------------------------------------------------------+
 ; EDA Netlist Writer Summary                                        ;
 +---------------------------+---------------------------------------+
-; EDA Netlist Writer Status ; Successful - Fri Feb 08 21:27:30 2019 ;
+; EDA Netlist Writer Status ; Successful - Sat Feb 09 13:28:13 2019 ;
 ; Revision Name             ; MC68K                                 ;
 ; Top-level Entity Name     ; MC68K                                 ;
 ; Family                    ; Cyclone V                             ;
@@ -45,34 +45,35 @@ agreement for further details.
 +---------------------------+---------------------------------------+
 
 
-+-------------------------------------------------------------------------------------------------------------------------------+
-; Simulation Settings                                                                                                           ;
-+---------------------------------------------------------------------------------------------------+---------------------------+
-; Option                                                                                            ; Setting                   ;
-+---------------------------------------------------------------------------------------------------+---------------------------+
-; Tool Name                                                                                         ; ModelSim-Altera (Verilog) ;
-; Generate netlist for functional simulation only                                                   ; On                        ;
-; Truncate long hierarchy paths                                                                     ; Off                       ;
-; Map illegal HDL characters                                                                        ; Off                       ;
-; Flatten buses into individual nodes                                                               ; Off                       ;
-; Maintain hierarchy                                                                                ; Off                       ;
-; Bring out device-wide set/reset signals as ports                                                  ; Off                       ;
-; Enable glitch filtering                                                                           ; Off                       ;
-; Do not write top level VHDL entity                                                                ; Off                       ;
-; Disable detection of setup and hold time violations in the input registers of bi-directional pins ; Off                       ;
-; Architecture name in VHDL output netlist                                                          ; structure                 ;
-; Generate third-party EDA tool command script for RTL functional simulation                        ; Off                       ;
-; Generate third-party EDA tool command script for gate-level simulation                            ; Off                       ;
-+---------------------------------------------------------------------------------------------------+---------------------------+
++----------------------------------------------------------------------------------------------------------------------------+
+; Simulation Settings                                                                                                        ;
++---------------------------------------------------------------------------------------------------+------------------------+
+; Option                                                                                            ; Setting                ;
++---------------------------------------------------------------------------------------------------+------------------------+
+; Tool Name                                                                                         ; ModelSim-Altera (VHDL) ;
+; Generate netlist for functional simulation only                                                   ; Off                    ;
+; Time scale                                                                                        ; 1 ps                   ;
+; Truncate long hierarchy paths                                                                     ; Off                    ;
+; Map illegal HDL characters                                                                        ; Off                    ;
+; Flatten buses into individual nodes                                                               ; Off                    ;
+; Maintain hierarchy                                                                                ; Off                    ;
+; Bring out device-wide set/reset signals as ports                                                  ; Off                    ;
+; Enable glitch filtering                                                                           ; Off                    ;
+; Do not write top level VHDL entity                                                                ; Off                    ;
+; Disable detection of setup and hold time violations in the input registers of bi-directional pins ; Off                    ;
+; Architecture name in VHDL output netlist                                                          ; structure              ;
+; Generate third-party EDA tool command script for RTL functional simulation                        ; Off                    ;
+; Generate third-party EDA tool command script for gate-level simulation                            ; Off                    ;
++---------------------------------------------------------------------------------------------------+------------------------+
 
 
-+-----------------------------------+
-; Simulation Generated Files        ;
-+-----------------------------------+
-; Generated Files                   ;
-+-----------------------------------+
-; C:/M68K/simulation/qsim//MC68K.vo ;
-+-----------------------------------+
++---------------------------------------+
+; Simulation Generated Files            ;
++---------------------------------------+
+; Generated Files                       ;
++---------------------------------------+
+; C:/M68K/simulation/modelsim/MC68K.vho ;
++---------------------------------------+
 
 
 +-----------------------------+
@@ -81,29 +82,16 @@ agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus II 64-Bit EDA Netlist Writer
     Info: Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
-    Info: Copyright (C) 1991-2015 Altera Corporation. All rights reserved.
-    Info: Your use of Altera Corporation's design tools, logic functions 
-    Info: and other software and tools, and its AMPP partner logic 
-    Info: functions, and any output files from any of the foregoing 
-    Info: (including device programming or simulation files), and any 
-    Info: associated documentation or information are expressly subject 
-    Info: to the terms and conditions of the Altera Program License 
-    Info: Subscription Agreement, the Altera Quartus II License Agreement,
-    Info: the Altera MegaCore Function License Agreement, or other 
-    Info: applicable license agreement, including, without limitation, 
-    Info: that your use is for the sole purpose of programming logic 
-    Info: devices manufactured by Altera and sold by Altera or its 
-    Info: authorized distributors.  Please refer to the applicable 
-    Info: agreement for further details.
-    Info: Processing started: Fri Feb 08 21:27:26 2019
-Info: Command: quartus_eda --write_settings_files=off --functional=on --flatten_buses=off --simulation=on --tool=modelsim_oem --format=verilog --output_directory=C:/M68K/simulation/qsim/ MC68K -c MC68K
+    Info: Processing started: Sat Feb 09 13:28:07 2019
+Info: Command: quartus_eda --read_settings_files=off --write_settings_files=off MC68K -c MC68K
 Warning (125092): Tcl Script File VideoRamFrameBuffer.qip not found
     Info (125063): set_global_assignment -name QIP_FILE VideoRamFrameBuffer.qip
-Info (204019): Generated file MC68K.vo in folder "C:/M68K/simulation/qsim//" for EDA simulation tool
-Info: Quartus II 64-Bit EDA Netlist Writer was successful. 0 errors, 1 warning
-    Info: Peak virtual memory: 4960 megabytes
-    Info: Processing ended: Fri Feb 08 21:27:30 2019
-    Info: Elapsed time: 00:00:04
-    Info: Total CPU time (on all processors): 00:00:04
+Warning (10905): Generated the EDA functional simulation files although EDA timing simulation option is chosen.
+Info (204019): Generated file MC68K.vho in folder "C:/M68K/simulation/modelsim/" for EDA simulation tool
+Info: Quartus II 64-Bit EDA Netlist Writer was successful. 0 errors, 2 warnings
+    Info: Peak virtual memory: 5042 megabytes
+    Info: Processing ended: Sat Feb 09 13:28:14 2019
+    Info: Elapsed time: 00:00:07
+    Info: Total CPU time (on all processors): 00:00:06
 
 

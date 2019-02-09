@@ -1,6 +1,6 @@
 680x0 MACRO ASSEMBLER   Version 5.00   (c) 1992-2005 Peter J. Fondse
 
-Date: 08 Feb 2019      Time: 15:46:15          Source: C:\M68K\PROGRAMS\DEBUGMONITORCODE\IDE68K_OUTPUT\DEBUGMONITORPROJECT.SRC
+Date: 09 Feb 2019      Time: 12:53:47          Source: C:\M68K\PROGRAMS\DEBUGMONITORCODE\IDE68K_OUTPUT\DEBUGMONITORPROJECT.SRC
 
                        1          section   code
                        2   ; for initial stack use $08040000 if your system uses SRAM for main memory (top of 256kbyte SRAM space)
@@ -5070,7 +5070,7 @@ Date: 08 Feb 2019      Time: 15:46:15          Source: C:\M68K\PROGRAMS\DEBUGMON
 000028FC  5882      4429          addq.l    #4,D2
 000028FE  60F0      4430          bra       MemoryTest_1
                     4431   MemoryTest_3:
-                    4432   ; } 
+                    4432   ; }
                     4433   ; // Read from Memory & Validate Data
                     4434   ; for(RamPtr=Start; RamPtr <= End; RamPtr+=0x1){
 00002900  2404      4435          move.l    D4,D2
