@@ -37,15 +37,15 @@ Begin
 			OnChipRomSelect_H <= '1' ;												-- DO NOT CHANGE - debugger expects rom at this address
 		end if ;	
 		
-		if(Address( 31 downto 18) = B"0000_1000_0000_00") then 			-- address hex 0800 0000 - 0803 FFFF Partial decoding - 256kbytes
+		if(Address( 31 downto 18) = B"1111_1000_0000_00") then 			-- address hex F000 0000 - F003 FFFF Partial decoding - 256kbytes
 			OnChipRamSelect_H <= '1' ;												-- DO NOT CHANGE - debugger expects memory at this address
 		end if ;	
-			
+
 		if(Address(31 downto 16) = B"0000_0000_0100_0000") then 			-- address hex 0040 0000 - 0040 FFFF Partial decoding
 			IOSelect_H <= '1' ;														-- DO NOT CHANGE - debugger expects IO at this address
 		end if ;
 		
-		if(Address(31 downto 26) = B"1111_00") then 							-- address hex F000 0000 - F3FF FFFF Partial decoding - 64M Partial Decoding
+		if(Address(31 downto 26) = B"0000_10") then 							-- address hex 0800 0000 - 0BFF FFFF Partial decoding - 64M Partial Decoding
 			DramSelect_H <= '1' ;													-- DO NOT CHANGE - debugger expects IO at this address
 		end if ;
 		

@@ -136,7 +136,7 @@ agreement for further details.
 		(pt 48 16)
 		(output)
 		(text "OUT" (rect 32 7 49 19)(font "Courier New" (bold))(invisible))
-		(text "OUT" (rect 32 7 49 19)(font "Courier New" (bold))(invisible))
+		(text "OUT" (rect 32 7 46 19)(font "Courier New" (bold))(invisible))
 		(line (pt 39 16)(pt 48 16))
 	)
 	(drawing
@@ -149,7 +149,7 @@ agreement for further details.
 (symbol
 	(rect 408 104 624 232)
 	(text "OnChipRom16KWord" (rect 46 0 192 16)(font "Arial" (font_size 10)))
-	(text "inst1" (rect 8 112 31 124)(font "Arial" ))
+	(text "inst3" (rect 8 112 31 124)(font "Arial" ))
 	(port
 		(pt 0 32)
 		(input)
@@ -219,6 +219,11 @@ agreement for further details.
 	(bus)
 )
 (connector
+	(pt 624 136)
+	(pt 752 136)
+	(bus)
+)
+(connector
 	(pt 256 216)
 	(pt 264 216)
 )
@@ -233,11 +238,6 @@ agreement for further details.
 (connector
 	(pt 264 72)
 	(pt 792 72)
-)
-(connector
-	(pt 624 136)
-	(pt 752 136)
-	(bus)
 )
 (junction (pt 264 216))
 (junction (pt 264 72))

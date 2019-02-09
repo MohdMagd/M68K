@@ -57,7 +57,7 @@ Begin
 			end if ;
 			
 			if(DramSelect_H = '1')	then		-- if dram is being selected
-				DtackOut_L <= DramSelect_H;		-- copy the dtack signal from the address decoder and give this as the dtack to the 68k
+				DtackOut_L <= DramDtack_L;		-- copy the dtack signal from the address decoder and give this as the dtack to the 68k
 			end if ;
 			
 		end if ;	

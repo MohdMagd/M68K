@@ -62,7 +62,7 @@ BEGIN
 		address_aclr_a => "NONE",
 		clock_enable_input_a => "BYPASS",
 		clock_enable_output_a => "BYPASS",
-		init_file => "./Programs/M68kdebugmonitor.mif",
+		init_file => "../M68kdebugmonitor.mif",
 		intended_device_family => "Cyclone V",
 		lpm_hint => "ENABLE_RUNTIME_MOD=YES,INSTANCE_NAME=ROM1",
 		lpm_type => "altsyncram",
@@ -104,7 +104,7 @@ END SYN;
 -- Retrieval info: PRIVATE: JTAG_ENABLED NUMERIC "1"
 -- Retrieval info: PRIVATE: JTAG_ID STRING "ROM1"
 -- Retrieval info: PRIVATE: MAXIMUM_DEPTH NUMERIC "0"
--- Retrieval info: PRIVATE: MIFfilename STRING "./Programs/M68kdebugmonitor.mif"
+-- Retrieval info: PRIVATE: MIFfilename STRING "../M68kdebugmonitor.mif"
 -- Retrieval info: PRIVATE: NUMWORDS_A NUMERIC "16384"
 -- Retrieval info: PRIVATE: RAM_BLOCK_TYPE NUMERIC "0"
 -- Retrieval info: PRIVATE: RegAddr NUMERIC "1"
@@ -119,7 +119,7 @@ END SYN;
 -- Retrieval info: CONSTANT: ADDRESS_ACLR_A STRING "NONE"
 -- Retrieval info: CONSTANT: CLOCK_ENABLE_INPUT_A STRING "BYPASS"
 -- Retrieval info: CONSTANT: CLOCK_ENABLE_OUTPUT_A STRING "BYPASS"
--- Retrieval info: CONSTANT: INIT_FILE STRING "./Programs/M68kdebugmonitor.mif"
+-- Retrieval info: CONSTANT: INIT_FILE STRING "../M68kdebugmonitor.mif"
 -- Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone V"
 -- Retrieval info: CONSTANT: LPM_HINT STRING "ENABLE_RUNTIME_MOD=YES,INSTANCE_NAME=ROM1"
 -- Retrieval info: CONSTANT: LPM_TYPE STRING "altsyncram"
