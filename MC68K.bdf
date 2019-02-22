@@ -2655,126 +2655,6 @@ agreement for further details.
 	)
 )
 (symbol
-	(rect 1552 2384 1768 2576)
-	(text "IIC_SPI_Interface" (rect 5 0 100 14)(font "Arial" (font_size 8)))
-	(text "inst32" (rect 8 176 37 188)(font "Arial" ))
-	(port
-		(pt 0 32)
-		(input)
-		(text "Address[31..0]" (rect 0 0 84 14)(font "Arial" (font_size 8)))
-		(text "Address[31..0]" (rect 21 27 105 41)(font "Arial" (font_size 8)))
-		(line (pt 0 32)(pt 16 32)(line_width 3))
-	)
-	(port
-		(pt 0 48)
-		(input)
-		(text "IIC_SPI_Select" (rect 0 0 80 14)(font "Arial" (font_size 8)))
-		(text "IIC_SPI_Select" (rect 21 43 101 57)(font "Arial" (font_size 8)))
-		(line (pt 0 48)(pt 16 48))
-	)
-	(port
-		(pt 0 64)
-		(input)
-		(text "Clk" (rect 0 0 16 14)(font "Arial" (font_size 8)))
-		(text "Clk" (rect 21 59 37 73)(font "Arial" (font_size 8)))
-		(line (pt 0 64)(pt 16 64))
-	)
-	(port
-		(pt 0 80)
-		(input)
-		(text "Reset_L" (rect 0 0 47 14)(font "Arial" (font_size 8)))
-		(text "Reset_L" (rect 21 75 68 89)(font "Arial" (font_size 8)))
-		(line (pt 0 80)(pt 16 80))
-	)
-	(port
-		(pt 0 96)
-		(input)
-		(text "DataIn[7..0]" (rect 0 0 63 14)(font "Arial" (font_size 8)))
-		(text "DataIn[7..0]" (rect 21 91 84 105)(font "Arial" (font_size 8)))
-		(line (pt 0 96)(pt 16 96)(line_width 3))
-	)
-	(port
-		(pt 0 112)
-		(input)
-		(text "WE_L" (rect 0 0 33 14)(font "Arial" (font_size 8)))
-		(text "WE_L" (rect 21 107 54 121)(font "Arial" (font_size 8)))
-		(line (pt 0 112)(pt 16 112))
-	)
-	(port
-		(pt 0 128)
-		(input)
-		(text "AS_L" (rect 0 0 31 14)(font "Arial" (font_size 8)))
-		(text "AS_L" (rect 21 123 52 137)(font "Arial" (font_size 8)))
-		(line (pt 0 128)(pt 16 128))
-	)
-	(port
-		(pt 0 144)
-		(input)
-		(text "miso_i" (rect 0 0 35 14)(font "Arial" (font_size 8)))
-		(text "miso_i" (rect 21 139 56 153)(font "Arial" (font_size 8)))
-		(line (pt 0 144)(pt 16 144))
-	)
-	(port
-		(pt 216 32)
-		(output)
-		(text "DataOut[7..0]" (rect 0 0 74 14)(font "Arial" (font_size 8)))
-		(text "DataOut[7..0]" (rect 121 27 195 41)(font "Arial" (font_size 8)))
-		(line (pt 216 32)(pt 200 32)(line_width 3))
-	)
-	(port
-		(pt 216 48)
-		(output)
-		(text "IIC0_IRQ_L" (rect 0 0 61 14)(font "Arial" (font_size 8)))
-		(text "IIC0_IRQ_L" (rect 134 43 195 57)(font "Arial" (font_size 8)))
-		(line (pt 216 48)(pt 200 48))
-	)
-	(port
-		(pt 216 96)
-		(output)
-		(text "SPI_IRQ" (rect 0 0 44 14)(font "Arial" (font_size 8)))
-		(text "SPI_IRQ" (rect 151 91 195 105)(font "Arial" (font_size 8)))
-		(line (pt 216 96)(pt 200 96))
-	)
-	(port
-		(pt 216 112)
-		(output)
-		(text "sck_o" (rect 0 0 34 14)(font "Arial" (font_size 8)))
-		(text "sck_o" (rect 161 107 195 121)(font "Arial" (font_size 8)))
-		(line (pt 216 112)(pt 200 112))
-	)
-	(port
-		(pt 216 128)
-		(output)
-		(text "mosi_o" (rect 0 0 40 14)(font "Arial" (font_size 8)))
-		(text "mosi_o" (rect 155 123 195 137)(font "Arial" (font_size 8)))
-		(line (pt 216 128)(pt 200 128))
-	)
-	(port
-		(pt 216 144)
-		(output)
-		(text "SSN_O[7..0]" (rect 0 0 69 14)(font "Arial" (font_size 8)))
-		(text "SSN_O[7..0]" (rect 126 139 195 153)(font "Arial" (font_size 8)))
-		(line (pt 216 144)(pt 200 144)(line_width 3))
-	)
-	(port
-		(pt 216 64)
-		(bidir)
-		(text "SCL_GPIO_0" (rect 0 0 73 14)(font "Arial" (font_size 8)))
-		(text "SCL_GPIO_0" (rect 122 59 195 73)(font "Arial" (font_size 8)))
-		(line (pt 216 64)(pt 200 64))
-	)
-	(port
-		(pt 216 80)
-		(bidir)
-		(text "SDA_GPIO_0" (rect 0 0 75 14)(font "Arial" (font_size 8)))
-		(text "SDA_GPIO_0" (rect 120 75 195 89)(font "Arial" (font_size 8)))
-		(line (pt 216 80)(pt 200 80))
-	)
-	(drawing
-		(rectangle (rect 16 16 200 176))
-	)
-)
-(symbol
 	(rect 1552 2752 1808 2944)
 	(text "CanBus" (rect 5 0 49 14)(font "Arial" (font_size 8)))
 	(text "inst5" (rect 8 176 31 188)(font "Arial" ))
@@ -3355,6 +3235,126 @@ agreement for further details.
 	)
 	(drawing
 		(rectangle (rect 16 16 200 80))
+	)
+)
+(symbol
+	(rect 1552 2384 1768 2576)
+	(text "IIC_SPI_Interface" (rect 5 0 100 14)(font "Arial" (font_size 8)))
+	(text "inst32" (rect 8 176 37 188)(font "Arial" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "Address[31..0]" (rect 0 0 84 14)(font "Arial" (font_size 8)))
+		(text "Address[31..0]" (rect 21 27 105 41)(font "Arial" (font_size 8)))
+		(line (pt 0 32)(pt 16 32)(line_width 3))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "IIC_SPI_Select" (rect 0 0 80 14)(font "Arial" (font_size 8)))
+		(text "IIC_SPI_Select" (rect 21 43 101 57)(font "Arial" (font_size 8)))
+		(line (pt 0 48)(pt 16 48))
+	)
+	(port
+		(pt 0 64)
+		(input)
+		(text "Clk" (rect 0 0 16 14)(font "Arial" (font_size 8)))
+		(text "Clk" (rect 21 59 37 73)(font "Arial" (font_size 8)))
+		(line (pt 0 64)(pt 16 64))
+	)
+	(port
+		(pt 0 80)
+		(input)
+		(text "Reset_L" (rect 0 0 47 14)(font "Arial" (font_size 8)))
+		(text "Reset_L" (rect 21 75 68 89)(font "Arial" (font_size 8)))
+		(line (pt 0 80)(pt 16 80))
+	)
+	(port
+		(pt 0 96)
+		(input)
+		(text "DataIn[7..0]" (rect 0 0 63 14)(font "Arial" (font_size 8)))
+		(text "DataIn[7..0]" (rect 21 91 84 105)(font "Arial" (font_size 8)))
+		(line (pt 0 96)(pt 16 96)(line_width 3))
+	)
+	(port
+		(pt 0 112)
+		(input)
+		(text "WE_L" (rect 0 0 33 14)(font "Arial" (font_size 8)))
+		(text "WE_L" (rect 21 107 54 121)(font "Arial" (font_size 8)))
+		(line (pt 0 112)(pt 16 112))
+	)
+	(port
+		(pt 0 128)
+		(input)
+		(text "AS_L" (rect 0 0 31 14)(font "Arial" (font_size 8)))
+		(text "AS_L" (rect 21 123 52 137)(font "Arial" (font_size 8)))
+		(line (pt 0 128)(pt 16 128))
+	)
+	(port
+		(pt 0 144)
+		(input)
+		(text "miso_i" (rect 0 0 35 14)(font "Arial" (font_size 8)))
+		(text "miso_i" (rect 21 139 56 153)(font "Arial" (font_size 8)))
+		(line (pt 0 144)(pt 16 144))
+	)
+	(port
+		(pt 216 32)
+		(output)
+		(text "DataOut[7..0]" (rect 0 0 74 14)(font "Arial" (font_size 8)))
+		(text "DataOut[7..0]" (rect 121 27 195 41)(font "Arial" (font_size 8)))
+		(line (pt 216 32)(pt 200 32)(line_width 3))
+	)
+	(port
+		(pt 216 48)
+		(output)
+		(text "IIC0_IRQ_L" (rect 0 0 61 14)(font "Arial" (font_size 8)))
+		(text "IIC0_IRQ_L" (rect 134 43 195 57)(font "Arial" (font_size 8)))
+		(line (pt 216 48)(pt 200 48))
+	)
+	(port
+		(pt 216 96)
+		(output)
+		(text "SPI_IRQ" (rect 0 0 44 14)(font "Arial" (font_size 8)))
+		(text "SPI_IRQ" (rect 151 91 195 105)(font "Arial" (font_size 8)))
+		(line (pt 216 96)(pt 200 96))
+	)
+	(port
+		(pt 216 112)
+		(output)
+		(text "sck_o" (rect 0 0 34 14)(font "Arial" (font_size 8)))
+		(text "sck_o" (rect 161 107 195 121)(font "Arial" (font_size 8)))
+		(line (pt 216 112)(pt 200 112))
+	)
+	(port
+		(pt 216 128)
+		(output)
+		(text "mosi_o" (rect 0 0 40 14)(font "Arial" (font_size 8)))
+		(text "mosi_o" (rect 155 123 195 137)(font "Arial" (font_size 8)))
+		(line (pt 216 128)(pt 200 128))
+	)
+	(port
+		(pt 216 144)
+		(output)
+		(text "SSN_O[7..0]" (rect 0 0 69 14)(font "Arial" (font_size 8)))
+		(text "SSN_O[7..0]" (rect 126 139 195 153)(font "Arial" (font_size 8)))
+		(line (pt 216 144)(pt 200 144)(line_width 3))
+	)
+	(port
+		(pt 216 64)
+		(bidir)
+		(text "SCL_GPIO_0" (rect 0 0 73 14)(font "Arial" (font_size 8)))
+		(text "SCL_GPIO_0" (rect 122 59 195 73)(font "Arial" (font_size 8)))
+		(line (pt 216 64)(pt 200 64))
+	)
+	(port
+		(pt 216 80)
+		(bidir)
+		(text "SDA_GPIO_0" (rect 0 0 75 14)(font "Arial" (font_size 8)))
+		(text "SDA_GPIO_0" (rect 120 75 195 89)(font "Arial" (font_size 8)))
+		(line (pt 216 80)(pt 200 80))
+	)
+	(drawing
+		(rectangle (rect 16 16 200 176))
 	)
 )
 (connector
@@ -4407,10 +4407,6 @@ agreement for further details.
 	(pt 1408 624)
 )
 (connector
-	(pt 1064 656)
-	(pt 1224 656)
-)
-(connector
 	(pt 1224 656)
 	(pt 1440 656)
 )
@@ -5199,142 +5195,8 @@ agreement for further details.
 	(pt 1096 2800)
 )
 (connector
-	(text "DataBusIn[15..8]" (rect 1866 2400 1949 2412)(font "Arial" ))
-	(pt 1952 2416)
-	(pt 1768 2416)
-	(bus)
-)
-(connector
-	(text "Address[31..0]" (rect 866 2400 937 2412)(font "Arial" ))
-	(pt 792 2416)
-	(pt 1552 2416)
-	(bus)
-)
-(connector
-	(pt 1376 2448)
-	(pt 1552 2448)
-)
-(connector
-	(pt 2008 2448)
-	(pt 1768 2448)
-)
-(connector
-	(pt 1392 2464)
-	(pt 1552 2464)
-)
-(connector
-	(pt 2008 2464)
-	(pt 1768 2464)
-)
-(connector
-	(text "DataBusOut[15..8]" (rect 1290 2464 1382 2476)(font "Arial" ))
-	(pt 1248 2480)
-	(pt 1552 2480)
-	(bus)
-)
-(connector
-	(pt 1448 2496)
-	(pt 1552 2496)
-)
-(connector
-	(pt 2008 2496)
-	(pt 1768 2496)
-)
-(connector
-	(pt 1432 2512)
-	(pt 1552 2512)
-)
-(connector
-	(pt 1224 2432)
-	(pt 1552 2432)
-)
-(connector
-	(pt 2008 2512)
-	(pt 1768 2512)
-)
-(connector
-	(text "SSN_O[7..0]" (rect 1768 2512 1830 2524)(font "Arial" ))
-	(pt 1848 2528)
-	(pt 1768 2528)
-	(bus)
-)
-(connector
-	(pt 1952 2416)
-	(pt 1952 2800)
-	(bus)
-)
-(connector
-	(pt 792 2416)
-	(pt 792 2784)
-	(bus)
-)
-(connector
-	(text "Clock25Mhz" (rect 1352 2296 1364 2355)(font "Arial" )(vertical))
-	(pt 1376 2328)
-	(pt 1376 2448)
-)
-(connector
-	(pt 1376 2448)
-	(pt 1376 2816)
-)
-(connector
-	(pt 1392 2128)
-	(pt 1392 2464)
-)
-(connector
-	(pt 1392 2464)
-	(pt 1392 2832)
-)
-(connector
-	(pt 1248 2480)
-	(pt 1248 2848)
-	(bus)
-)
-(connector
-	(pt 1448 2240)
-	(pt 1448 2496)
-)
-(connector
-	(pt 1448 2496)
-	(pt 1448 2864)
-)
-(connector
-	(pt 1432 2192)
-	(pt 1432 2512)
-)
-(connector
-	(pt 1432 2512)
-	(pt 1432 2880)
-)
-(connector
-	(pt 1224 1160)
-	(pt 1224 1776)
-)
-(connector
-	(pt 1224 1776)
-	(pt 1224 2432)
-)
-(connector
-	(pt 1848 2528)
-	(pt 1848 2568)
-	(bus)
-)
-(connector
-	(pt 1848 2568)
-	(pt 1848 2600)
-	(bus)
-)
-(connector
 	(pt 2016 2704)
 	(pt 1520 2704)
-)
-(connector
-	(pt 1552 2528)
-	(pt 1520 2528)
-)
-(connector
-	(pt 1520 2704)
-	(pt 1520 2528)
 )
 (connector
 	(pt 720 312)
@@ -5446,18 +5308,8 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(pt 792 2144)
-	(pt 792 2416)
-	(bus)
-)
-(connector
 	(pt 1248 1744)
 	(pt 1248 2160)
-	(bus)
-)
-(connector
-	(pt 1248 2160)
-	(pt 1248 2480)
 	(bus)
 )
 (connector
@@ -5471,11 +5323,6 @@ agreement for further details.
 (connector
 	(pt 1952 1728)
 	(pt 1952 2224)
-	(bus)
-)
-(connector
-	(pt 1952 2224)
-	(pt 1952 2416)
 	(bus)
 )
 (connector
@@ -5517,6 +5364,159 @@ agreement for further details.
 (connector
 	(pt -176 240)
 	(pt -208 240)
+)
+(connector
+	(text "DataBusIn[15..8]" (rect 1866 2400 1949 2412)(font "Arial" ))
+	(pt 1952 2416)
+	(pt 1768 2416)
+	(bus)
+)
+(connector
+	(text "Address[31..0]" (rect 866 2400 937 2412)(font "Arial" ))
+	(pt 792 2416)
+	(pt 1552 2416)
+	(bus)
+)
+(connector
+	(pt 1376 2448)
+	(pt 1552 2448)
+)
+(connector
+	(pt 2008 2448)
+	(pt 1768 2448)
+)
+(connector
+	(pt 1392 2464)
+	(pt 1552 2464)
+)
+(connector
+	(pt 2008 2464)
+	(pt 1768 2464)
+)
+(connector
+	(text "DataBusOut[15..8]" (rect 1290 2464 1382 2476)(font "Arial" ))
+	(pt 1248 2480)
+	(pt 1552 2480)
+	(bus)
+)
+(connector
+	(pt 1448 2496)
+	(pt 1552 2496)
+)
+(connector
+	(pt 2008 2496)
+	(pt 1768 2496)
+)
+(connector
+	(pt 1432 2512)
+	(pt 1552 2512)
+)
+(connector
+	(pt 1224 2432)
+	(pt 1552 2432)
+)
+(connector
+	(pt 2008 2512)
+	(pt 1768 2512)
+)
+(connector
+	(text "SSN_O[7..0]" (rect 1768 2512 1830 2524)(font "Arial" ))
+	(pt 1848 2528)
+	(pt 1768 2528)
+	(bus)
+)
+(connector
+	(pt 1520 2528)
+	(pt 1552 2528)
+)
+(connector
+	(pt 1520 2704)
+	(pt 1520 2528)
+)
+(connector
+	(pt 1952 2224)
+	(pt 1952 2416)
+	(bus)
+)
+(connector
+	(pt 1952 2416)
+	(pt 1952 2800)
+	(bus)
+)
+(connector
+	(pt 792 2144)
+	(pt 792 2416)
+	(bus)
+)
+(connector
+	(pt 792 2416)
+	(pt 792 2784)
+	(bus)
+)
+(connector
+	(text "Clock25Mhz" (rect 1352 2296 1364 2355)(font "Arial" )(vertical))
+	(pt 1376 2328)
+	(pt 1376 2448)
+)
+(connector
+	(pt 1376 2448)
+	(pt 1376 2816)
+)
+(connector
+	(pt 1392 2128)
+	(pt 1392 2464)
+)
+(connector
+	(pt 1392 2464)
+	(pt 1392 2832)
+)
+(connector
+	(pt 1248 2160)
+	(pt 1248 2480)
+	(bus)
+)
+(connector
+	(pt 1248 2480)
+	(pt 1248 2848)
+	(bus)
+)
+(connector
+	(pt 1448 2240)
+	(pt 1448 2496)
+)
+(connector
+	(pt 1448 2496)
+	(pt 1448 2864)
+)
+(connector
+	(pt 1432 2192)
+	(pt 1432 2512)
+)
+(connector
+	(pt 1432 2512)
+	(pt 1432 2880)
+)
+(connector
+	(pt 1224 1160)
+	(pt 1224 1776)
+)
+(connector
+	(pt 1224 1776)
+	(pt 1224 2432)
+)
+(connector
+	(pt 1848 2528)
+	(pt 1848 2568)
+	(bus)
+)
+(connector
+	(pt 1848 2568)
+	(pt 1848 2600)
+	(bus)
+)
+(connector
+	(pt 1064 656)
+	(pt 1224 656)
 )
 (junction (pt 1280 224))
 (junction (pt 1376 224))
