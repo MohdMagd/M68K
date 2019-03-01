@@ -69,12 +69,7 @@ int _putch( int c)
 int TestForSPITransmitDataComplete(void)
 {
     /* if register SPIF bit set, return true, otherwise wait*/
-    Enable_SPI_CS();
-    SPI_Data = 0x05; // Read Status register command
-    SPI_Data = 0xFF; // dummy byte
     while ((SPI_Status & 128) >> 7 != 1);
-    printf("\r\n SPI_Status = %d \r\n", SPI_Status); // 128
-    Disable_SPI_CS();
     return 1;
 }
 
@@ -116,14 +111,44 @@ void WaitForSPITransmitComplete(void)
 ** Disable Write Protect to allow writing access to chip
 ************************************************************************************/
 void DisableWriteProtect(void){
-  // Enable Chip Select
-  SPI_CS = Enable_SPI_CS();
+  	// Enable Chip Select
+  	Enable_SPI_CS();
   
-  // Send Write Command to Chip
+  	// Send Write Command to Chip
     SPI_Data = 0x6;
+    WaitForSPITransmitComplete();
 
     // Disable Chip Select
-    SPI_CS = Disable_SPI_CS();
+    Disable_SPI_CS();
+}
+
+
+/************************************************************************************
+** Wait Write Command Completion
+************************************************************************************/
+void WaitWriteCommandCompletion(void){
+	char x;
+
+	// Enable Chip Select
+  	Enable_SPI_CS();
+  
+  	// Send Write Command to Chip
+    SPI_Data = 0x5;
+    WaitForSPITransmitComplete();
+    x = SPI_Data;
+
+    while(1){
+
+    	SPI_Data = 0xFF;
+    	WaitForSPITransmitComplete();
+    	x = SPI_Data;
+
+    	if ((x & 1) != 1)
+    		break;
+    }
+
+    // Disable Chip Select
+    Disable_SPI_CS();
 }
 
 /************************************************************************************
@@ -132,34 +157,46 @@ void DisableWriteProtect(void){
 ************************************************************************************/
 void WriteSPIChar(char c)
 {
-    // Enable Chip Select
-    SPI_CS = Enable_SPI_CS();
+	
+	char x;
+	DisableWriteProtect();
 
-    DisableWriteProtect();
+    // Enable Chip Select
+    Enable_SPI_CS();
   
     // Send Write Command to Chip
     SPI_Data = 0x2;
+    WaitForSPITransmitComplete();
+    x = SPI_Data;
 
     // Send 24-bit Address that we stored c in
     SPI_Data = 0x0; // 24-bit address - 1st Byte
+    WaitForSPITransmitComplete();
+	x = SPI_Data;
+
     SPI_Data = 0x0; // 24-bit address - 2nd Byte
+    WaitForSPITransmitComplete();
+    x = SPI_Data;
+
     SPI_Data = 0xF; // 24-bit address - 3rd Byte
+    WaitForSPITransmitComplete();
+    x = SPI_Data;
 
     // Payload Data
     SPI_Data = c;
-
-    printf("\r\n SPI_Data before disable = %c", SPI_Data);
-    //  Disable Chip Select
-    SPI_CS = Disable_SPI_CS();
-    printf("\r\n SPI_Data before wait = %c", SPI_Data);
-    // wait for completion of transmission
     WaitForSPITransmitComplete();
+    x = SPI_Data;
 
-    printf("\r\n SPI_Data after wait= %c", SPI_Data);
+    //  Disable Chip Select
+    Disable_SPI_CS();
+
+    // Poll Chip Status register for write completion
+    WaitWriteCommandCompletion();
 }
 
 char ReadSPIChar(void){
 
+	char x;
     char read_byte;
 
     // Enable Chip Select
@@ -167,20 +204,26 @@ char ReadSPIChar(void){
 
     // Send Read Command to Chip
     SPI_Data = 0x3;
+    WaitForSPITransmitComplete();
+    x = SPI_Data;
 
     // Send 24-bit Address that we stored c in
     SPI_Data = 0x0; // 24-bit address - 1st Byte
+    WaitForSPITransmitComplete();
+    x = SPI_Data;
+
     SPI_Data = 0x0; // 24-bit address - 2nd Byte
+    WaitForSPITransmitComplete();
+    x = SPI_Data;
+
     SPI_Data = 0xF; // 24-bit address - 3rd Byte
+    WaitForSPITransmitComplete();
+    x = SPI_Data;
 
     // Send Dummy Data to purge c out of read FIFO
     SPI_Data = 0xFF;
-
-    // wait for completion of transmission
     WaitForSPITransmitComplete();
-
-    // store data from read FIFO into temporary variable
-    read_byte = SPI_Data;
+    read_byte = SPI_Data;	// store data from read FIFO into temporary variable
 
     //  Disable Chip Select
     SPI_CS = Disable_SPI_CS();
