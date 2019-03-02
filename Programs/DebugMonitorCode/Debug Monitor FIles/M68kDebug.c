@@ -530,7 +530,7 @@ void ProgramFlashChip(void)
     int FlashAddress = 0;
     int count = 0;
 
-    printf("\r\nRunning ProgramFlashChip()!");
+    printf("\r\nRunning ProgramFlashChip....");
 
     SPI_Init();
     ChipErase();
@@ -605,7 +605,7 @@ void FlashChipMemoryTest(void){
 
     FlashAddressByte1 = FlashAddressByte2 = FlashAddressByte3 = 0;
 
-    printf("\r\nRunning FlashChipMemoryTest()!");
+    printf("\r\nRunning FlashChipMemoryTest....");
 
     // Enable SPI Chip Select
     Enable_SPI_CS();
@@ -652,12 +652,51 @@ void FlashChipMemoryTest(void){
 **************************************************************************/
 void LoadFromFlashChip(void)
 {
+    //  read 256k of data from SPI flash chip and store in user ram starting at hex 08000000
+    unsigned char *RamPtr;
+    unsigned char x, ReadByte;
+    unsigned char FlashAddressByte1, FlashAddressByte2, FlashAddressByte3;
+
+    FlashAddressByte1 = FlashAddressByte2 = FlashAddressByte3 = 0;
+
     printf("\r\nLoading Program From SPI Flash....") ;
 
-    //
-    // TODO : put your code here to read 256k of data from SPI flash chip and store in user ram starting at hex 08000000
-    //
+    SPI_Init();
 
+    // Enable SPI Chip Select
+    Enable_SPI_CS();
+
+    // Send Read Command to Chip
+    SPI_Data = 3;
+    WaitForSPITransmitComplete();
+    x = SPI_Data;
+
+    // Send 24-bit Address that we stored c in
+    SPI_Data = FlashAddressByte1; // 24-bit address - 1st Byte
+    WaitForSPITransmitComplete();
+    x = SPI_Data;
+
+    SPI_Data = FlashAddressByte2; // 24-bit address - 2nd Byte
+    WaitForSPITransmitComplete();
+    x = SPI_Data;
+
+    SPI_Data = FlashAddressByte3; // 24-bit address - 3rd Byte
+    WaitForSPITransmitComplete();
+    x = SPI_Data;
+
+    for(RamPtr=0x08000000;RamPtr<=0x08040000;RamPtr++){
+
+        SPI_Data = 0xFF;          // Send Dummy byte
+        WaitForSPITransmitComplete();
+        ReadByte = SPI_Data;
+
+        // Copy SPI Data into DRAM
+        *RamPtr = ReadByte;
+     }
+
+    // Disable SPI Chip Select
+     Disable_SPI_CS();
+     printf("\r\nLoading Program From SPI Flash Successful!");
 }
 
 // get rid of excess spaces

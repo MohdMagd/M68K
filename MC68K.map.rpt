@@ -1,5 +1,5 @@
 Analysis & Synthesis report for MC68K
-Thu Feb 21 17:33:49 2019
+Fri Mar 01 21:20:23 2019
 Quartus II 64-Bit Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
 
 
@@ -32,7 +32,7 @@ Quartus II 64-Bit Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
  24. Registers Packed Into Inferred Megafunctions
  25. Multiplexer Restructuring Statistics (No Restructuring Performed)
  26. Source assignments for Video_Controller800x480:inst1|ColourPallette_2PortRam:inst3|altsyncram:altsyncram_component|altsyncram_b634:auto_generated
- 27. Source assignments for OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1
+ 27. Source assignments for OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|altsyncram_na63:altsyncram1
  28. Source assignments for OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated
  29. Source assignments for OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated
  30. Source assignments for IIC_SPI_Interface:inst32|simple_spi_top:inst1|fifo4:wfifo|altsyncram:mem_rtl_0|altsyncram_edi1:auto_generated
@@ -103,7 +103,7 @@ agreement for further details.
 +------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                 ;
 +---------------------------------+--------------------------------------------+
-; Analysis & Synthesis Status     ; Successful - Thu Feb 21 17:33:49 2019      ;
+; Analysis & Synthesis Status     ; Successful - Fri Mar 01 21:20:23 2019      ;
 ; Quartus II 64-Bit Version       ; 15.0.0 Build 145 04/22/2015 SJ Web Edition ;
 ; Revision Name                   ; MC68K                                      ;
 ; Top-level Entity Name           ; MC68K                                      ;
@@ -216,108 +216,109 @@ agreement for further details.
 +----------------------------+-------------+
 ; Processors                 ; Number      ;
 +----------------------------+-------------+
-; Number detected on machine ; 2           ;
-; Maximum allowed            ; 2           ;
+; Number detected on machine ; 8           ;
+; Maximum allowed            ; 4           ;
 ;                            ;             ;
 ; Average used               ; 1.00        ;
-; Maximum used               ; 2           ;
+; Maximum used               ; 4           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processor 2            ; < 0.1%      ;
+;     Processors 2-4         ; < 0.1%      ;
+;     Processors 5-8         ;   0.0%      ;
 +----------------------------+-------------+
 
 
-+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis Source Files Read                                                                                                                                                                                               ;
-+--------------------------------------------------------------------+-----------------+----------------------------------------------+----------------------------------------------------------------------------------+-------------+
-; File Name with User-Entered Path                                   ; Used in Netlist ; File Type                                    ; File Name with Absolute Path                                                     ; Library     ;
-+--------------------------------------------------------------------+-----------------+----------------------------------------------+----------------------------------------------------------------------------------+-------------+
-; simple_spi_top.v                                                   ; yes             ; User Verilog HDL File                        ; C:/M68K/simple_spi_top.v                                                         ;             ;
-; AddressDecoder.vhd                                                 ; yes             ; User VHDL File                               ; C:/M68K/AddressDecoder.vhd                                                       ;             ;
-; lpm_bustri0.vhd                                                    ; yes             ; User Wizard-Generated File                   ; C:/M68K/lpm_bustri0.vhd                                                          ;             ;
-; MC68K.bdf                                                          ; yes             ; User Block Diagram/Schematic File            ; C:/M68K/MC68K.bdf                                                                ;             ;
-; Latch8Bit.vhd                                                      ; yes             ; User VHDL File                               ; C:/M68K/Latch8Bit.vhd                                                            ;             ;
-; OnChipIO.bdf                                                       ; yes             ; User Block Diagram/Schematic File            ; C:/M68K/OnChipIO.bdf                                                             ;             ;
-; InterruptPriorityEncoder.vhd                                       ; yes             ; User VHDL File                               ; C:/M68K/InterruptPriorityEncoder.vhd                                             ;             ;
-; Dtack_Generator.vhd                                                ; yes             ; User VHDL File                               ; C:/M68K/Dtack_Generator.vhd                                                      ;             ;
-; IODecoder.vhd                                                      ; yes             ; User VHDL File                               ; C:/M68K/IODecoder.vhd                                                            ;             ;
-; LCD_Controller.vhd                                                 ; yes             ; User VHDL File                               ; C:/M68K/LCD_Controller.vhd                                                       ;             ;
-; HexTo7SegmentDisplay.vhd                                           ; yes             ; User VHDL File                               ; C:/M68K/HexTo7SegmentDisplay.vhd                                                 ;             ;
-; Timer.vhd                                                          ; yes             ; User VHDL File                               ; C:/M68K/Timer.vhd                                                                ;             ;
-; Dram.bdf                                                           ; yes             ; User Block Diagram/Schematic File            ; C:/M68K/Dram.bdf                                                                 ;             ;
-; lpm_bustri2.vhd                                                    ; yes             ; User Wizard-Generated File                   ; C:/M68K/lpm_bustri2.vhd                                                          ;             ;
-; TG68.vhd                                                           ; yes             ; User VHDL File                               ; C:/M68K/TG68.vhd                                                                 ;             ;
-; ACIA_6850.vhd                                                      ; yes             ; User VHDL File                               ; C:/M68K/ACIA_6850.vhd                                                            ;             ;
-; ACIA_RX.vhd                                                        ; yes             ; User VHDL File                               ; C:/M68K/ACIA_RX.vhd                                                              ;             ;
-; ACIA_TX.vhd                                                        ; yes             ; User VHDL File                               ; C:/M68K/ACIA_TX.vhd                                                              ;             ;
-; M68xxIODecoder.vhd                                                 ; yes             ; User VHDL File                               ; C:/M68K/M68xxIODecoder.vhd                                                       ;             ;
-; Latch3Bit.vhd                                                      ; yes             ; User VHDL File                               ; C:/M68K/Latch3Bit.vhd                                                            ;             ;
-; OnChipM68xxIO.bdf                                                  ; yes             ; User Block Diagram/Schematic File            ; C:/M68K/OnChipM68xxIO.bdf                                                        ;             ;
-; ACIA_BaudRate_Generator.bdf                                        ; yes             ; User Block Diagram/Schematic File            ; C:/M68K/ACIA_BaudRate_Generator.bdf                                              ;             ;
-; ACIA_Clock.vhd                                                     ; yes             ; User VHDL File                               ; C:/M68K/ACIA_Clock.vhd                                                           ;             ;
-; TG68_fast.vhd                                                      ; yes             ; User VHDL File                               ; C:/M68K/TG68_fast.vhd                                                            ;             ;
-; TraceExceptionGenerator.vhd                                        ; yes             ; User VHDL File                               ; C:/M68K/TraceExceptionGenerator.vhd                                              ;             ;
-; TraceExceptionControlBit.vhd                                       ; yes             ; User VHDL File                               ; C:/M68K/TraceExceptionControlBit.vhd                                             ;             ;
-; M68000CPU.bdf                                                      ; yes             ; User Block Diagram/Schematic File            ; C:/M68K/M68000CPU.bdf                                                            ;             ;
-; BusRequestLogic.vhd                                                ; yes             ; User VHDL File                               ; C:/M68K/BusRequestLogic.vhd                                                      ;             ;
-; DMAController.bdf                                                  ; yes             ; User Block Diagram/Schematic File            ; C:/M68K/DMAController.bdf                                                        ;             ;
-; CPU_DMA_Mux.vhd                                                    ; yes             ; User VHDL File                               ; C:/M68K/CPU_DMA_Mux.vhd                                                          ;             ;
-; OnChipROM16KWords.bdf                                              ; yes             ; User Block Diagram/Schematic File            ; C:/M68K/OnChipROM16KWords.bdf                                                    ;             ;
-; Ram128kByte.vhd                                                    ; yes             ; User Wizard-Generated File                   ; C:/M68K/Ram128kByte.vhd                                                          ;             ;
-; GraphicsFrameBufferMemory.bdf                                      ; yes             ; User Block Diagram/Schematic File            ; C:/M68K/GraphicsFrameBufferMemory.bdf                                            ;             ;
-; IIC_SPI_Interface.bdf                                              ; yes             ; User Block Diagram/Schematic File            ; C:/M68K/IIC_SPI_Interface.bdf                                                    ;             ;
-; ColourPallette_2PortRam.vhd                                        ; yes             ; User Wizard-Generated File                   ; C:/M68K/ColourPallette_2PortRam.vhd                                              ;             ;
-; CanBus.bdf                                                         ; yes             ; User Block Diagram/Schematic File            ; C:/M68K/CanBus.bdf                                                               ;             ;
-; OnChipRam256kbyte.bdf                                              ; yes             ; User Block Diagram/Schematic File            ; C:/M68K/OnChipRam256kbyte.bdf                                                    ;             ;
-; Video_Controller800x480.bdf                                        ; yes             ; User Block Diagram/Schematic File            ; C:/M68K/Video_Controller800x480.bdf                                              ;             ;
-; ClockGen.vhd                                                       ; yes             ; User Wizard-Generated File                   ; C:/M68K/ClockGen.vhd                                                             ; ClockGen    ;
-; ClockGen/ClockGen_0002.v                                           ; yes             ; User Verilog HDL File                        ; C:/M68K/ClockGen/ClockGen_0002.v                                                 ; ClockGen    ;
-; M68kDramController_Verilog.v                                       ; yes             ; User Verilog HDL File                        ; C:/M68K/M68kDramController_Verilog.v                                             ;             ;
-; GraphicsLCD_Controller_verilog.v                                   ; yes             ; User Verilog HDL File                        ; C:/M68K/GraphicsLCD_Controller_verilog.v                                         ;             ;
-; RamAddressMapper_Verilog.v                                         ; yes             ; User Verilog HDL File                        ; C:/M68K/RamAddressMapper_Verilog.v                                               ;             ;
-; OnChipRom16KWord.vhd                                               ; yes             ; User Wizard-Generated File                   ; C:/M68K/OnChipRom16KWord.vhd                                                     ;             ;
-; SPI_BUS_Decoder.vhd                                                ; yes             ; User VHDL File                               ; C:/M68K/SPI_BUS_Decoder.vhd                                                      ;             ;
-; altera_pll.v                                                       ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/altera_pll.v                      ;             ;
-; lpm_bustri.tdf                                                     ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/lpm_bustri.tdf                    ;             ;
-; altsyncram.tdf                                                     ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/altsyncram.tdf                    ;             ;
-; stratix_ram_block.inc                                              ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/stratix_ram_block.inc             ;             ;
-; lpm_mux.inc                                                        ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/lpm_mux.inc                       ;             ;
-; lpm_decode.inc                                                     ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/lpm_decode.inc                    ;             ;
-; aglobal150.inc                                                     ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/aglobal150.inc                    ;             ;
-; a_rdenreg.inc                                                      ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/a_rdenreg.inc                     ;             ;
-; altrom.inc                                                         ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/altrom.inc                        ;             ;
-; altram.inc                                                         ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/altram.inc                        ;             ;
-; altdpram.inc                                                       ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/altdpram.inc                      ;             ;
-; db/altsyncram_b634.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/altsyncram_b634.tdf                                                   ;             ;
-; ColourPallette_2PortRam.mif                                        ; yes             ; Auto-Found Memory Initialization File        ; C:/M68K/ColourPallette_2PortRam.mif                                              ;             ;
-; graphicscontroller_verilog.v                                       ; yes             ; Auto-Found Verilog HDL File                  ; C:/M68K/graphicscontroller_verilog.v                                             ;             ;
-; vgadatamux_verilog.v                                               ; yes             ; Auto-Found Verilog HDL File                  ; C:/M68K/vgadatamux_verilog.v                                                     ;             ;
-; db/altsyncram_3l64.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/altsyncram_3l64.tdf                                                   ;             ;
-; db/altsyncram_ea73.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/altsyncram_ea73.tdf                                                   ;             ;
-; ./Programs/debugmonitorproject.mif                                 ; yes             ; Auto-Found Memory Initialization File        ; C:/M68K/Programs/debugmonitorproject.mif                                         ;             ;
-; db/decode_5la.tdf                                                  ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/decode_5la.tdf                                                        ;             ;
-; db/decode_u0a.tdf                                                  ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/decode_u0a.tdf                                                        ;             ;
-; db/mux_4hb.tdf                                                     ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/mux_4hb.tdf                                                           ;             ;
-; sld_mod_ram_rom.vhd                                                ; yes             ; Encrypted Megafunction                       ; c:/altera/15.0/quartus/libraries/megafunctions/sld_mod_ram_rom.vhd               ;             ;
-; sld_jtag_endpoint_adapter.vhd                                      ; yes             ; Encrypted Megafunction                       ; c:/altera/15.0/quartus/libraries/megafunctions/sld_jtag_endpoint_adapter.vhd     ;             ;
-; sld_jtag_endpoint_adapter_impl.sv                                  ; yes             ; Encrypted Megafunction                       ; c:/altera/15.0/quartus/libraries/megafunctions/sld_jtag_endpoint_adapter_impl.sv ;             ;
-; sld_rom_sr.vhd                                                     ; yes             ; Encrypted Megafunction                       ; c:/altera/15.0/quartus/libraries/megafunctions/sld_rom_sr.vhd                    ;             ;
-; db/altsyncram_hb04.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/altsyncram_hb04.tdf                                                   ;             ;
-; db/decode_tma.tdf                                                  ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/decode_tma.tdf                                                        ;             ;
-; db/decode_m2a.tdf                                                  ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/decode_m2a.tdf                                                        ;             ;
-; db/mux_dhb.tdf                                                     ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/mux_dhb.tdf                                                           ;             ;
-; sld_hub.vhd                                                        ; yes             ; Encrypted Megafunction                       ; c:/altera/15.0/quartus/libraries/megafunctions/sld_hub.vhd                       ; altera_sld  ;
-; db/ip/sldbe7d4d23/alt_sld_fab.v                                    ; yes             ; Encrypted Auto-Found Verilog HDL File        ; C:/M68K/db/ip/sldbe7d4d23/alt_sld_fab.v                                          ; alt_sld_fab ;
-; db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab.v             ; yes             ; Encrypted Auto-Found Verilog HDL File        ; C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab.v                   ; alt_sld_fab ;
-; db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_ident.sv      ; yes             ; Auto-Found SystemVerilog HDL File            ; C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_ident.sv            ; alt_sld_fab ;
-; db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_presplit.sv   ; yes             ; Encrypted Auto-Found SystemVerilog HDL File  ; C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_presplit.sv         ; alt_sld_fab ;
-; db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_sldfabric.vhd ; yes             ; Encrypted Auto-Found VHDL File               ; C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_sldfabric.vhd       ; alt_sld_fab ;
-; db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_splitter.sv   ; yes             ; Encrypted Auto-Found SystemVerilog HDL File  ; C:/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_splitter.sv         ; alt_sld_fab ;
-; sld_jtag_hub.vhd                                                   ; yes             ; Encrypted Megafunction                       ; c:/altera/15.0/quartus/libraries/megafunctions/sld_jtag_hub.vhd                  ;             ;
-; db/altsyncram_edi1.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/altsyncram_edi1.tdf                                                   ;             ;
-; db/altsyncram_uvj1.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/altsyncram_uvj1.tdf                                                   ;             ;
-+--------------------------------------------------------------------+-----------------+----------------------------------------------+----------------------------------------------------------------------------------+-------------+
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Source Files Read                                                                                                                                                                                                             ;
++--------------------------------------------------------------------+-----------------+----------------------------------------------+------------------------------------------------------------------------------------------------+-------------+
+; File Name with User-Entered Path                                   ; Used in Netlist ; File Type                                    ; File Name with Absolute Path                                                                   ; Library     ;
++--------------------------------------------------------------------+-----------------+----------------------------------------------+------------------------------------------------------------------------------------------------+-------------+
+; simple_spi_top.v                                                   ; yes             ; User Verilog HDL File                        ; C:/cygwin64/home/sabas/M68K/simple_spi_top.v                                                   ;             ;
+; AddressDecoder.vhd                                                 ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/AddressDecoder.vhd                                                 ;             ;
+; lpm_bustri0.vhd                                                    ; yes             ; User Wizard-Generated File                   ; C:/cygwin64/home/sabas/M68K/lpm_bustri0.vhd                                                    ;             ;
+; MC68K.bdf                                                          ; yes             ; User Block Diagram/Schematic File            ; C:/cygwin64/home/sabas/M68K/MC68K.bdf                                                          ;             ;
+; Latch8Bit.vhd                                                      ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/Latch8Bit.vhd                                                      ;             ;
+; OnChipIO.bdf                                                       ; yes             ; User Block Diagram/Schematic File            ; C:/cygwin64/home/sabas/M68K/OnChipIO.bdf                                                       ;             ;
+; InterruptPriorityEncoder.vhd                                       ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/InterruptPriorityEncoder.vhd                                       ;             ;
+; Dtack_Generator.vhd                                                ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/Dtack_Generator.vhd                                                ;             ;
+; IODecoder.vhd                                                      ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/IODecoder.vhd                                                      ;             ;
+; LCD_Controller.vhd                                                 ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/LCD_Controller.vhd                                                 ;             ;
+; HexTo7SegmentDisplay.vhd                                           ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/HexTo7SegmentDisplay.vhd                                           ;             ;
+; Timer.vhd                                                          ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/Timer.vhd                                                          ;             ;
+; Dram.bdf                                                           ; yes             ; User Block Diagram/Schematic File            ; C:/cygwin64/home/sabas/M68K/Dram.bdf                                                           ;             ;
+; lpm_bustri2.vhd                                                    ; yes             ; User Wizard-Generated File                   ; C:/cygwin64/home/sabas/M68K/lpm_bustri2.vhd                                                    ;             ;
+; TG68.vhd                                                           ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/TG68.vhd                                                           ;             ;
+; ACIA_6850.vhd                                                      ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/ACIA_6850.vhd                                                      ;             ;
+; ACIA_RX.vhd                                                        ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/ACIA_RX.vhd                                                        ;             ;
+; ACIA_TX.vhd                                                        ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/ACIA_TX.vhd                                                        ;             ;
+; M68xxIODecoder.vhd                                                 ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/M68xxIODecoder.vhd                                                 ;             ;
+; Latch3Bit.vhd                                                      ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/Latch3Bit.vhd                                                      ;             ;
+; OnChipM68xxIO.bdf                                                  ; yes             ; User Block Diagram/Schematic File            ; C:/cygwin64/home/sabas/M68K/OnChipM68xxIO.bdf                                                  ;             ;
+; ACIA_BaudRate_Generator.bdf                                        ; yes             ; User Block Diagram/Schematic File            ; C:/cygwin64/home/sabas/M68K/ACIA_BaudRate_Generator.bdf                                        ;             ;
+; ACIA_Clock.vhd                                                     ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/ACIA_Clock.vhd                                                     ;             ;
+; TG68_fast.vhd                                                      ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/TG68_fast.vhd                                                      ;             ;
+; TraceExceptionGenerator.vhd                                        ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/TraceExceptionGenerator.vhd                                        ;             ;
+; TraceExceptionControlBit.vhd                                       ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/TraceExceptionControlBit.vhd                                       ;             ;
+; M68000CPU.bdf                                                      ; yes             ; User Block Diagram/Schematic File            ; C:/cygwin64/home/sabas/M68K/M68000CPU.bdf                                                      ;             ;
+; BusRequestLogic.vhd                                                ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/BusRequestLogic.vhd                                                ;             ;
+; DMAController.bdf                                                  ; yes             ; User Block Diagram/Schematic File            ; C:/cygwin64/home/sabas/M68K/DMAController.bdf                                                  ;             ;
+; CPU_DMA_Mux.vhd                                                    ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/CPU_DMA_Mux.vhd                                                    ;             ;
+; OnChipROM16KWords.bdf                                              ; yes             ; User Block Diagram/Schematic File            ; C:/cygwin64/home/sabas/M68K/OnChipROM16KWords.bdf                                              ;             ;
+; Ram128kByte.vhd                                                    ; yes             ; User Wizard-Generated File                   ; C:/cygwin64/home/sabas/M68K/Ram128kByte.vhd                                                    ;             ;
+; GraphicsFrameBufferMemory.bdf                                      ; yes             ; User Block Diagram/Schematic File            ; C:/cygwin64/home/sabas/M68K/GraphicsFrameBufferMemory.bdf                                      ;             ;
+; IIC_SPI_Interface.bdf                                              ; yes             ; User Block Diagram/Schematic File            ; C:/cygwin64/home/sabas/M68K/IIC_SPI_Interface.bdf                                              ;             ;
+; ColourPallette_2PortRam.vhd                                        ; yes             ; User Wizard-Generated File                   ; C:/cygwin64/home/sabas/M68K/ColourPallette_2PortRam.vhd                                        ;             ;
+; CanBus.bdf                                                         ; yes             ; User Block Diagram/Schematic File            ; C:/cygwin64/home/sabas/M68K/CanBus.bdf                                                         ;             ;
+; OnChipRam256kbyte.bdf                                              ; yes             ; User Block Diagram/Schematic File            ; C:/cygwin64/home/sabas/M68K/OnChipRam256kbyte.bdf                                              ;             ;
+; Video_Controller800x480.bdf                                        ; yes             ; User Block Diagram/Schematic File            ; C:/cygwin64/home/sabas/M68K/Video_Controller800x480.bdf                                        ;             ;
+; ClockGen.vhd                                                       ; yes             ; User Wizard-Generated File                   ; C:/cygwin64/home/sabas/M68K/ClockGen.vhd                                                       ; ClockGen    ;
+; ClockGen/ClockGen_0002.v                                           ; yes             ; User Verilog HDL File                        ; C:/cygwin64/home/sabas/M68K/ClockGen/ClockGen_0002.v                                           ; ClockGen    ;
+; M68kDramController_Verilog.v                                       ; yes             ; User Verilog HDL File                        ; C:/cygwin64/home/sabas/M68K/M68kDramController_Verilog.v                                       ;             ;
+; GraphicsLCD_Controller_verilog.v                                   ; yes             ; User Verilog HDL File                        ; C:/cygwin64/home/sabas/M68K/GraphicsLCD_Controller_verilog.v                                   ;             ;
+; RamAddressMapper_Verilog.v                                         ; yes             ; User Verilog HDL File                        ; C:/cygwin64/home/sabas/M68K/RamAddressMapper_Verilog.v                                         ;             ;
+; OnChipRom16KWord.vhd                                               ; yes             ; User Wizard-Generated File                   ; C:/cygwin64/home/sabas/M68K/OnChipRom16KWord.vhd                                               ;             ;
+; SPI_BUS_Decoder.vhd                                                ; yes             ; User VHDL File                               ; C:/cygwin64/home/sabas/M68K/SPI_BUS_Decoder.vhd                                                ;             ;
+; altera_pll.v                                                       ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/altera_pll.v                                    ;             ;
+; lpm_bustri.tdf                                                     ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/lpm_bustri.tdf                                  ;             ;
+; altsyncram.tdf                                                     ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/altsyncram.tdf                                  ;             ;
+; stratix_ram_block.inc                                              ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/stratix_ram_block.inc                           ;             ;
+; lpm_mux.inc                                                        ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/lpm_mux.inc                                     ;             ;
+; lpm_decode.inc                                                     ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/lpm_decode.inc                                  ;             ;
+; aglobal150.inc                                                     ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/aglobal150.inc                                  ;             ;
+; a_rdenreg.inc                                                      ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/a_rdenreg.inc                                   ;             ;
+; altrom.inc                                                         ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/altrom.inc                                      ;             ;
+; altram.inc                                                         ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/altram.inc                                      ;             ;
+; altdpram.inc                                                       ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/altdpram.inc                                    ;             ;
+; db/altsyncram_b634.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/cygwin64/home/sabas/M68K/db/altsyncram_b634.tdf                                             ;             ;
+; ColourPallette_2PortRam.mif                                        ; yes             ; Auto-Found Memory Initialization File        ; C:/cygwin64/home/sabas/M68K/ColourPallette_2PortRam.mif                                        ;             ;
+; graphicscontroller_verilog.v                                       ; yes             ; Auto-Found Verilog HDL File                  ; C:/cygwin64/home/sabas/M68K/graphicscontroller_verilog.v                                       ;             ;
+; vgadatamux_verilog.v                                               ; yes             ; Auto-Found Verilog HDL File                  ; C:/cygwin64/home/sabas/M68K/vgadatamux_verilog.v                                               ;             ;
+; db/altsyncram_cl54.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/cygwin64/home/sabas/M68K/db/altsyncram_cl54.tdf                                             ;             ;
+; db/altsyncram_na63.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/cygwin64/home/sabas/M68K/db/altsyncram_na63.tdf                                             ;             ;
+; debugmonitorproject.mif                                            ; yes             ; Auto-Found Memory Initialization File        ; C:/cygwin64/home/sabas/M68K/debugmonitorproject.mif                                            ;             ;
+; db/decode_5la.tdf                                                  ; yes             ; Auto-Generated Megafunction                  ; C:/cygwin64/home/sabas/M68K/db/decode_5la.tdf                                                  ;             ;
+; db/decode_u0a.tdf                                                  ; yes             ; Auto-Generated Megafunction                  ; C:/cygwin64/home/sabas/M68K/db/decode_u0a.tdf                                                  ;             ;
+; db/mux_4hb.tdf                                                     ; yes             ; Auto-Generated Megafunction                  ; C:/cygwin64/home/sabas/M68K/db/mux_4hb.tdf                                                     ;             ;
+; sld_mod_ram_rom.vhd                                                ; yes             ; Encrypted Megafunction                       ; c:/altera/15.0/quartus/libraries/megafunctions/sld_mod_ram_rom.vhd                             ;             ;
+; sld_jtag_endpoint_adapter.vhd                                      ; yes             ; Encrypted Megafunction                       ; c:/altera/15.0/quartus/libraries/megafunctions/sld_jtag_endpoint_adapter.vhd                   ;             ;
+; sld_jtag_endpoint_adapter_impl.sv                                  ; yes             ; Encrypted Megafunction                       ; c:/altera/15.0/quartus/libraries/megafunctions/sld_jtag_endpoint_adapter_impl.sv               ;             ;
+; sld_rom_sr.vhd                                                     ; yes             ; Encrypted Megafunction                       ; c:/altera/15.0/quartus/libraries/megafunctions/sld_rom_sr.vhd                                  ;             ;
+; db/altsyncram_hb04.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/cygwin64/home/sabas/M68K/db/altsyncram_hb04.tdf                                             ;             ;
+; db/decode_tma.tdf                                                  ; yes             ; Auto-Generated Megafunction                  ; C:/cygwin64/home/sabas/M68K/db/decode_tma.tdf                                                  ;             ;
+; db/decode_m2a.tdf                                                  ; yes             ; Auto-Generated Megafunction                  ; C:/cygwin64/home/sabas/M68K/db/decode_m2a.tdf                                                  ;             ;
+; db/mux_dhb.tdf                                                     ; yes             ; Auto-Generated Megafunction                  ; C:/cygwin64/home/sabas/M68K/db/mux_dhb.tdf                                                     ;             ;
+; sld_hub.vhd                                                        ; yes             ; Encrypted Megafunction                       ; c:/altera/15.0/quartus/libraries/megafunctions/sld_hub.vhd                                     ; altera_sld  ;
+; db/ip/sldbe7d4d23/alt_sld_fab.v                                    ; yes             ; Encrypted Auto-Found Verilog HDL File        ; C:/cygwin64/home/sabas/M68K/db/ip/sldbe7d4d23/alt_sld_fab.v                                    ; alt_sld_fab ;
+; db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab.v             ; yes             ; Encrypted Auto-Found Verilog HDL File        ; C:/cygwin64/home/sabas/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab.v             ; alt_sld_fab ;
+; db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_ident.sv      ; yes             ; Auto-Found SystemVerilog HDL File            ; C:/cygwin64/home/sabas/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_ident.sv      ; alt_sld_fab ;
+; db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_presplit.sv   ; yes             ; Encrypted Auto-Found SystemVerilog HDL File  ; C:/cygwin64/home/sabas/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_presplit.sv   ; alt_sld_fab ;
+; db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_sldfabric.vhd ; yes             ; Encrypted Auto-Found VHDL File               ; C:/cygwin64/home/sabas/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_sldfabric.vhd ; alt_sld_fab ;
+; db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_splitter.sv   ; yes             ; Encrypted Auto-Found SystemVerilog HDL File  ; C:/cygwin64/home/sabas/M68K/db/ip/sldbe7d4d23/submodules/alt_sld_fab_alt_sld_fab_splitter.sv   ; alt_sld_fab ;
+; sld_jtag_hub.vhd                                                   ; yes             ; Encrypted Megafunction                       ; c:/altera/15.0/quartus/libraries/megafunctions/sld_jtag_hub.vhd                                ;             ;
+; db/altsyncram_edi1.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/cygwin64/home/sabas/M68K/db/altsyncram_edi1.tdf                                             ;             ;
+; db/altsyncram_uvj1.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/cygwin64/home/sabas/M68K/db/altsyncram_uvj1.tdf                                             ;             ;
++--------------------------------------------------------------------+-----------------+----------------------------------------------+------------------------------------------------------------------------------------------------+-------------+
 
 
 +---------------------------------------------------------------------------------------------------------------------------------+
@@ -327,12 +328,12 @@ agreement for further details.
 +---------------------------------------------+-----------------------------------------------------------------------------------+
 ; Estimate of Logic utilization (ALMs needed) ; 2800                                                                              ;
 ;                                             ;                                                                                   ;
-; Combinational ALUT usage for logic          ; 4258                                                                              ;
+; Combinational ALUT usage for logic          ; 4261                                                                              ;
 ;     -- 7 input functions                    ; 111                                                                               ;
-;     -- 6 input functions                    ; 1181                                                                              ;
-;     -- 5 input functions                    ; 1045                                                                              ;
+;     -- 6 input functions                    ; 1178                                                                              ;
+;     -- 5 input functions                    ; 1049                                                                              ;
 ;     -- 4 input functions                    ; 655                                                                               ;
-;     -- <=3 input functions                  ; 1266                                                                              ;
+;     -- <=3 input functions                  ; 1268                                                                              ;
 ;                                             ;                                                                                   ;
 ; Dedicated logic registers                   ; 1337                                                                              ;
 ;                                             ;                                                                                   ;
@@ -347,7 +348,7 @@ agreement for further details.
 ;                                             ;                                                                                   ;
 ; Maximum fan-out node                        ; ClockGen:inst7|ClockGen_0002:clockgen_inst|altera_pll:altera_pll_i|outclk_wire[0] ;
 ; Maximum fan-out                             ; 1278                                                                              ;
-; Total fan-out                               ; 30380                                                                             ;
+; Total fan-out                               ; 30391                                                                             ;
 ; Average fan-out                             ; 4.68                                                                              ;
 +---------------------------------------------+-----------------------------------------------------------------------------------+
 
@@ -357,7 +358,7 @@ agreement for further details.
 +-----------------------------------------------------------------------------------------------------+-------------------+--------------+-------------------+------------+------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
 ; Compilation Hierarchy Node                                                                          ; LC Combinationals ; LC Registers ; Block Memory Bits ; DSP Blocks ; Pins ; Virtual Pins ; Full Hierarchy Name                                                                                                                                                                                                                                                        ; Library Name ;
 +-----------------------------------------------------------------------------------------------------+-------------------+--------------+-------------------+------------+------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-; |MC68K                                                                                              ; 4258 (6)          ; 1337 (0)     ; 2360560           ; 0          ; 238  ; 0            ; |MC68K                                                                                                                                                                                                                                                                     ; work         ;
+; |MC68K                                                                                              ; 4261 (6)          ; 1337 (0)     ; 2360560           ; 0          ; 238  ; 0            ; |MC68K                                                                                                                                                                                                                                                                     ; work         ;
 ;    |AddressDecoder:inst3|                                                                           ; 15 (15)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|AddressDecoder:inst3                                                                                                                                                                                                                                                ; work         ;
 ;    |ClockGen:inst7|                                                                                 ; 0 (0)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|ClockGen:inst7                                                                                                                                                                                                                                                      ; clockgen     ;
 ;       |ClockGen_0002:clockgen_inst|                                                                 ; 0 (0)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|ClockGen:inst7|ClockGen_0002:clockgen_inst                                                                                                                                                                                                                          ; ClockGen     ;
@@ -426,11 +427,11 @@ agreement for further details.
 ;    |OnChipROM16KWords:inst16|                                                                       ; 131 (0)           ; 51 (0)       ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16                                                                                                                                                                                                                                            ; work         ;
 ;       |OnChipRom16KWord:inst1|                                                                      ; 112 (0)           ; 51 (0)       ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1                                                                                                                                                                                                                     ; work         ;
 ;          |altsyncram:altsyncram_component|                                                          ; 112 (0)           ; 51 (0)       ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component                                                                                                                                                                                     ; work         ;
-;             |altsyncram_3l64:auto_generated|                                                        ; 112 (0)           ; 51 (0)       ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated                                                                                                                                                      ; work         ;
-;                |altsyncram_ea73:altsyncram1|                                                        ; 2 (0)             ; 1 (1)        ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1                                                                                                                          ; work         ;
-;                   |decode_5la:decode5|                                                              ; 2 (2)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1|decode_5la:decode5                                                                                                       ; work         ;
-;                |sld_mod_ram_rom:mgl_prim2|                                                          ; 110 (92)          ; 50 (41)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2                                                                                                                            ; work         ;
-;                   |sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr|                              ; 18 (18)           ; 9 (9)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr                                                                         ; work         ;
+;             |altsyncram_cl54:auto_generated|                                                        ; 112 (0)           ; 51 (0)       ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated                                                                                                                                                      ; work         ;
+;                |altsyncram_na63:altsyncram1|                                                        ; 2 (0)             ; 1 (1)        ; 262144            ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|altsyncram_na63:altsyncram1                                                                                                                          ; work         ;
+;                   |decode_5la:decode5|                                                              ; 2 (2)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|altsyncram_na63:altsyncram1|decode_5la:decode5                                                                                                       ; work         ;
+;                |sld_mod_ram_rom:mgl_prim2|                                                          ; 110 (92)          ; 50 (41)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|sld_mod_ram_rom:mgl_prim2                                                                                                                            ; work         ;
+;                   |sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr|                              ; 18 (18)           ; 9 (9)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr                                                                         ; work         ;
 ;       |lpm_bustri0:inst|                                                                            ; 19 (0)            ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|lpm_bustri0:inst                                                                                                                                                                                                                           ; work         ;
 ;          |lpm_bustri:lpm_bustri_component|                                                          ; 19 (19)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipROM16KWords:inst16|lpm_bustri0:inst|lpm_bustri:lpm_bustri_component                                                                                                                                                                                           ; work         ;
 ;    |OnChipRam256kbyte:inst6|                                                                        ; 135 (2)           ; 4 (0)        ; 2097152           ; 0          ; 0    ; 0            ; |MC68K|OnChipRam256kbyte:inst6                                                                                                                                                                                                                                             ; work         ;
@@ -454,34 +455,34 @@ agreement for further details.
 ;          |altsyncram:altsyncram_component|                                                          ; 0 (0)             ; 0 (0)        ; 48                ; 0          ; 0    ; 0            ; |MC68K|Video_Controller800x480:inst1|ColourPallette_2PortRam:inst3|altsyncram:altsyncram_component                                                                                                                                                                         ; work         ;
 ;             |altsyncram_b634:auto_generated|                                                        ; 0 (0)             ; 0 (0)        ; 48                ; 0          ; 0    ; 0            ; |MC68K|Video_Controller800x480:inst1|ColourPallette_2PortRam:inst3|altsyncram:altsyncram_component|altsyncram_b634:auto_generated                                                                                                                                          ; work         ;
 ;       |GraphicsLCD_Controller_Verilog:inst5|                                                        ; 77 (77)           ; 26 (26)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|Video_Controller800x480:inst1|GraphicsLCD_Controller_Verilog:inst5                                                                                                                                                                                                  ; work         ;
-;    |sld_hub:auto_hub|                                                                               ; 100 (1)           ; 80 (0)       ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub                                                                                                                                                                                                                                                    ; altera_sld   ;
-;       |alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric| ; 99 (0)            ; 80 (0)       ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric                                                                                                                                                        ; alt_sld_fab  ;
-;          |alt_sld_fab_alt_sld_fab:alt_sld_fab|                                                      ; 99 (1)            ; 80 (5)       ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab                                                                                                                    ; alt_sld_fab  ;
-;             |alt_sld_fab_alt_sld_fab_ident:ident|                                                   ; 3 (3)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_ident:ident                                                                                ; alt_sld_fab  ;
-;             |alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|                                           ; 95 (0)            ; 75 (0)       ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric                                                                        ; alt_sld_fab  ;
-;                |sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub|                                       ; 95 (59)           ; 75 (47)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub                           ; work         ;
+;    |sld_hub:auto_hub|                                                                               ; 103 (1)           ; 80 (0)       ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub                                                                                                                                                                                                                                                    ; altera_sld   ;
+;       |alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric| ; 102 (0)           ; 80 (0)       ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric                                                                                                                                                        ; alt_sld_fab  ;
+;          |alt_sld_fab_alt_sld_fab:alt_sld_fab|                                                      ; 102 (1)           ; 80 (5)       ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab                                                                                                                    ; alt_sld_fab  ;
+;             |alt_sld_fab_alt_sld_fab_ident:ident|                                                   ; 2 (2)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_ident:ident                                                                                ; alt_sld_fab  ;
+;             |alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|                                           ; 99 (0)            ; 75 (0)       ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric                                                                        ; alt_sld_fab  ;
+;                |sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub|                                       ; 99 (63)           ; 75 (47)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub                           ; work         ;
 ;                   |sld_rom_sr:hub_info_reg|                                                         ; 17 (17)           ; 9 (9)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub|sld_rom_sr:hub_info_reg   ; work         ;
 ;                   |sld_shadow_jsm:shadow_jsm|                                                       ; 19 (19)           ; 19 (19)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub|sld_shadow_jsm:shadow_jsm ; altera_sld   ;
 +-----------------------------------------------------------------------------------------------------+-------------------+--------------+-------------------+------------+------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
 Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
 
 
-+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis RAM Summary                                                                                                                                                                                                                                                           ;
-+-------------------------------------------------------------------------------------------------------------------------------------------------------+------+------------------+--------------+--------------+--------------+--------------+---------+------------------------------------+
-; Name                                                                                                                                                  ; Type ; Mode             ; Port A Depth ; Port A Width ; Port B Depth ; Port B Width ; Size    ; MIF                                ;
-+-------------------------------------------------------------------------------------------------------------------------------------------------------+------+------------------+--------------+--------------+--------------+--------------+---------+------------------------------------+
-; IIC_SPI_Interface:inst32|simple_spi_top:inst1|fifo4:rfifo|altsyncram:mem_rtl_0|altsyncram_edi1:auto_generated|ALTSYNCRAM                              ; AUTO ; Simple Dual Port ; 8            ; 8            ; 8            ; 8            ; 64      ; None                               ;
-; IIC_SPI_Interface:inst32|simple_spi_top:inst1|fifo4:wfifo|altsyncram:mem_rtl_0|altsyncram_edi1:auto_generated|ALTSYNCRAM                              ; AUTO ; Simple Dual Port ; 8            ; 8            ; 8            ; 8            ; 64      ; None                               ;
-; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_high_rtl_0|altsyncram_uvj1:auto_generated|ALTSYNCRAM                           ; AUTO ; Simple Dual Port ; 17           ; 16           ; 17           ; 16           ; 272     ; None                               ;
-; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_high_rtl_1|altsyncram_uvj1:auto_generated|ALTSYNCRAM                           ; AUTO ; Simple Dual Port ; 17           ; 16           ; 17           ; 16           ; 272     ; None                               ;
-; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_low_rtl_0|altsyncram_uvj1:auto_generated|ALTSYNCRAM                            ; AUTO ; Simple Dual Port ; 17           ; 16           ; 17           ; 16           ; 272     ; None                               ;
-; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_low_rtl_1|altsyncram_uvj1:auto_generated|ALTSYNCRAM                            ; AUTO ; Simple Dual Port ; 17           ; 16           ; 17           ; 16           ; 272     ; None                               ;
-; OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1|ALTSYNCRAM ; AUTO ; True Dual Port   ; 16384        ; 16           ; 16384        ; 16           ; 262144  ; ./Programs/debugmonitorproject.mif ;
-; OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|ALTSYNCRAM                                  ; AUTO ; Single Port      ; 131072       ; 8            ; --           ; --           ; 1048576 ; None                               ;
-; OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|ALTSYNCRAM                                  ; AUTO ; Single Port      ; 131072       ; 8            ; --           ; --           ; 1048576 ; None                               ;
-; Video_Controller800x480:inst1|ColourPallette_2PortRam:inst3|altsyncram:altsyncram_component|altsyncram_b634:auto_generated|ALTSYNCRAM                 ; AUTO ; Simple Dual Port ; 64           ; 24           ; 64           ; 24           ; 1536    ; ColourPallette_2PortRam.mif        ;
-+-------------------------------------------------------------------------------------------------------------------------------------------------------+------+------------------+--------------+--------------+--------------+--------------+---------+------------------------------------+
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis RAM Summary                                                                                                                                                                                                                                                    ;
++-------------------------------------------------------------------------------------------------------------------------------------------------------+------+------------------+--------------+--------------+--------------+--------------+---------+-----------------------------+
+; Name                                                                                                                                                  ; Type ; Mode             ; Port A Depth ; Port A Width ; Port B Depth ; Port B Width ; Size    ; MIF                         ;
++-------------------------------------------------------------------------------------------------------------------------------------------------------+------+------------------+--------------+--------------+--------------+--------------+---------+-----------------------------+
+; IIC_SPI_Interface:inst32|simple_spi_top:inst1|fifo4:rfifo|altsyncram:mem_rtl_0|altsyncram_edi1:auto_generated|ALTSYNCRAM                              ; AUTO ; Simple Dual Port ; 8            ; 8            ; 8            ; 8            ; 64      ; None                        ;
+; IIC_SPI_Interface:inst32|simple_spi_top:inst1|fifo4:wfifo|altsyncram:mem_rtl_0|altsyncram_edi1:auto_generated|ALTSYNCRAM                              ; AUTO ; Simple Dual Port ; 8            ; 8            ; 8            ; 8            ; 64      ; None                        ;
+; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_high_rtl_0|altsyncram_uvj1:auto_generated|ALTSYNCRAM                           ; AUTO ; Simple Dual Port ; 17           ; 16           ; 17           ; 16           ; 272     ; None                        ;
+; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_high_rtl_1|altsyncram_uvj1:auto_generated|ALTSYNCRAM                           ; AUTO ; Simple Dual Port ; 17           ; 16           ; 17           ; 16           ; 272     ; None                        ;
+; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_low_rtl_0|altsyncram_uvj1:auto_generated|ALTSYNCRAM                            ; AUTO ; Simple Dual Port ; 17           ; 16           ; 17           ; 16           ; 272     ; None                        ;
+; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_low_rtl_1|altsyncram_uvj1:auto_generated|ALTSYNCRAM                            ; AUTO ; Simple Dual Port ; 17           ; 16           ; 17           ; 16           ; 272     ; None                        ;
+; OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|altsyncram_na63:altsyncram1|ALTSYNCRAM ; AUTO ; True Dual Port   ; 16384        ; 16           ; 16384        ; 16           ; 262144  ; debugmonitorproject.mif     ;
+; OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|ALTSYNCRAM                                  ; AUTO ; Single Port      ; 131072       ; 8            ; --           ; --           ; 1048576 ; None                        ;
+; OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|ALTSYNCRAM                                  ; AUTO ; Single Port      ; 131072       ; 8            ; --           ; --           ; 1048576 ; None                        ;
+; Video_Controller800x480:inst1|ColourPallette_2PortRam:inst3|altsyncram:altsyncram_component|altsyncram_b634:auto_generated|ALTSYNCRAM                 ; AUTO ; Simple Dual Port ; 64           ; 24           ; 64           ; 24           ; 1536    ; ColourPallette_2PortRam.mif ;
++-------------------------------------------------------------------------------------------------------------------------------------------------------+------+------------------+--------------+--------------+--------------+--------------+---------+-----------------------------+
 
 
 +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -751,7 +752,7 @@ Note: All latches listed above may not be present at the end of synthesis due to
 ; OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[3]                                  ; Merged with OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[3] ;
 ; OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[2]                                  ; Merged with OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[2] ;
 ; OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[1]                                  ; Merged with OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[1] ;
-; OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1|address_reg_a[0] ; Merged with OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[0] ;
+; OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|altsyncram_na63:altsyncram1|address_reg_a[0] ; Merged with OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[0] ;
 ; OnChipRam256kbyte:inst6|Ram128kByte:inst12|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[0]                                  ; Merged with OnChipRam256kbyte:inst6|Ram128kByte:inst13|altsyncram:altsyncram_component|altsyncram_hb04:auto_generated|address_reg_a[0] ;
 ; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|trap_vector[1]                                                                                          ; Merged with M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|trap_vector[0]                                                         ;
 ; OnChipM68xxIO:inst11|ACIA_6850:inst16|ACIA_RX:RxDev|RxClkDel                                                                                                ; Merged with OnChipM68xxIO:inst11|ACIA_6850:inst16|ACIA_TX:TxDev|TxClkDel                                                               ;
@@ -1033,8 +1034,8 @@ Note: All latches listed above may not be present at the end of synthesis due to
 ; 3:1                ; 6 bits    ; 12 LEs        ; 12 LEs               ; 0 LEs                  ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|exec_MOVE                                                                                                                                                                                                                     ;
 ; 3:1                ; 10 bits   ; 20 LEs        ; 0 LEs                ; 20 LEs                 ; Yes        ; |MC68K|Video_Controller800x480:inst1|GraphicsLCD_Controller_Verilog:inst5|HCount[1]                                                                                                                                                                                                      ;
 ; 3:1                ; 10 bits   ; 20 LEs        ; 0 LEs                ; 20 LEs                 ; Yes        ; |MC68K|Video_Controller800x480:inst1|GraphicsLCD_Controller_Verilog:inst5|VCount[8]                                                                                                                                                                                                      ;
-; 3:1                ; 5 bits    ; 10 LEs        ; 5 LEs                ; 5 LEs                  ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|ram_rom_data_shift_cntr_reg[4]                                                                                                           ;
-; 3:1                ; 14 bits   ; 28 LEs        ; 0 LEs                ; 28 LEs                 ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|ram_rom_addr_reg[6]                                                                                                                      ;
+; 3:1                ; 5 bits    ; 10 LEs        ; 5 LEs                ; 5 LEs                  ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|sld_mod_ram_rom:mgl_prim2|ram_rom_data_shift_cntr_reg[4]                                                                                                           ;
+; 3:1                ; 14 bits   ; 28 LEs        ; 0 LEs                ; 28 LEs                 ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|sld_mod_ram_rom:mgl_prim2|ram_rom_addr_reg[6]                                                                                                                      ;
 ; 3:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; Yes        ; |MC68K|OnChipM68xxIO:inst11|ACIA_6850:inst16|WriteTR                                                                                                                                                                                                                                     ;
 ; 3:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |MC68K|Dram:inst2|M68kDramController_Verilog:inst1|Timer[9]                                                                                                                                                                                                                              ;
 ; 3:1                ; 8 bits    ; 16 LEs        ; 0 LEs                ; 16 LEs                 ; Yes        ; |MC68K|Dram:inst2|M68kDramController_Verilog:inst1|Timer[11]                                                                                                                                                                                                                             ;
@@ -1048,18 +1049,18 @@ Note: All latches listed above may not be present at the end of synthesis due to
 ; 3:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|Flags[12]                                                                                                                                                                                                                     ;
 ; 4:1                ; 3 bits    ; 6 LEs         ; 3 LEs                ; 3 LEs                  ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|Flags[6]                                                                                                                                                                                                                      ;
 ; 4:1                ; 32 bits   ; 64 LEs        ; 64 LEs               ; 0 LEs                  ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|TG68_PC[26]                                                                                                                                                                                                                   ;
-; 4:1                ; 16 bits   ; 32 LEs        ; 32 LEs               ; 0 LEs                  ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|ram_rom_data_reg[9]                                                                                                                      ;
+; 4:1                ; 16 bits   ; 32 LEs        ; 32 LEs               ; 0 LEs                  ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|sld_mod_ram_rom:mgl_prim2|ram_rom_data_reg[9]                                                                                                                      ;
 ; 3:1                ; 2 bits    ; 4 LEs         ; 2 LEs                ; 2 LEs                  ; Yes        ; |MC68K|OnChipM68xxIO:inst11|ACIA_6850:inst16|ACIA_RX:RxDev|RxBitCount[1]                                                                                                                                                                                                                 ;
 ; 4:1                ; 2 bits    ; 4 LEs         ; 2 LEs                ; 2 LEs                  ; Yes        ; |MC68K|IIC_SPI_Interface:inst32|simple_spi_top:inst1|tcnt[1]                                                                                                                                                                                                                             ;
 ; 4:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; Yes        ; |MC68K|Dram:inst2|M68kDramController_Verilog:inst1|Timer[3]                                                                                                                                                                                                                              ;
-; 5:1                ; 5 bits    ; 15 LEs        ; 10 LEs               ; 5 LEs                  ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr|word_counter[0]                                                                       ;
+; 5:1                ; 5 bits    ; 15 LEs        ; 10 LEs               ; 5 LEs                  ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr|word_counter[0]                                                                       ;
 ; 6:1                ; 3 bits    ; 12 LEs        ; 6 LEs                ; 6 LEs                  ; Yes        ; |MC68K|IIC_SPI_Interface:inst32|simple_spi_top:inst1|bcnt[2]                                                                                                                                                                                                                             ;
 ; 5:1                ; 8 bits    ; 24 LEs        ; 0 LEs                ; 24 LEs                 ; Yes        ; |MC68K|OnChipM68xxIO:inst11|ACIA_6850:inst16|ACIA_RX:RxDev|RxShiftReg[0]                                                                                                                                                                                                                 ;
 ; 8:1                ; 8 bits    ; 40 LEs        ; 16 LEs               ; 24 LEs                 ; Yes        ; |MC68K|IIC_SPI_Interface:inst32|simple_spi_top:inst1|treg[7]                                                                                                                                                                                                                             ;
 ; 8:1                ; 8 bits    ; 40 LEs        ; 32 LEs               ; 8 LEs                  ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|data_write_tmp[0]                                                                                                                                                                                                             ;
 ; 8:1                ; 16 bits   ; 80 LEs        ; 64 LEs               ; 16 LEs                 ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|data_write_tmp[25]                                                                                                                                                                                                            ;
 ; 9:1                ; 8 bits    ; 48 LEs        ; 40 LEs               ; 8 LEs                  ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|data_write_tmp[15]                                                                                                                                                                                                            ;
-; 24:1               ; 4 bits    ; 64 LEs        ; 48 LEs               ; 16 LEs                 ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr|WORD_SR[2]                                                                            ;
+; 24:1               ; 4 bits    ; 64 LEs        ; 48 LEs               ; 16 LEs                 ; Yes        ; |MC68K|OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr|WORD_SR[2]                                                                            ;
 ; 9:1                ; 3 bits    ; 18 LEs        ; 15 LEs               ; 3 LEs                  ; Yes        ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|trap_vector[4]                                                                                                                                                                                                                ;
 ; 15:1               ; 2 bits    ; 20 LEs        ; 20 LEs               ; 0 LEs                  ; Yes        ; |MC68K|Dram:inst2|M68kDramController_Verilog:inst1|SDram_Addr[12]                                                                                                                                                                                                                        ;
 ; 19:1               ; 2 bits    ; 24 LEs        ; 18 LEs               ; 6 LEs                  ; Yes        ; |MC68K|Dram:inst2|M68kDramController_Verilog:inst1|SDram_BA[0]                                                                                                                                                                                                                           ;
@@ -1149,7 +1150,7 @@ Note: All latches listed above may not be present at the end of synthesis due to
 ; 4:1                ; 5 bits    ; 10 LEs        ; 10 LEs               ; 0 LEs                  ; Yes        ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub|mixer_addr_reg_internal[2]              ;
 ; 5:1                ; 5 bits    ; 15 LEs        ; 10 LEs               ; 5 LEs                  ; Yes        ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub|sld_rom_sr:hub_info_reg|word_counter[0] ;
 ; 6:1                ; 4 bits    ; 16 LEs        ; 4 LEs                ; 12 LEs                 ; Yes        ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub|irsr_reg[2]                             ;
-; 34:1               ; 4 bits    ; 88 LEs        ; 64 LEs               ; 24 LEs                 ; Yes        ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub|design_hash_reg[0]                      ;
+; 34:1               ; 4 bits    ; 88 LEs        ; 60 LEs               ; 28 LEs                 ; Yes        ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub|design_hash_reg[0]                      ;
 ; 20:1               ; 4 bits    ; 52 LEs        ; 32 LEs               ; 20 LEs                 ; Yes        ; |MC68K|sld_hub:auto_hub|alt_sld_fab:\instrumentation_fabric_with_node_gen:fabric_gen_new_way:instrumentation_fabric|alt_sld_fab_alt_sld_fab:alt_sld_fab|alt_sld_fab_alt_sld_fab_sldfabric:sldfabric|sld_jtag_hub:\jtag_hub_gen:real_sld_jtag_hub|sld_rom_sr:hub_info_reg|WORD_SR[0]      ;
 +--------------------+-----------+---------------+----------------------+------------------------+------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
@@ -1164,7 +1165,7 @@ Note: All latches listed above may not be present at the end of synthesis due to
 
 
 +-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Source assignments for OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1 ;
+; Source assignments for OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|altsyncram_na63:altsyncram1 ;
 +---------------------------------+--------------------+------+-----------------------------------------------------------------------------------------------------+
 ; Assignment                      ; Value              ; From ; To                                                                                                  ;
 +---------------------------------+--------------------+------+-----------------------------------------------------------------------------------------------------+
@@ -1676,62 +1677,62 @@ Note: In order to hide this table in the UI and the text report file, please set
 
 +------------------------------------------------------------------------------------------------------------------------------+
 ; Parameter Settings for User Entity Instance: OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component ;
-+------------------------------------+------------------------------------+----------------------------------------------------+
-; Parameter Name                     ; Value                              ; Type                                               ;
-+------------------------------------+------------------------------------+----------------------------------------------------+
-; BYTE_SIZE_BLOCK                    ; 8                                  ; Untyped                                            ;
-; AUTO_CARRY_CHAINS                  ; ON                                 ; AUTO_CARRY                                         ;
-; IGNORE_CARRY_BUFFERS               ; OFF                                ; IGNORE_CARRY                                       ;
-; AUTO_CASCADE_CHAINS                ; ON                                 ; AUTO_CASCADE                                       ;
-; IGNORE_CASCADE_BUFFERS             ; OFF                                ; IGNORE_CASCADE                                     ;
-; WIDTH_BYTEENA                      ; 1                                  ; Untyped                                            ;
-; OPERATION_MODE                     ; ROM                                ; Untyped                                            ;
-; WIDTH_A                            ; 16                                 ; Signed Integer                                     ;
-; WIDTHAD_A                          ; 14                                 ; Signed Integer                                     ;
-; NUMWORDS_A                         ; 16384                              ; Signed Integer                                     ;
-; OUTDATA_REG_A                      ; UNREGISTERED                       ; Untyped                                            ;
-; ADDRESS_ACLR_A                     ; NONE                               ; Untyped                                            ;
-; OUTDATA_ACLR_A                     ; NONE                               ; Untyped                                            ;
-; WRCONTROL_ACLR_A                   ; NONE                               ; Untyped                                            ;
-; INDATA_ACLR_A                      ; NONE                               ; Untyped                                            ;
-; BYTEENA_ACLR_A                     ; NONE                               ; Untyped                                            ;
-; WIDTH_B                            ; 1                                  ; Signed Integer                                     ;
-; WIDTHAD_B                          ; 1                                  ; Signed Integer                                     ;
-; NUMWORDS_B                         ; 0                                  ; Signed Integer                                     ;
-; INDATA_REG_B                       ; CLOCK1                             ; Untyped                                            ;
-; WRCONTROL_WRADDRESS_REG_B          ; CLOCK1                             ; Untyped                                            ;
-; RDCONTROL_REG_B                    ; CLOCK1                             ; Untyped                                            ;
-; ADDRESS_REG_B                      ; CLOCK1                             ; Untyped                                            ;
-; OUTDATA_REG_B                      ; UNREGISTERED                       ; Untyped                                            ;
-; BYTEENA_REG_B                      ; CLOCK1                             ; Untyped                                            ;
-; INDATA_ACLR_B                      ; NONE                               ; Untyped                                            ;
-; WRCONTROL_ACLR_B                   ; NONE                               ; Untyped                                            ;
-; ADDRESS_ACLR_B                     ; NONE                               ; Untyped                                            ;
-; OUTDATA_ACLR_B                     ; NONE                               ; Untyped                                            ;
-; RDCONTROL_ACLR_B                   ; NONE                               ; Untyped                                            ;
-; BYTEENA_ACLR_B                     ; NONE                               ; Untyped                                            ;
-; WIDTH_BYTEENA_A                    ; 1                                  ; Signed Integer                                     ;
-; WIDTH_BYTEENA_B                    ; 1                                  ; Signed Integer                                     ;
-; RAM_BLOCK_TYPE                     ; AUTO                               ; Untyped                                            ;
-; BYTE_SIZE                          ; 8                                  ; Signed Integer                                     ;
-; READ_DURING_WRITE_MODE_MIXED_PORTS ; DONT_CARE                          ; Untyped                                            ;
-; READ_DURING_WRITE_MODE_PORT_A      ; NEW_DATA_NO_NBE_READ               ; Untyped                                            ;
-; READ_DURING_WRITE_MODE_PORT_B      ; NEW_DATA_NO_NBE_READ               ; Untyped                                            ;
-; INIT_FILE                          ; ./Programs/debugmonitorproject.mif ; Untyped                                            ;
-; INIT_FILE_LAYOUT                   ; PORT_A                             ; Untyped                                            ;
-; MAXIMUM_DEPTH                      ; 0                                  ; Signed Integer                                     ;
-; CLOCK_ENABLE_INPUT_A               ; BYPASS                             ; Untyped                                            ;
-; CLOCK_ENABLE_INPUT_B               ; NORMAL                             ; Untyped                                            ;
-; CLOCK_ENABLE_OUTPUT_A              ; BYPASS                             ; Untyped                                            ;
-; CLOCK_ENABLE_OUTPUT_B              ; NORMAL                             ; Untyped                                            ;
-; CLOCK_ENABLE_CORE_A                ; USE_INPUT_CLKEN                    ; Untyped                                            ;
-; CLOCK_ENABLE_CORE_B                ; USE_INPUT_CLKEN                    ; Untyped                                            ;
-; ENABLE_ECC                         ; FALSE                              ; Untyped                                            ;
-; ECC_PIPELINE_STAGE_ENABLED         ; FALSE                              ; Untyped                                            ;
-; WIDTH_ECCSTATUS                    ; 3                                  ; Signed Integer                                     ;
-; DEVICE_FAMILY                      ; Cyclone V                          ; Untyped                                            ;
-; CBXI_PARAMETER                     ; altsyncram_3l64                    ; Untyped                                            ;
-+------------------------------------+------------------------------------+----------------------------------------------------+
++------------------------------------+-------------------------+---------------------------------------------------------------+
+; Parameter Name                     ; Value                   ; Type                                                          ;
++------------------------------------+-------------------------+---------------------------------------------------------------+
+; BYTE_SIZE_BLOCK                    ; 8                       ; Untyped                                                       ;
+; AUTO_CARRY_CHAINS                  ; ON                      ; AUTO_CARRY                                                    ;
+; IGNORE_CARRY_BUFFERS               ; OFF                     ; IGNORE_CARRY                                                  ;
+; AUTO_CASCADE_CHAINS                ; ON                      ; AUTO_CASCADE                                                  ;
+; IGNORE_CASCADE_BUFFERS             ; OFF                     ; IGNORE_CASCADE                                                ;
+; WIDTH_BYTEENA                      ; 1                       ; Untyped                                                       ;
+; OPERATION_MODE                     ; ROM                     ; Untyped                                                       ;
+; WIDTH_A                            ; 16                      ; Signed Integer                                                ;
+; WIDTHAD_A                          ; 14                      ; Signed Integer                                                ;
+; NUMWORDS_A                         ; 16384                   ; Signed Integer                                                ;
+; OUTDATA_REG_A                      ; UNREGISTERED            ; Untyped                                                       ;
+; ADDRESS_ACLR_A                     ; NONE                    ; Untyped                                                       ;
+; OUTDATA_ACLR_A                     ; NONE                    ; Untyped                                                       ;
+; WRCONTROL_ACLR_A                   ; NONE                    ; Untyped                                                       ;
+; INDATA_ACLR_A                      ; NONE                    ; Untyped                                                       ;
+; BYTEENA_ACLR_A                     ; NONE                    ; Untyped                                                       ;
+; WIDTH_B                            ; 1                       ; Signed Integer                                                ;
+; WIDTHAD_B                          ; 1                       ; Signed Integer                                                ;
+; NUMWORDS_B                         ; 0                       ; Signed Integer                                                ;
+; INDATA_REG_B                       ; CLOCK1                  ; Untyped                                                       ;
+; WRCONTROL_WRADDRESS_REG_B          ; CLOCK1                  ; Untyped                                                       ;
+; RDCONTROL_REG_B                    ; CLOCK1                  ; Untyped                                                       ;
+; ADDRESS_REG_B                      ; CLOCK1                  ; Untyped                                                       ;
+; OUTDATA_REG_B                      ; UNREGISTERED            ; Untyped                                                       ;
+; BYTEENA_REG_B                      ; CLOCK1                  ; Untyped                                                       ;
+; INDATA_ACLR_B                      ; NONE                    ; Untyped                                                       ;
+; WRCONTROL_ACLR_B                   ; NONE                    ; Untyped                                                       ;
+; ADDRESS_ACLR_B                     ; NONE                    ; Untyped                                                       ;
+; OUTDATA_ACLR_B                     ; NONE                    ; Untyped                                                       ;
+; RDCONTROL_ACLR_B                   ; NONE                    ; Untyped                                                       ;
+; BYTEENA_ACLR_B                     ; NONE                    ; Untyped                                                       ;
+; WIDTH_BYTEENA_A                    ; 1                       ; Signed Integer                                                ;
+; WIDTH_BYTEENA_B                    ; 1                       ; Signed Integer                                                ;
+; RAM_BLOCK_TYPE                     ; AUTO                    ; Untyped                                                       ;
+; BYTE_SIZE                          ; 8                       ; Signed Integer                                                ;
+; READ_DURING_WRITE_MODE_MIXED_PORTS ; DONT_CARE               ; Untyped                                                       ;
+; READ_DURING_WRITE_MODE_PORT_A      ; NEW_DATA_NO_NBE_READ    ; Untyped                                                       ;
+; READ_DURING_WRITE_MODE_PORT_B      ; NEW_DATA_NO_NBE_READ    ; Untyped                                                       ;
+; INIT_FILE                          ; debugmonitorproject.mif ; Untyped                                                       ;
+; INIT_FILE_LAYOUT                   ; PORT_A                  ; Untyped                                                       ;
+; MAXIMUM_DEPTH                      ; 0                       ; Signed Integer                                                ;
+; CLOCK_ENABLE_INPUT_A               ; BYPASS                  ; Untyped                                                       ;
+; CLOCK_ENABLE_INPUT_B               ; NORMAL                  ; Untyped                                                       ;
+; CLOCK_ENABLE_OUTPUT_A              ; BYPASS                  ; Untyped                                                       ;
+; CLOCK_ENABLE_OUTPUT_B              ; NORMAL                  ; Untyped                                                       ;
+; CLOCK_ENABLE_CORE_A                ; USE_INPUT_CLKEN         ; Untyped                                                       ;
+; CLOCK_ENABLE_CORE_B                ; USE_INPUT_CLKEN         ; Untyped                                                       ;
+; ENABLE_ECC                         ; FALSE                   ; Untyped                                                       ;
+; ECC_PIPELINE_STAGE_ENABLED         ; FALSE                   ; Untyped                                                       ;
+; WIDTH_ECCSTATUS                    ; 3                       ; Signed Integer                                                ;
+; DEVICE_FAMILY                      ; Cyclone V               ; Untyped                                                       ;
+; CBXI_PARAMETER                     ; altsyncram_cl54         ; Untyped                                                       ;
++------------------------------------+-------------------------+---------------------------------------------------------------+
 Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
 
 
@@ -2466,7 +2467,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 +----------------+-------------+-------+-------+------------+----------------------------------------------------------------------------------------------------------------+
 ; Instance Index ; Instance ID ; Width ; Depth ; Mode       ; Hierarchy Location                                                                                             ;
 +----------------+-------------+-------+-------+------------+----------------------------------------------------------------------------------------------------------------+
-; 0              ; ROM1        ; 16    ; 16384 ; Read/Write ; OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated ;
+; 0              ; ROM1        ; 16    ; 16384 ; Read/Write ; OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated ;
 +----------------+-------------+-------+-------+------------+----------------------------------------------------------------------------------------------------------------+
 
 
@@ -2533,21 +2534,21 @@ Note: In order to hide this table in the UI and the text report file, please set
 ;     ENA CLR SLD       ; 1                                        ;
 ;     SCLR              ; 7                                        ;
 ;     plain             ; 27                                       ;
-; arriav_lcell_comb     ; 100                                      ;
+; arriav_lcell_comb     ; 103                                      ;
 ;     extend            ; 1                                        ;
 ;         7 data inputs ; 1                                        ;
-;     normal            ; 99                                       ;
+;     normal            ; 102                                      ;
 ;         0 data inputs ; 1                                        ;
 ;         1 data inputs ; 5                                        ;
-;         2 data inputs ; 21                                       ;
-;         3 data inputs ; 16                                       ;
+;         2 data inputs ; 18                                       ;
+;         3 data inputs ; 21                                       ;
 ;         4 data inputs ; 18                                       ;
-;         5 data inputs ; 16                                       ;
-;         6 data inputs ; 22                                       ;
+;         5 data inputs ; 20                                       ;
+;         6 data inputs ; 19                                       ;
 ; boundary_port         ; 96                                       ;
 ;                       ;                                          ;
 ; Max LUT depth         ; 2.00                                     ;
-; Average LUT depth     ; 1.46                                     ;
+; Average LUT depth     ; 1.47                                     ;
 +-----------------------+------------------------------------------+
 
 
@@ -2556,7 +2557,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 +------------------+--------------+
 ; Partition Name   ; Elapsed Time ;
 +------------------+--------------+
-; Top              ; 00:02:01     ;
+; Top              ; 00:01:19     ;
 ; sld_hub:auto_hub ; 00:00:00     ;
 +------------------+--------------+
 
@@ -2567,11 +2568,11 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus II 64-Bit Analysis & Synthesis
     Info: Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
-    Info: Processing started: Thu Feb 21 17:31:13 2019
+    Info: Processing started: Fri Mar 01 21:18:12 2019
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off MC68K -c MC68K
 Warning (125092): Tcl Script File VideoRamFrameBuffer.qip not found
     Info (125063): set_global_assignment -name QIP_FILE VideoRamFrameBuffer.qip
-Info (20030): Parallel compilation is enabled and will use 2 of the 2 processors detected
+Info (11104): Parallel Compilation has detected 8 hyper-threaded processors. However, the extra hyper-threaded processors will not be used by default. Parallel Compilation will use 4 of the 4 physical processors detected instead.
 Info (12021): Found 2 design units, including 2 entities, in source file simple_spi_top.v
     Info (12023): Found entity 1: fifo4
     Info (12023): Found entity 2: simple_spi_top
@@ -2906,7 +2907,7 @@ Info (12133): Instantiated megafunction "Video_Controller800x480:inst1|ColourPal
 Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_b634.tdf
     Info (12023): Found entity 1: altsyncram_b634
 Info (12128): Elaborating entity "altsyncram_b634" for hierarchy "Video_Controller800x480:inst1|ColourPallette_2PortRam:inst3|altsyncram:altsyncram_component|altsyncram_b634:auto_generated"
-Critical Warning (127004): Memory depth (64) in the design file differs from memory depth (256) in the Memory Initialization File "C:/M68K/ColourPallette_2PortRam.mif" -- truncated remaining initial content value to fit RAM
+Critical Warning (127004): Memory depth (64) in the design file differs from memory depth (256) in the Memory Initialization File "C:/cygwin64/home/sabas/M68K/ColourPallette_2PortRam.mif" -- truncated remaining initial content value to fit RAM
 Warning (12125): Using design file graphicscontroller_verilog.v, which is not specified as a design file for the current project, but contains definitions for 1 design units and 1 entities in project
     Info (12023): Found entity 1: GraphicsController_Verilog
 Info (12128): Elaborating entity "GraphicsController_Verilog" for hierarchy "Video_Controller800x480:inst1|GraphicsController_Verilog:inst1"
@@ -2953,7 +2954,7 @@ Info (12133): Instantiated megafunction "OnChipROM16KWords:inst16|OnChipRom16KWo
     Info (12134): Parameter "indata_aclr_a" = "UNUSED"
     Info (12134): Parameter "indata_aclr_b" = "NONE"
     Info (12134): Parameter "indata_reg_b" = "CLOCK1"
-    Info (12134): Parameter "init_file" = "./Programs/debugmonitorproject.mif"
+    Info (12134): Parameter "init_file" = "debugmonitorproject.mif"
     Info (12134): Parameter "init_file_layout" = "PORT_A"
     Info (12134): Parameter "maximum_depth" = "0"
     Info (12134): Parameter "numwords_a" = "16384"
@@ -2983,27 +2984,27 @@ Info (12133): Instantiated megafunction "OnChipROM16KWords:inst16|OnChipRom16KWo
     Info (12134): Parameter "wrcontrol_wraddress_reg_b" = "CLOCK1"
     Info (12134): Parameter "lpm_hint" = "ENABLE_RUNTIME_MOD=YES,INSTANCE_NAME=ROM1"
     Info (12134): Parameter "lpm_type" = "altsyncram"
-Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_3l64.tdf
-    Info (12023): Found entity 1: altsyncram_3l64
-Info (12128): Elaborating entity "altsyncram_3l64" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated"
-Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_ea73.tdf
-    Info (12023): Found entity 1: altsyncram_ea73
-Info (12128): Elaborating entity "altsyncram_ea73" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1"
-Warning (113028): 1645 out of 16384 addresses are uninitialized. The Quartus II software will initialize them to "0". There are 2 warnings found, and 2 warnings are reported.
+Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_cl54.tdf
+    Info (12023): Found entity 1: altsyncram_cl54
+Info (12128): Elaborating entity "altsyncram_cl54" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated"
+Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_na63.tdf
+    Info (12023): Found entity 1: altsyncram_na63
+Info (12128): Elaborating entity "altsyncram_na63" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|altsyncram_na63:altsyncram1"
+Warning (113028): 808 out of 16384 addresses are uninitialized. The Quartus II software will initialize them to "0". There are 2 warnings found, and 2 warnings are reported.
     Warning (113027): Addresses ranging from 96 to 511 are not initialized
-    Warning (113027): Addresses ranging from 15155 to 16383 are not initialized
+    Warning (113027): Addresses ranging from 15992 to 16383 are not initialized
 Info (12021): Found 1 design units, including 1 entities, in source file db/decode_5la.tdf
     Info (12023): Found entity 1: decode_5la
-Info (12128): Elaborating entity "decode_5la" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1|decode_5la:decode4"
+Info (12128): Elaborating entity "decode_5la" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|altsyncram_na63:altsyncram1|decode_5la:decode4"
 Info (12021): Found 1 design units, including 1 entities, in source file db/decode_u0a.tdf
     Info (12023): Found entity 1: decode_u0a
-Info (12128): Elaborating entity "decode_u0a" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1|decode_u0a:rden_decode_a"
+Info (12128): Elaborating entity "decode_u0a" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|altsyncram_na63:altsyncram1|decode_u0a:rden_decode_a"
 Info (12021): Found 1 design units, including 1 entities, in source file db/mux_4hb.tdf
     Info (12023): Found entity 1: mux_4hb
-Info (12128): Elaborating entity "mux_4hb" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|altsyncram_ea73:altsyncram1|mux_4hb:mux6"
-Info (12128): Elaborating entity "sld_mod_ram_rom" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2"
-Info (12130): Elaborated megafunction instantiation "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2"
-Info (12133): Instantiated megafunction "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2" with the following parameter:
+Info (12128): Elaborating entity "mux_4hb" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|altsyncram_na63:altsyncram1|mux_4hb:mux6"
+Info (12128): Elaborating entity "sld_mod_ram_rom" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|sld_mod_ram_rom:mgl_prim2"
+Info (12130): Elaborated megafunction instantiation "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|sld_mod_ram_rom:mgl_prim2"
+Info (12133): Instantiated megafunction "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|sld_mod_ram_rom:mgl_prim2" with the following parameter:
     Info (12134): Parameter "CVALUE" = "0000000000000000"
     Info (12134): Parameter "IS_DATA_IN_RAM" = "1"
     Info (12134): Parameter "IS_READABLE" = "1"
@@ -3012,9 +3013,9 @@ Info (12133): Instantiated megafunction "OnChipROM16KWords:inst16|OnChipRom16KWo
     Info (12134): Parameter "SHIFT_COUNT_BITS" = "5"
     Info (12134): Parameter "WIDTH_WORD" = "16"
     Info (12134): Parameter "WIDTHAD" = "14"
-Info (12128): Elaborating entity "sld_jtag_endpoint_adapter" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_jtag_endpoint_adapter:jtag_signal_adapter"
-Info (12128): Elaborating entity "sld_jtag_endpoint_adapter_impl" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_jtag_endpoint_adapter:jtag_signal_adapter|sld_jtag_endpoint_adapter_impl:sld_jtag_endpoint_adapter_impl_inst"
-Info (12128): Elaborating entity "sld_rom_sr" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_3l64:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr"
+Info (12128): Elaborating entity "sld_jtag_endpoint_adapter" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_jtag_endpoint_adapter:jtag_signal_adapter"
+Info (12128): Elaborating entity "sld_jtag_endpoint_adapter_impl" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_jtag_endpoint_adapter:jtag_signal_adapter|sld_jtag_endpoint_adapter_impl:sld_jtag_endpoint_adapter_impl_inst"
+Info (12128): Elaborating entity "sld_rom_sr" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|sld_mod_ram_rom:mgl_prim2|sld_rom_sr:\ram_rom_logic_gen:name_gen:info_rom_sr"
 Info (12128): Elaborating entity "lpm_bustri" for hierarchy "lpm_bustri:inst22"
 Info (12130): Elaborated megafunction instantiation "lpm_bustri:inst22"
 Info (12133): Instantiated megafunction "lpm_bustri:inst22" with the following parameter:
@@ -3105,7 +3106,7 @@ Info (12128): Elaborating entity "SPI_BUS_Decoder" for hierarchy "IIC_SPI_Interf
 Info (12128): Elaborating entity "InterruptPriorityEncoder" for hierarchy "InterruptPriorityEncoder:inst28"
 Info (12128): Elaborating entity "TraceExceptionGenerator" for hierarchy "TraceExceptionGenerator:inst30"
 Info (11170): Start IP generation for the debug fabric within sld_hub.
-Info (11172): 2019.02.21.17:31:37 Progress: Loading sldbe7d4d23/alt_sld_fab_wrapper_hw.tcl
+Info (11172): 2019.03.01.21:18:53 Progress: Loading sldbe7d4d23/alt_sld_fab_wrapper_hw.tcl
 Info (11172): Alt_sld_fab.alt_sld_fab: SLD fabric agents which did not specify prefer_host were connected to JTAG
 Info (11172): Alt_sld_fab: Generating alt_sld_fab "alt_sld_fab" for QUARTUS_SYNTH
 Info (11172): Alt_sld_fab: "alt_sld_fab" instantiated alt_sld_fab "alt_sld_fab"
@@ -3338,29 +3339,29 @@ Info (17049): 40 registers lost all their fanouts during netlist optimizations.
 Info (17036): Removed 5 MSB VCC or GND address nodes from RAM block "Video_Controller800x480:inst1|ColourPallette_2PortRam:inst3|altsyncram:altsyncram_component|altsyncram_b634:auto_generated|ALTSYNCRAM"
 Info (17026): Resynthesizing 0 WYSIWYG logic cells and I/Os using "balanced" technology mapper which leaves 0 WYSIWYG logic cells and I/Os untouched
 Info (286031): Timing-Driven Synthesis is running on partition "sld_hub:auto_hub"
-Info (144001): Generated suppressed messages file C:/M68K/MC68K.map.smsg
+Info (144001): Generated suppressed messages file C:/cygwin64/home/sabas/M68K/MC68K.map.smsg
 Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 23 node(s), including 0 DDIO, 4 PLL, 0 transceiver and 0 LCELL
 Warning (21074): Design contains 2 input pin(s) that do not drive logic
     Warning (15610): No output dependent on input pin "Can0_RX"
     Warning (15610): No output dependent on input pin "Can1_RX"
-Info (21057): Implemented 5340 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 5343 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 22 input pins
     Info (21059): Implemented 202 output pins
     Info (21060): Implemented 18 bidirectional pins
-    Info (21061): Implemented 4701 logic cells
+    Info (21061): Implemented 4704 logic cells
     Info (21064): Implemented 392 RAM segments
     Info (21065): Implemented 4 PLLs
 Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 152 warnings
-    Info: Peak virtual memory: 5001 megabytes
-    Info: Processing ended: Thu Feb 21 17:33:50 2019
-    Info: Elapsed time: 00:02:37
-    Info: Total CPU time (on all processors): 00:02:46
+    Info: Peak virtual memory: 5029 megabytes
+    Info: Processing ended: Fri Mar 01 21:20:23 2019
+    Info: Elapsed time: 00:02:11
+    Info: Total CPU time (on all processors): 00:02:22
 
 
 +------------------------------------------+
 ; Analysis & Synthesis Suppressed Messages ;
 +------------------------------------------+
-The suppressed messages can be found in C:/M68K/MC68K.map.smsg.
+The suppressed messages can be found in C:/cygwin64/home/sabas/M68K/MC68K.map.smsg.
 
 

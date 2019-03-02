@@ -466,22 +466,10 @@ _main:
 ; int test_byte;
 ; scanflush() ;                       // flush any text that may have been typed ahead
        jsr       _scanflush
-; printf("\r\nHello CPEN 412 Student\r\n") ;
+; printf("\r\nHello CPEN 412 Student\r\nWelcome to Lab3!!!\r\n");
        pea       @m68kus~1_4.L
        jsr       _printf
        addq.w    #4,A7
-; SPI_Init();
-       jsr       _SPI_Init
-; ChipErase();
-       jsr       _ChipErase
-; WriteSPIChar('t');
-       pea       116
-       jsr       _WriteSPIChar
-       addq.w    #4,A7
-; test_byte = ReadSPIChar();
-       jsr       _ReadSPIChar
-       and.l     #255,D0
-       move.l    D0,-4(A6)
 ; while(1);
 main_1:
        bra       main_1
@@ -2519,7 +2507,9 @@ dodiv_5:
        dc.b      67,104,105,112,32,69,114,97,115,101,100,33,0
 @m68kus~1_4:
        dc.b      13,10,72,101,108,108,111,32,67,80,69,78,32,52
-       dc.b      49,50,32,83,116,117,100,101,110,116,13,10,0
+       dc.b      49,50,32,83,116,117,100,101,110,116,13,10,87
+       dc.b      101,108,99,111,109,101,32,116,111,32,76,97,98
+       dc.b      51,33,33,33,13,10,0
 @doscan_1:
        dc.b      10,0
 __ctype:

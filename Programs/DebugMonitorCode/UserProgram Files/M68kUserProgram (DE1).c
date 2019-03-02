@@ -306,15 +306,9 @@ void main()
 {
     int test_byte;
     scanflush() ;                       // flush any text that may have been typed ahead
-    printf("\r\nHello CPEN 412 Student\r\n") ;
-
-    SPI_Init();
-    ChipErase();
-    WriteSPIChar('t');
-    test_byte = ReadSPIChar();
+    printf("\r\nHello CPEN 412 Student\r\nWelcome to Lab3!!!\r\n");
 
     while(1);
-
    // programs should NOT exit as there is nothing to Exit TO !!!!!!
    // There is no OS - just press the reset button to end program and call debug
 }
