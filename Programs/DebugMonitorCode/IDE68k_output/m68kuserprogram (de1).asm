@@ -1,4 +1,4 @@
-; C:\M68K\PROGRAMS\DEBUGMONITORCODE\USERPROGRAM FILES\M68KUSERPROGRAM (DE1).C - Compiled by CC68K  Version 5.00 (c) 1991-2005  Peter J. Fondse
+; C:\CYGWIN64\HOME\SABAS\M68K\PROGRAMS\DEBUGMONITORCODE\USERPROGRAM FILES\M68KUSERPROGRAM (DE1).C - Compiled by CC68K  Version 5.00 (c) 1991-2005  Peter J. Fondse
 ; #include <stdio.h>
 ; // #include <string.h>
 ; // #include <ctype.h>
@@ -32,9 +32,11 @@
 ; int TestForSPITransmitDataComplete(void);
 ; void SPI_Init(void);
 ; void WaitForSPITransmitComplete(void);
-; void DisableWriteProtect(void);
-; void WriteSPIChar(char c);
-; char ReadSPIChar(void);
+; void WriteEnable(void);
+; void WriteSPIChar(unsigned char c);
+; unsigned char ReadSPIChar(void);
+; void WaitWriteCommandCompletion(void);
+; void DisableBlockProtect(void);
 ; int _getch( void )
 ; {
        section   code
@@ -91,12 +93,6 @@ _putch_3:
        xdef      _TestForSPITransmitDataComplete
 _TestForSPITransmitDataComplete:
 ; /* if register SPIF bit set, return true, otherwise wait*/
-; Enable_SPI_CS();
-       move.b    #254,4227112
-; SPI_Data = 0x05; // Read Status register command
-       move.b    #5,4227108
-; SPI_Data = 0xFF; // dummy byte
-       move.b    #255,4227108
 ; while ((SPI_Status & 128) >> 7 != 1);
 TestForSPITransmitDataComplete_1:
        move.b    4227106,D0
@@ -107,15 +103,6 @@ TestForSPITransmitDataComplete_1:
        beq.s     TestForSPITransmitDataComplete_3
        bra       TestForSPITransmitDataComplete_1
 TestForSPITransmitDataComplete_3:
-; printf("\r\n SPI_Status = %d \r\n", SPI_Status); // 128
-       move.b    4227106,D1
-       and.l     #255,D1
-       move.l    D1,-(A7)
-       pea       @m68kus~1_1.L
-       jsr       _printf
-       addq.w    #8,A7
-; Disable_SPI_CS();
-       move.b    #255,4227112
 ; return 1;
        moveq     #1,D0
        rts
@@ -161,142 +148,282 @@ _WaitForSPITransmitComplete:
        jsr       _TestForSPITransmitDataComplete
 ; // once transmission is complete, clear the write collision and interrupt on transmit complete flags in the status register (read documentation)
 ; // in case they were set
-; SPI_Status = 0xC0; //  (8'b11XX0000, X = don't Care (Use 0))
+; SPI_Status = 0xC0; //  (8'b11000000, X = don't Care (Use 0))
        move.b    #192,4227106
        rts
 ; }
 ; /************************************************************************************
 ; ** Disable Write Protect to allow writing access to chip
 ; ************************************************************************************/
-; void DisableWriteProtect(void){
-       xdef      _DisableWriteProtect
-_DisableWriteProtect:
+; void WriteEnable(void){
+       xdef      _WriteEnable
+_WriteEnable:
+       link      A6,#-4
+; unsigned char x;
 ; // Enable Chip Select
-; SPI_CS = Enable_SPI_CS();
-       move.b    #254,4227112
+; Enable_SPI_CS();
        move.b    #254,4227112
 ; // Send Write Command to Chip
-; SPI_Data = 0x6;
+; SPI_Data = 6;
        move.b    #6,4227108
+; WaitForSPITransmitComplete();
+       jsr       _WaitForSPITransmitComplete
+; x = SPI_Data;
+       move.b    4227108,-1(A6)
 ; // Disable Chip Select
-; SPI_CS = Disable_SPI_CS();
+; Disable_SPI_CS();
        move.b    #255,4227112
+       unlk      A6
+       rts
+; }
+; /************************************************************************************
+; ** Disable Write Protect to allow writing access to chip
+; ************************************************************************************/
+; void DisableBlockProtect(void){
+       xdef      _DisableBlockProtect
+_DisableBlockProtect:
+       link      A6,#-4
+; unsigned char x;
+; Enable_SPI_CS();
+       move.b    #254,4227112
+; // Send Write To status Register Command to Chip
+; SPI_Data = 1;
+       move.b    #1,4227108
+; WaitForSPITransmitComplete();
+       jsr       _WaitForSPITransmitComplete
+; x = SPI_Data;
+       move.b    4227108,-1(A6)
+; // Send Write To status Register Command to Chip
+; SPI_Data = 2;   // 8'b00000010
+       move.b    #2,4227108
+; WaitForSPITransmitComplete();
+       jsr       _WaitForSPITransmitComplete
+; x = SPI_Data;   
+       move.b    4227108,-1(A6)
+; Disable_SPI_CS(); 
        move.b    #255,4227112
+       unlk      A6
+       rts
+; }
+; /************************************************************************************
+; ** Wait for Write Command Completion
+; ************************************************************************************/
+; void WaitWriteCommandCompletion(void){
+       xdef      _WaitWriteCommandCompletion
+_WaitWriteCommandCompletion:
+       move.l    D2,-(A7)
+; unsigned char x;
+; // Enable Chip Select
+; Enable_SPI_CS();
+       move.b    #254,4227112
+; // Send Write Command to Chip
+; SPI_Data = 5;
+       move.b    #5,4227108
+; WaitForSPITransmitComplete();
+       jsr       _WaitForSPITransmitComplete
+; x = SPI_Data;
+       move.b    4227108,D2
+; while(1){
+WaitWriteCommandCompletion_1:
+; SPI_Data = 0xFF;
+       move.b    #255,4227108
+; WaitForSPITransmitComplete();
+       jsr       _WaitForSPITransmitComplete
+; x = SPI_Data;
+       move.b    4227108,D2
+; if ((x & 1) != 1)
+       move.b    D2,D0
+       and.b     #1,D0
+       cmp.b     #1,D0
+       beq.s     WaitWriteCommandCompletion_4
+; break;
+       bra.s     WaitWriteCommandCompletion_3
+WaitWriteCommandCompletion_4:
+       bra       WaitWriteCommandCompletion_1
+WaitWriteCommandCompletion_3:
+; }
+; // Disable Chip Select
+; Disable_SPI_CS();
+       move.b    #255,4227112
+       move.l    (A7)+,D2
        rts
 ; }
 ; /************************************************************************************
 ; ** Write a byte to the SPI flash chip via the controller and returns (reads) whatever was
 ; ** given back by SPI device at the same time (removes the read byte from the FIFO)
 ; ************************************************************************************/
-; void WriteSPIChar(char c)
+; void WriteSPIChar(unsigned char c)
 ; {
        xdef      _WriteSPIChar
 _WriteSPIChar:
-       link      A6,#0
-       move.l    A2,-(A7)
-       lea       _printf.L,A2
+       link      A6,#-4
+       movem.l   D2/A2,-(A7)
+       lea       _WaitForSPITransmitComplete.L,A2
+; unsigned char x;
+; unsigned char addr1, addr2, addr3;
+; addr1 = addr2 = addr3 = 6;
+       move.b    #6,-1(A6)
+       move.b    #6,-2(A6)
+       move.b    #6,-3(A6)
+; printf("\r\nc = %u \n", c);
+       move.b    11(A6),D1
+       and.l     #255,D1
+       move.l    D1,-(A7)
+       pea       @m68kus~1_1.L
+       jsr       _printf
+       addq.w    #8,A7
+; DisableBlockProtect();
+       jsr       _DisableBlockProtect
+; WriteEnable();
+       jsr       _WriteEnable
 ; // Enable Chip Select
-; SPI_CS = Enable_SPI_CS();
+; Enable_SPI_CS();
        move.b    #254,4227112
-       move.b    #254,4227112
-; DisableWriteProtect();
-       jsr       _DisableWriteProtect
 ; // Send Write Command to Chip
-; SPI_Data = 0x2;
+; SPI_Data = 2;
        move.b    #2,4227108
+; WaitForSPITransmitComplete();
+       jsr       (A2)
+; x = SPI_Data;
+       move.b    4227108,D2
 ; // Send 24-bit Address that we stored c in
-; SPI_Data = 0x0; // 24-bit address - 1st Byte
-       clr.b     4227108
-; SPI_Data = 0x0; // 24-bit address - 2nd Byte
-       clr.b     4227108
-; SPI_Data = 0xF; // 24-bit address - 3rd Byte
-       move.b    #15,4227108
+; SPI_Data = addr1; // 24-bit address - 1st Byte
+       move.b    -3(A6),4227108
+; WaitForSPITransmitComplete();
+       jsr       (A2)
+; x = SPI_Data;
+       move.b    4227108,D2
+; SPI_Data = addr2; // 24-bit address - 2nd Byte
+       move.b    -2(A6),4227108
+; WaitForSPITransmitComplete();
+       jsr       (A2)
+; x = SPI_Data;
+       move.b    4227108,D2
+; SPI_Data = addr3; // 24-bit address - 3rd Byte
+       move.b    -1(A6),4227108
+; WaitForSPITransmitComplete();
+       jsr       (A2)
+; x = SPI_Data;
+       move.b    4227108,D2
 ; // Payload Data
 ; SPI_Data = c;
        move.b    11(A6),4227108
-; printf("\r\n SPI_Data before disable = %c", SPI_Data);
-       move.b    4227108,D1
-       and.l     #255,D1
-       move.l    D1,-(A7)
-       pea       @m68kus~1_2.L
-       jsr       (A2)
-       addq.w    #8,A7
-; //  Disable Chip Select
-; SPI_CS = Disable_SPI_CS();
-       move.b    #255,4227112
-       move.b    #255,4227112
-; printf("\r\n SPI_Data before wait = %c", SPI_Data);
-       move.b    4227108,D1
-       and.l     #255,D1
-       move.l    D1,-(A7)
-       pea       @m68kus~1_3.L
-       jsr       (A2)
-       addq.w    #8,A7
-; // wait for completion of transmission
 ; WaitForSPITransmitComplete();
-       jsr       _WaitForSPITransmitComplete
-; printf("\r\n SPI_Data after wait= %c", SPI_Data);
-       move.b    4227108,D1
-       and.l     #255,D1
-       move.l    D1,-(A7)
-       pea       @m68kus~1_4.L
        jsr       (A2)
-       addq.w    #8,A7
-       move.l    (A7)+,A2
+; x = SPI_Data;
+       move.b    4227108,D2
+; //  Disable Chip Select
+; Disable_SPI_CS();
+       move.b    #255,4227112
+; // Poll Chip Status register for write completion
+; WaitWriteCommandCompletion();
+       jsr       _WaitWriteCommandCompletion
+       movem.l   (A7)+,D2/A2
        unlk      A6
        rts
 ; }
-; char ReadSPIChar(void){
+; /************************************************************************************
+; ** Read contents of SPI flash chip from address 0
+; ************************************************************************************/
+; unsigned char ReadSPIChar(void){
        xdef      _ReadSPIChar
 _ReadSPIChar:
-       move.l    D2,-(A7)
-; char read_byte;
+       link      A6,#-4
+       movem.l   D2/D3/A2,-(A7)
+       lea       _WaitForSPITransmitComplete.L,A2
+; unsigned char x;
+; unsigned char read_byte;
+; unsigned char addr1, addr2, addr3;
+; addr1 = addr2 = addr3 = 6;
+       move.b    #6,-1(A6)
+       move.b    #6,-2(A6)
+       move.b    #6,-3(A6)
 ; // Enable Chip Select
-; SPI_CS = Enable_SPI_CS();
-       move.b    #254,4227112
+; Enable_SPI_CS();
        move.b    #254,4227112
 ; // Send Read Command to Chip
-; SPI_Data = 0x3;
+; SPI_Data = 3;
        move.b    #3,4227108
-; // Send 24-bit Address that we stored c in
-; SPI_Data = 0x0; // 24-bit address - 1st Byte
-       clr.b     4227108
-; SPI_Data = 0x0; // 24-bit address - 2nd Byte
-       clr.b     4227108
-; SPI_Data = 0xF; // 24-bit address - 3rd Byte
-       move.b    #15,4227108
-; // Send Dummy Data to purge c out of read FIFO
-; SPI_Data = 0xFF;
-       move.b    #255,4227108
-; // wait for completion of transmission
 ; WaitForSPITransmitComplete();
-       jsr       _WaitForSPITransmitComplete
-; // store data from read FIFO into temporary variable
-; read_byte = SPI_Data;
+       jsr       (A2)
+; x = SPI_Data;
        move.b    4227108,D2
+; // Send 24-bit Address that we stored c in
+; // 24-bit address - 1st Byte
+; SPI_Data = addr1;
+       move.b    -3(A6),4227108
+; WaitForSPITransmitComplete();
+       jsr       (A2)
+; x = SPI_Data;
+       move.b    4227108,D2
+; // 24-bit address - 2nd Byte
+; SPI_Data = addr2;
+       move.b    -2(A6),4227108
+; WaitForSPITransmitComplete();
+       jsr       (A2)
+; x = SPI_Data;
+       move.b    4227108,D2
+; // 24-bit address - 3rd Byte
+; SPI_Data = addr3;
+       move.b    -1(A6),4227108
+; WaitForSPITransmitComplete();
+       jsr       (A2)
+; x = SPI_Data;
+       move.b    4227108,D2
+; // Send Dummy Data to purge c out of read FIFO
+; SPI_Data = 0xF0;
+       move.b    #240,4227108
+; WaitForSPITransmitComplete();
+       jsr       (A2)
+; read_byte = SPI_Data;	// store data from read FIFO into temporary variable
+       move.b    4227108,D3
 ; //  Disable Chip Select
-; SPI_CS = Disable_SPI_CS();
+; Disable_SPI_CS();
        move.b    #255,4227112
-       move.b    #255,4227112
-; printf("\r\nRead back Data (as int) = %d", read_byte);
-       ext.w     D2
-       ext.l     D2
-       move.l    D2,-(A7)
-       pea       @m68kus~1_5.L
-       jsr       _printf
-       addq.w    #8,A7
-; printf("\r\nRead back Data (as char) = %c", read_byte);
-       ext.w     D2
-       ext.l     D2
-       move.l    D2,-(A7)
-       pea       @m68kus~1_6.L
+; printf("Read back Data (as u-char) = %u \n", read_byte);
+       and.l     #255,D3
+       move.l    D3,-(A7)
+       pea       @m68kus~1_2.L
        jsr       _printf
        addq.w    #8,A7
 ; return read_byte;
-       move.b    D2,D0
-       move.l    (A7)+,D2
+       move.b    D3,D0
+       movem.l   (A7)+,D2/D3/A2
+       unlk      A6
        rts
 ; // return the received data from Flash chip 
+; }
+; /************************************************************************************
+; ** Erase Chip Contents in SPI flash chip
+; ************************************************************************************/
+; void ChipErase(void){
+       xdef      _ChipErase
+_ChipErase:
+       link      A6,#-4
+; unsigned char x;
+; DisableBlockProtect();
+       jsr       _DisableBlockProtect
+; WriteEnable();
+       jsr       _WriteEnable
+; Enable_SPI_CS();
+       move.b    #254,4227112
+; // Send Dummy Data to purge c out of read FIFO
+; SPI_Data = 199;
+       move.b    #199,4227108
+; WaitForSPITransmitComplete();
+       jsr       _WaitForSPITransmitComplete
+; x = SPI_Data;
+       move.b    4227108,-1(A6)
+; Disable_SPI_CS();
+       move.b    #255,4227112
+; WaitWriteCommandCompletion();
+       jsr       _WaitWriteCommandCompletion
+; printf("Chip Erased!");
+       pea       @m68kus~1_3.L
+       jsr       _printf
+       addq.w    #4,A7
+       unlk      A6
+       rts
 ; }
 ; /******************************************************************************************************************************
 ; * Start of user program
@@ -310,13 +437,15 @@ _main:
 ; scanflush() ;                       // flush any text that may have been typed ahead
        jsr       _scanflush
 ; printf("\r\nHello CPEN 412 Student\r\n") ;
-       pea       @m68kus~1_7.L
+       pea       @m68kus~1_4.L
        jsr       _printf
        addq.w    #4,A7
 ; SPI_Init();
        jsr       _SPI_Init
-; WriteSPIChar('k');
-       pea       107
+; ChipErase();
+       jsr       _ChipErase
+; WriteSPIChar('t');
+       pea       116
        jsr       _WriteSPIChar
        addq.w    #4,A7
 ; test_byte = ReadSPIChar();
@@ -331,28 +460,14 @@ main_1:
 ; }
        section   const
 @m68kus~1_1:
-       dc.b      13,10,32,83,80,73,95,83,116,97,116,117,115,32
-       dc.b      61,32,37,100,32,13,10,0
+       dc.b      13,10,99,32,61,32,37,117,32,10,0
 @m68kus~1_2:
-       dc.b      13,10,32,83,80,73,95,68,97,116,97,32,98,101
-       dc.b      102,111,114,101,32,100,105,115,97,98,108,101
-       dc.b      32,61,32,37,99,0
+       dc.b      82,101,97,100,32,98,97,99,107,32,68,97,116,97
+       dc.b      32,40,97,115,32,117,45,99,104,97,114,41,32,61
+       dc.b      32,37,117,32,10,0
 @m68kus~1_3:
-       dc.b      13,10,32,83,80,73,95,68,97,116,97,32,98,101
-       dc.b      102,111,114,101,32,119,97,105,116,32,61,32,37
-       dc.b      99,0
+       dc.b      67,104,105,112,32,69,114,97,115,101,100,33,0
 @m68kus~1_4:
-       dc.b      13,10,32,83,80,73,95,68,97,116,97,32,97,102
-       dc.b      116,101,114,32,119,97,105,116,61,32,37,99,0
-@m68kus~1_5:
-       dc.b      13,10,82,101,97,100,32,98,97,99,107,32,68,97
-       dc.b      116,97,32,40,97,115,32,105,110,116,41,32,61
-       dc.b      32,37,100,0
-@m68kus~1_6:
-       dc.b      13,10,82,101,97,100,32,98,97,99,107,32,68,97
-       dc.b      116,97,32,40,97,115,32,99,104,97,114,41,32,61
-       dc.b      32,37,99,0
-@m68kus~1_7:
        dc.b      13,10,72,101,108,108,111,32,67,80,69,78,32,52
        dc.b      49,50,32,83,116,117,100,101,110,116,13,10,0
        xref      _scanflush

@@ -281,8 +281,8 @@ void ChipErase(void){
 
     unsigned char x;
 
-    WriteEnable();
     DisableBlockProtect();
+    WriteEnable();
 
     Enable_SPI_CS();
 
@@ -310,7 +310,7 @@ void main()
 
     SPI_Init();
     ChipErase();
-    WriteSPIChar('m');
+    WriteSPIChar('t');
     test_byte = ReadSPIChar();
 
     while(1);
