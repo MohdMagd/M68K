@@ -38,9 +38,11 @@ int sprintf(char *out, const char *format, ...) ;
 int TestForSPITransmitDataComplete(void);
 void SPI_Init(void);
 void WaitForSPITransmitComplete(void);
-void DisableWriteProtect(void);
-void WriteSPIChar(char c);
-char ReadSPIChar(void);
+void WriteEnable(void);
+void WriteSPIChar(unsigned char c);
+unsigned char ReadSPIChar(void);
+void WaitWriteCommandCompletion(void);
+void DisableBlockProtect(void);
 
 int _getch( void )
 {
@@ -104,36 +106,60 @@ void WaitForSPITransmitComplete(void)
     TestForSPITransmitDataComplete();
     // once transmission is complete, clear the write collision and interrupt on transmit complete flags in the status register (read documentation)
     // in case they were set
-    SPI_Status = 0xC0; //  (8'b11XX0000, X = don't Care (Use 0))
+    SPI_Status = 0xC0; //  (8'b11000000, X = don't Care (Use 0))
 }
 
 /************************************************************************************
 ** Disable Write Protect to allow writing access to chip
 ************************************************************************************/
-void DisableWriteProtect(void){
+void WriteEnable(void){
+    unsigned char x;
+
   	// Enable Chip Select
   	Enable_SPI_CS();
   
   	// Send Write Command to Chip
-    SPI_Data = 0x6;
+    SPI_Data = 6;
     WaitForSPITransmitComplete();
+    x = SPI_Data;
 
     // Disable Chip Select
     Disable_SPI_CS();
 }
 
+/************************************************************************************
+** Disable Write Protect to allow writing access to chip
+************************************************************************************/
+void DisableBlockProtect(void){
+
+    unsigned char x;
+    Enable_SPI_CS();
+
+    // Send Write To status Register Command to Chip
+    SPI_Data = 1;
+    WaitForSPITransmitComplete();
+    x = SPI_Data;
+
+    // Send Write To status Register Command to Chip
+    SPI_Data = 2;   // 8'b00000010
+    WaitForSPITransmitComplete();
+    x = SPI_Data;   
+
+    Disable_SPI_CS(); 
+}
+
 
 /************************************************************************************
-** Wait Write Command Completion
+** Wait for Write Command Completion
 ************************************************************************************/
 void WaitWriteCommandCompletion(void){
-	char x;
+	unsigned char x;
 
 	// Enable Chip Select
   	Enable_SPI_CS();
   
   	// Send Write Command to Chip
-    SPI_Data = 0x5;
+    SPI_Data = 5;
     WaitForSPITransmitComplete();
     x = SPI_Data;
 
@@ -155,30 +181,36 @@ void WaitWriteCommandCompletion(void){
 ** Write a byte to the SPI flash chip via the controller and returns (reads) whatever was
 ** given back by SPI device at the same time (removes the read byte from the FIFO)
 ************************************************************************************/
-void WriteSPIChar(char c)
+void WriteSPIChar(unsigned char c)
 {
 	
-	char x;
-	DisableWriteProtect();
+	unsigned char x;
+    unsigned char addr1, addr2, addr3;
+    addr1 = addr2 = addr3 = 6;
+
+    printf("\r\nc = %u \n", c);
+
+    DisableBlockProtect();
+    WriteEnable();
 
     // Enable Chip Select
     Enable_SPI_CS();
-  
+    
     // Send Write Command to Chip
-    SPI_Data = 0x2;
+    SPI_Data = 2;
     WaitForSPITransmitComplete();
     x = SPI_Data;
 
     // Send 24-bit Address that we stored c in
-    SPI_Data = 0x0; // 24-bit address - 1st Byte
+    SPI_Data = addr1; // 24-bit address - 1st Byte
     WaitForSPITransmitComplete();
 	x = SPI_Data;
 
-    SPI_Data = 0x0; // 24-bit address - 2nd Byte
+    SPI_Data = addr2; // 24-bit address - 2nd Byte
     WaitForSPITransmitComplete();
     x = SPI_Data;
 
-    SPI_Data = 0xF; // 24-bit address - 3rd Byte
+    SPI_Data = addr3; // 24-bit address - 3rd Byte
     WaitForSPITransmitComplete();
     x = SPI_Data;
 
@@ -194,45 +226,76 @@ void WriteSPIChar(char c)
     WaitWriteCommandCompletion();
 }
 
-char ReadSPIChar(void){
+/************************************************************************************
+** Read contents of SPI flash chip from address 0
+************************************************************************************/
 
-	char x;
-    char read_byte;
+unsigned char ReadSPIChar(void){
+
+	unsigned char x;
+    unsigned char read_byte;
+    unsigned char addr1, addr2, addr3;
+    addr1 = addr2 = addr3 = 6;
 
     // Enable Chip Select
-    SPI_CS = Enable_SPI_CS();
+    Enable_SPI_CS();
 
     // Send Read Command to Chip
-    SPI_Data = 0x3;
+    SPI_Data = 3;
     WaitForSPITransmitComplete();
     x = SPI_Data;
 
     // Send 24-bit Address that we stored c in
-    SPI_Data = 0x0; // 24-bit address - 1st Byte
+    // 24-bit address - 1st Byte
+    SPI_Data = addr1;
     WaitForSPITransmitComplete();
     x = SPI_Data;
 
-    SPI_Data = 0x0; // 24-bit address - 2nd Byte
+    // 24-bit address - 2nd Byte
+    SPI_Data = addr2;
     WaitForSPITransmitComplete();
     x = SPI_Data;
 
-    SPI_Data = 0xF; // 24-bit address - 3rd Byte
+    // 24-bit address - 3rd Byte
+    SPI_Data = addr3;
     WaitForSPITransmitComplete();
     x = SPI_Data;
 
     // Send Dummy Data to purge c out of read FIFO
-    SPI_Data = 0xFF;
+    SPI_Data = 0xF0;
     WaitForSPITransmitComplete();
     read_byte = SPI_Data;	// store data from read FIFO into temporary variable
 
     //  Disable Chip Select
-    SPI_CS = Disable_SPI_CS();
+    Disable_SPI_CS();
 
-
-    printf("\r\nRead back Data (as int) = %d", read_byte);
-    printf("\r\nRead back Data (as char) = %c", read_byte);
+    printf("Read back Data (as u-char) = %u \n", read_byte);
     return read_byte;
     // return the received data from Flash chip 
+}
+
+/************************************************************************************
+** Erase Chip Contents in SPI flash chip
+************************************************************************************/
+void ChipErase(void){
+
+    unsigned char x;
+
+    WriteEnable();
+    DisableBlockProtect();
+
+    Enable_SPI_CS();
+
+    // Send Dummy Data to purge c out of read FIFO
+    SPI_Data = 199;
+    WaitForSPITransmitComplete();
+    x = SPI_Data;
+    
+    Disable_SPI_CS();
+
+    WaitWriteCommandCompletion();
+
+    printf("Chip Erased!");
 }
 
 /******************************************************************************************************************************
@@ -246,7 +309,8 @@ void main()
     printf("\r\nHello CPEN 412 Student\r\n") ;
 
     SPI_Init();
-    WriteSPIChar('k');
+    ChipErase();
+    WriteSPIChar('m');
     test_byte = ReadSPIChar();
 
     while(1);

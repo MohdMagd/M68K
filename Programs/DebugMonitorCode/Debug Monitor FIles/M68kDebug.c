@@ -508,10 +508,53 @@ void MemoryChange(void)
 
 void ProgramFlashChip(void)
 {
-    //
+   //
     // TODO : put your code here to program the 1st 256k of ram (where user program is held at hex 08000000) to SPI flash chip
-    // TODO : then verify by reading it back and comparing to memory
-    //
+
+     unsigned char *RamPtr;
+     char DataByte,x;
+     char flashaddressByte1, flashaddressbyte2, flashaddressbyte3;
+     int flashaddress = 0;
+     int count = 0;
+   
+     for(RamPtr=0x08000000;RamPtr<0x8040000;RamPtr++){    
+        
+        DataByte= *RamPtr;
+    
+        flashaddressByte1= (flashaddress >> 16) & 0xFF;
+        flashaddressbyte2 = (flashaddress >> 8) & 0xFF;
+        flashaddressbyte3 = flashaddress & 0xFF;
+
+        if(count == 0){
+
+            DisableWriteProtect();
+
+            Enable_SPI_CS();
+
+            SPI_Data = 0x05;
+            WaitForSPITransmitComplete();
+            x=SPI_Data;
+            SPI_Data = flashaddressByte1;
+            WaitForSPITransmitComplete();
+            x=SPI_Data;
+            SPI_Data = flashaddressbyte2;
+            WaitForSPITransmitComplete();
+            x=SPI_Data;
+            SPI_Data = flashaddressbyte3;
+            WaitForSPITransmitComplete();
+            x=SPI_Data;
+
+        }  else if(count==255){
+            flashaddress += 256;
+            count = 0;
+            Disable_SPI_CS();
+            WaitWriteCommandCompletion();
+        }
+
+        SPI_Data = DataByte;
+        WaitForSPITransmitComplete();
+        x=SPI_Data;
+    }
 }
 
 /*************************************************************************
