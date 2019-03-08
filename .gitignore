@@ -1,6 +1,9 @@
-hyperterminal/
+/hyperterminal/
+/db/
+/Programs/SRecord_to_MIF_Converter/
+/incremental_db/
+/greybox_tmp/
+/simulation/qsim/
+/Ide68k/
 
-db/
-
-Programs/SRecord_to_MIF_Converter/
 
