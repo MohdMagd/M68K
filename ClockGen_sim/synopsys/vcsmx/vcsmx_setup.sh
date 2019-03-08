@@ -1,5 +1,5 @@
 
-# (C) 2001-2016 Altera Corporation. All rights reserved.
+# (C) 2001-2019 Altera Corporation. All rights reserved.
 # Your use of Altera Corporation's design tools, logic functions and 
 # other software and tools, and its AMPP partner logic functions, and 
 # any output files any of the foregoing (including device programming 
@@ -12,7 +12,7 @@
 # or its authorized distributors. Please refer to the applicable 
 # agreement for further details.
 
-# ACDS 15.0 145 win32 2016.06.01.19:02:04
+# ACDS 15.0 145 win32 2019.03.07.19:50:33
 
 # ----------------------------------------
 # vcsmx - auto-generated simulation script
