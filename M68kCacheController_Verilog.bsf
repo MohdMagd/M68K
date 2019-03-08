@@ -1,0 +1,317 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 1991-2015 Altera Corporation. All rights reserved.
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, the Altera Quartus II License Agreement,
+the Altera MegaCore Function License Agreement, or other 
+applicable license agreement, including, without limitation, 
+that your use is for the sole purpose of programming logic 
+devices manufactured by Altera and sold by Altera or its 
+authorized distributors.  Please refer to the applicable 
+agreement for further details.
+*/
+(header "symbol" (version "1.1"))
+(symbol
+	(rect 16 16 400 352)
+	(text "M68kCacheController_Verilog" (rect 5 0 125 12)(font "Arial" ))
+	(text "inst" (rect 8 320 20 332)(font "Arial" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "Clock" (rect 0 0 22 12)(font "Arial" ))
+		(text "Clock" (rect 21 27 43 39)(font "Arial" ))
+		(line (pt 0 32)(pt 16 32)(line_width 1))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "Reset_L" (rect 0 0 36 12)(font "Arial" ))
+		(text "Reset_L" (rect 21 43 57 55)(font "Arial" ))
+		(line (pt 0 48)(pt 16 48)(line_width 1))
+	)
+	(port
+		(pt 0 64)
+		(input)
+		(text "CacheHit_H" (rect 0 0 49 12)(font "Arial" ))
+		(text "CacheHit_H" (rect 21 59 70 71)(font "Arial" ))
+		(line (pt 0 64)(pt 16 64)(line_width 1))
+	)
+	(port
+		(pt 0 80)
+		(input)
+		(text "ValidBitIn_H" (rect 0 0 49 12)(font "Arial" ))
+		(text "ValidBitIn_H" (rect 21 75 70 87)(font "Arial" ))
+		(line (pt 0 80)(pt 16 80)(line_width 1))
+	)
+	(port
+		(pt 0 96)
+		(input)
+		(text "DramSelect68k_H" (rect 0 0 74 12)(font "Arial" ))
+		(text "DramSelect68k_H" (rect 21 91 95 103)(font "Arial" ))
+		(line (pt 0 96)(pt 16 96)(line_width 1))
+	)
+	(port
+		(pt 0 112)
+		(input)
+		(text "AddressBusInFrom68k[31..0]" (rect 0 0 118 12)(font "Arial" ))
+		(text "AddressBusInFrom68k[31..0]" (rect 21 107 139 119)(font "Arial" ))
+		(line (pt 0 112)(pt 16 112)(line_width 3))
+	)
+	(port
+		(pt 0 128)
+		(input)
+		(text "DataBusInFrom68k[15..0]" (rect 0 0 101 12)(font "Arial" ))
+		(text "DataBusInFrom68k[15..0]" (rect 21 123 122 135)(font "Arial" ))
+		(line (pt 0 128)(pt 16 128)(line_width 3))
+	)
+	(port
+		(pt 0 144)
+		(input)
+		(text "UDS_L" (rect 0 0 31 12)(font "Arial" ))
+		(text "UDS_L" (rect 21 139 52 151)(font "Arial" ))
+		(line (pt 0 144)(pt 16 144)(line_width 1))
+	)
+	(port
+		(pt 0 160)
+		(input)
+		(text "LDS_L" (rect 0 0 30 12)(font "Arial" ))
+		(text "LDS_L" (rect 21 155 51 167)(font "Arial" ))
+		(line (pt 0 160)(pt 16 160)(line_width 1))
+	)
+	(port
+		(pt 0 176)
+		(input)
+		(text "WE_L" (rect 0 0 29 12)(font "Arial" ))
+		(text "WE_L" (rect 21 171 50 183)(font "Arial" ))
+		(line (pt 0 176)(pt 16 176)(line_width 1))
+	)
+	(port
+		(pt 0 192)
+		(input)
+		(text "AS_L" (rect 0 0 25 12)(font "Arial" ))
+		(text "AS_L" (rect 21 187 46 199)(font "Arial" ))
+		(line (pt 0 192)(pt 16 192)(line_width 1))
+	)
+	(port
+		(pt 0 208)
+		(input)
+		(text "DtackFromDram_L" (rect 0 0 81 12)(font "Arial" ))
+		(text "DtackFromDram_L" (rect 21 203 102 215)(font "Arial" ))
+		(line (pt 0 208)(pt 16 208)(line_width 1))
+	)
+	(port
+		(pt 0 224)
+		(input)
+		(text "CAS_Dram_L" (rect 0 0 62 12)(font "Arial" ))
+		(text "CAS_Dram_L" (rect 21 219 83 231)(font "Arial" ))
+		(line (pt 0 224)(pt 16 224)(line_width 1))
+	)
+	(port
+		(pt 0 240)
+		(input)
+		(text "RAS_Dram_L" (rect 0 0 63 12)(font "Arial" ))
+		(text "RAS_Dram_L" (rect 21 235 84 247)(font "Arial" ))
+		(line (pt 0 240)(pt 16 240)(line_width 1))
+	)
+	(port
+		(pt 0 256)
+		(input)
+		(text "DataBusInFromDram[15..0]" (rect 0 0 110 12)(font "Arial" ))
+		(text "DataBusInFromDram[15..0]" (rect 21 251 131 263)(font "Arial" ))
+		(line (pt 0 256)(pt 16 256)(line_width 3))
+	)
+	(port
+		(pt 0 272)
+		(input)
+		(text "DataBusInFromCache[15..0]" (rect 0 0 113 12)(font "Arial" ))
+		(text "DataBusInFromCache[15..0]" (rect 21 267 134 279)(font "Arial" ))
+		(line (pt 0 272)(pt 16 272)(line_width 3))
+	)
+	(port
+		(pt 384 32)
+		(output)
+		(text "DataBusOutTo68k[15..0]" (rect 0 0 96 12)(font "Arial" ))
+		(text "DataBusOutTo68k[15..0]" (rect 267 27 363 39)(font "Arial" ))
+		(line (pt 384 32)(pt 368 32)(line_width 3))
+	)
+	(port
+		(pt 384 48)
+		(output)
+		(text "DataBusOutToDramController[15..0]" (rect 0 0 143 12)(font "Arial" ))
+		(text "DataBusOutToDramController[15..0]" (rect 220 43 363 55)(font "Arial" ))
+		(line (pt 384 48)(pt 368 48)(line_width 3))
+	)
+	(port
+		(pt 384 64)
+		(output)
+		(text "UDS_DramController_L" (rect 0 0 99 12)(font "Arial" ))
+		(text "UDS_DramController_L" (rect 264 59 363 71)(font "Arial" ))
+		(line (pt 384 64)(pt 368 64)(line_width 1))
+	)
+	(port
+		(pt 384 80)
+		(output)
+		(text "LDS_DramController_L" (rect 0 0 97 12)(font "Arial" ))
+		(text "LDS_DramController_L" (rect 266 75 363 87)(font "Arial" ))
+		(line (pt 384 80)(pt 368 80)(line_width 1))
+	)
+	(port
+		(pt 384 96)
+		(output)
+		(text "DramSelectFromCache_L" (rect 0 0 107 12)(font "Arial" ))
+		(text "DramSelectFromCache_L" (rect 256 91 363 103)(font "Arial" ))
+		(line (pt 384 96)(pt 368 96)(line_width 1))
+	)
+	(port
+		(pt 384 112)
+		(output)
+		(text "WE_DramController_L" (rect 0 0 96 12)(font "Arial" ))
+		(text "WE_DramController_L" (rect 267 107 363 119)(font "Arial" ))
+		(line (pt 384 112)(pt 368 112)(line_width 1))
+	)
+	(port
+		(pt 384 128)
+		(output)
+		(text "AS_DramController_L" (rect 0 0 93 12)(font "Arial" ))
+		(text "AS_DramController_L" (rect 270 123 363 135)(font "Arial" ))
+		(line (pt 384 128)(pt 368 128)(line_width 1))
+	)
+	(port
+		(pt 384 144)
+		(output)
+		(text "DtackTo68k_L" (rect 0 0 60 12)(font "Arial" ))
+		(text "DtackTo68k_L" (rect 303 139 363 151)(font "Arial" ))
+		(line (pt 384 144)(pt 368 144)(line_width 1))
+	)
+	(port
+		(pt 384 160)
+		(output)
+		(text "TagCache_WE_L" (rect 0 0 76 12)(font "Arial" ))
+		(text "TagCache_WE_L" (rect 287 155 363 167)(font "Arial" ))
+		(line (pt 384 160)(pt 368 160)(line_width 1))
+	)
+	(port
+		(pt 384 176)
+		(output)
+		(text "DataCache_WE_L" (rect 0 0 80 12)(font "Arial" ))
+		(text "DataCache_WE_L" (rect 283 171 363 183)(font "Arial" ))
+		(line (pt 384 176)(pt 368 176)(line_width 1))
+	)
+	(port
+		(pt 384 192)
+		(output)
+		(text "ValidBit_WE_L" (rect 0 0 64 12)(font "Arial" ))
+		(text "ValidBit_WE_L" (rect 299 187 363 199)(font "Arial" ))
+		(line (pt 384 192)(pt 368 192)(line_width 1))
+	)
+	(port
+		(pt 384 208)
+		(output)
+		(text "AddressBusOutToDramController[31..0]" (rect 0 0 160 12)(font "Arial" ))
+		(text "AddressBusOutToDramController[31..0]" (rect 203 203 363 215)(font "Arial" ))
+		(line (pt 384 208)(pt 368 208)(line_width 3))
+	)
+	(port
+		(pt 384 224)
+		(output)
+		(text "TagDataOut[22..0]" (rect 0 0 73 12)(font "Arial" ))
+		(text "TagDataOut[22..0]" (rect 290 219 363 231)(font "Arial" ))
+		(line (pt 384 224)(pt 368 224)(line_width 3))
+	)
+	(port
+		(pt 384 240)
+		(output)
+		(text "WordAddress[2..0]" (rect 0 0 79 12)(font "Arial" ))
+		(text "WordAddress[2..0]" (rect 284 235 363 247)(font "Arial" ))
+		(line (pt 384 240)(pt 368 240)(line_width 3))
+	)
+	(port
+		(pt 384 256)
+		(output)
+		(text "ValidBitOut_H" (rect 0 0 56 12)(font "Arial" ))
+		(text "ValidBitOut_H" (rect 307 251 363 263)(font "Arial" ))
+		(line (pt 384 256)(pt 368 256)(line_width 1))
+	)
+	(port
+		(pt 384 272)
+		(output)
+		(text "Index[8..4]" (rect 0 0 42 12)(font "Arial" ))
+		(text "Index[8..4]" (rect 321 267 363 279)(font "Arial" ))
+		(line (pt 384 272)(pt 368 272)(line_width 3))
+	)
+	(port
+		(pt 384 288)
+		(output)
+		(text "CacheState[4..0]" (rect 0 0 67 12)(font "Arial" ))
+		(text "CacheState[4..0]" (rect 296 283 363 295)(font "Arial" ))
+		(line (pt 384 288)(pt 368 288)(line_width 3))
+	)
+	(parameter
+		"Reset"
+		"00000"
+		""
+		(type "PARAMETER_UNSIGNED_BIN")	)
+	(parameter
+		"InvalidateCache"
+		"00001"
+		""
+		(type "PARAMETER_UNSIGNED_BIN")	)
+	(parameter
+		"Idle"
+		"00010"
+		""
+		(type "PARAMETER_UNSIGNED_BIN")	)
+	(parameter
+		"CheckForCacheHit"
+		"00011"
+		""
+		(type "PARAMETER_UNSIGNED_BIN")	)
+	(parameter
+		"ReadDataFromDramIntoCache"
+		"00100"
+		""
+		(type "PARAMETER_UNSIGNED_BIN")	)
+	(parameter
+		"CASDelay1"
+		"00101"
+		""
+		(type "PARAMETER_UNSIGNED_BIN")	)
+	(parameter
+		"CASDelay2"
+		"00110"
+		""
+		(type "PARAMETER_UNSIGNED_BIN")	)
+	(parameter
+		"BurstFill"
+		"00111"
+		""
+		(type "PARAMETER_UNSIGNED_BIN")	)
+	(parameter
+		"EndBurstFill"
+		"01000"
+		""
+		(type "PARAMETER_UNSIGNED_BIN")	)
+	(parameter
+		"WriteDataToDram"
+		"01001"
+		""
+		(type "PARAMETER_UNSIGNED_BIN")	)
+	(parameter
+		"WaitForEndOfCacheRead"
+		"01010"
+		""
+		(type "PARAMETER_UNSIGNED_BIN")	)
+	(drawing
+		(rectangle (rect 16 16 368 320)(line_width 1))
+	)
+	(annotation_block (parameter)(rect 400 -64 500 16))
+)
