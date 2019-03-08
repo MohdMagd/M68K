@@ -1,5 +1,5 @@
 EDA Netlist Writer report for MC68K
-Fri Mar 08 14:19:02 2019
+Fri Mar 08 15:19:32 2019
 Quartus II 64-Bit Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
 
 
@@ -37,7 +37,7 @@ agreement for further details.
 +-------------------------------------------------------------------+
 ; EDA Netlist Writer Summary                                        ;
 +---------------------------+---------------------------------------+
-; EDA Netlist Writer Status ; Successful - Fri Mar 08 14:19:02 2019 ;
+; EDA Netlist Writer Status ; Successful - Fri Mar 08 15:19:32 2019 ;
 ; Revision Name             ; MC68K                                 ;
 ; Top-level Entity Name     ; MC68K                                 ;
 ; Family                    ; Cyclone V                             ;
@@ -95,15 +95,15 @@ Info: Running Quartus II 64-Bit EDA Netlist Writer
     Info: devices manufactured by Altera and sold by Altera or its 
     Info: authorized distributors.  Please refer to the applicable 
     Info: agreement for further details.
-    Info: Processing started: Fri Mar 08 14:18:52 2019
+    Info: Processing started: Fri Mar 08 15:19:27 2019
 Info: Command: quartus_eda --write_settings_files=off --functional=on --flatten_buses=off --simulation=on --tool=modelsim_oem --format=verilog --output_directory=C:/M68K/simulation/qsim/ MC68K -c MC68K
 Warning (125092): Tcl Script File VideoRamFrameBuffer.qip not found
     Info (125063): set_global_assignment -name QIP_FILE VideoRamFrameBuffer.qip
 Info (204019): Generated file MC68K.vo in folder "C:/M68K/simulation/qsim//" for EDA simulation tool
 Info: Quartus II 64-Bit EDA Netlist Writer was successful. 0 errors, 1 warning
-    Info: Peak virtual memory: 4962 megabytes
-    Info: Processing ended: Fri Mar 08 14:19:02 2019
-    Info: Elapsed time: 00:00:10
-    Info: Total CPU time (on all processors): 00:00:09
+    Info: Peak virtual memory: 4961 megabytes
+    Info: Processing ended: Fri Mar 08 15:19:33 2019
+    Info: Elapsed time: 00:00:06
+    Info: Total CPU time (on all processors): 00:00:04
 
 

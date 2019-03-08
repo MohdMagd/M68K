@@ -1,5 +1,5 @@
 Analysis & Synthesis report for MC68K
-Fri Mar 08 12:52:25 2019
+Fri Mar 08 15:09:27 2019
 Quartus II 64-Bit Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
 
 
@@ -109,7 +109,7 @@ agreement for further details.
 +------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                 ;
 +---------------------------------+--------------------------------------------+
-; Analysis & Synthesis Status     ; Successful - Fri Mar 08 12:52:25 2019      ;
+; Analysis & Synthesis Status     ; Successful - Fri Mar 08 15:09:26 2019      ;
 ; Quartus II 64-Bit Version       ; 15.0.0 Build 145 04/22/2015 SJ Web Edition ;
 ; Revision Name                   ; MC68K                                      ;
 ; Top-level Entity Name           ; MC68K                                      ;
@@ -308,7 +308,7 @@ agreement for further details.
 ; db/altsyncram_g504.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/altsyncram_g504.tdf                                                   ;             ;
 ; lpm_bustri.tdf                                                     ; yes             ; Megafunction                                 ; c:/altera/15.0/quartus/libraries/megafunctions/lpm_bustri.tdf                    ;             ;
 ; db/altsyncram_b634.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/altsyncram_b634.tdf                                                   ;             ;
-; colourpallette_2portram.mif                                        ; yes             ; Auto-Found Memory Initialization File        ; C:/M68K/colourpallette_2portram.mif                                              ;             ;
+; ColourPallette_2PortRam.mif                                        ; yes             ; Auto-Found Memory Initialization File        ; C:/M68K/ColourPallette_2PortRam.mif                                              ;             ;
 ; graphicscontroller_verilog.v                                       ; yes             ; Auto-Found Verilog HDL File                  ; C:/M68K/graphicscontroller_verilog.v                                             ;             ;
 ; vgadatamux_verilog.v                                               ; yes             ; Auto-Found Verilog HDL File                  ; C:/M68K/vgadatamux_verilog.v                                                     ;             ;
 ; db/altsyncram_cl54.tdf                                             ; yes             ; Auto-Generated Megafunction                  ; C:/M68K/db/altsyncram_cl54.tdf                                                   ;             ;
@@ -343,14 +343,14 @@ agreement for further details.
 +---------------------------------------------+-----------------------------------------------------------------------------------+
 ; Resource                                    ; Usage                                                                             ;
 +---------------------------------------------+-----------------------------------------------------------------------------------+
-; Estimate of Logic utilization (ALMs needed) ; 2845                                                                              ;
+; Estimate of Logic utilization (ALMs needed) ; 2849                                                                              ;
 ;                                             ;                                                                                   ;
-; Combinational ALUT usage for logic          ; 4327                                                                              ;
-;     -- 7 input functions                    ; 119                                                                               ;
-;     -- 6 input functions                    ; 1198                                                                              ;
-;     -- 5 input functions                    ; 1021                                                                              ;
-;     -- 4 input functions                    ; 668                                                                               ;
-;     -- <=3 input functions                  ; 1321                                                                              ;
+; Combinational ALUT usage for logic          ; 4335                                                                              ;
+;     -- 7 input functions                    ; 122                                                                               ;
+;     -- 6 input functions                    ; 1195                                                                              ;
+;     -- 5 input functions                    ; 1020                                                                              ;
+;     -- 4 input functions                    ; 675                                                                               ;
+;     -- <=3 input functions                  ; 1323                                                                              ;
 ;                                             ;                                                                                   ;
 ; Dedicated logic registers                   ; 1337                                                                              ;
 ;                                             ;                                                                                   ;
@@ -365,7 +365,7 @@ agreement for further details.
 ;                                             ;                                                                                   ;
 ; Maximum fan-out node                        ; ClockGen:inst7|ClockGen_0002:clockgen_inst|altera_pll:altera_pll_i|outclk_wire[0] ;
 ; Maximum fan-out                             ; 1278                                                                              ;
-; Total fan-out                               ; 30860                                                                             ;
+; Total fan-out                               ; 30892                                                                             ;
 ; Average fan-out                             ; 4.67                                                                              ;
 +---------------------------------------------+-----------------------------------------------------------------------------------+
 
@@ -375,11 +375,11 @@ agreement for further details.
 +-----------------------------------------------------------------------------------------------------+-------------------+--------------+-------------------+------------+------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
 ; Compilation Hierarchy Node                                                                          ; LC Combinationals ; LC Registers ; Block Memory Bits ; DSP Blocks ; Pins ; Virtual Pins ; Full Hierarchy Name                                                                                                                                                                                                                                                        ; Library Name ;
 +-----------------------------------------------------------------------------------------------------+-------------------+--------------+-------------------+------------+------+--------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-; |MC68K                                                                                              ; 4327 (6)          ; 1337 (0)     ; 2365424           ; 0          ; 238  ; 0            ; |MC68K                                                                                                                                                                                                                                                                     ; work         ;
+; |MC68K                                                                                              ; 4335 (6)          ; 1337 (0)     ; 2365424           ; 0          ; 238  ; 0            ; |MC68K                                                                                                                                                                                                                                                                     ; work         ;
 ;    |AddressDecoder:inst3|                                                                           ; 14 (14)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|AddressDecoder:inst3                                                                                                                                                                                                                                                ; work         ;
-;    |CachedDramController:inst21|                                                                    ; 299 (0)           ; 121 (0)      ; 4864              ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21                                                                                                                                                                                                                                         ; work         ;
-;       |CacheEnabledDramController:inst|                                                             ; 187 (187)         ; 94 (94)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21|CacheEnabledDramController:inst                                                                                                                                                                                                         ; work         ;
-;       |DramCache:inst1|                                                                             ; 112 (1)           ; 27 (0)       ; 4864              ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21|DramCache:inst1                                                                                                                                                                                                                         ; work         ;
+;    |CachedDramController:inst21|                                                                    ; 307 (0)           ; 121 (0)      ; 4864              ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21                                                                                                                                                                                                                                         ; work         ;
+;       |CacheEnabledDramController:inst|                                                             ; 194 (194)         ; 94 (94)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21|CacheEnabledDramController:inst                                                                                                                                                                                                         ; work         ;
+;       |DramCache:inst1|                                                                             ; 113 (1)           ; 27 (0)       ; 4864              ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21|DramCache:inst1                                                                                                                                                                                                                         ; work         ;
 ;          |AddressComparator:inst1|                                                                  ; 21 (21)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21|DramCache:inst1|AddressComparator:inst1                                                                                                                                                                                                 ; work         ;
 ;          |CacheDataMemory:inst4|                                                                    ; 2 (2)             ; 0 (0)        ; 4096              ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21|DramCache:inst1|CacheDataMemory:inst4                                                                                                                                                                                                   ; work         ;
 ;             |CacheData:inst1|                                                                       ; 0 (0)             ; 0 (0)        ; 2048              ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21|DramCache:inst1|CacheDataMemory:inst4|CacheData:inst1                                                                                                                                                                                   ; work         ;
@@ -388,7 +388,7 @@ agreement for further details.
 ;             |CacheData:inst6|                                                                       ; 0 (0)             ; 0 (0)        ; 2048              ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21|DramCache:inst1|CacheDataMemory:inst4|CacheData:inst6                                                                                                                                                                                   ; work         ;
 ;                |altsyncram:altsyncram_component|                                                    ; 0 (0)             ; 0 (0)        ; 2048              ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21|DramCache:inst1|CacheDataMemory:inst4|CacheData:inst6|altsyncram:altsyncram_component                                                                                                                                                   ; work         ;
 ;                   |altsyncram_g504:auto_generated|                                                  ; 0 (0)             ; 0 (0)        ; 2048              ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21|DramCache:inst1|CacheDataMemory:inst4|CacheData:inst6|altsyncram:altsyncram_component|altsyncram_g504:auto_generated                                                                                                                    ; work         ;
-;          |M68kCacheController:inst|                                                                 ; 69 (69)           ; 27 (27)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21|DramCache:inst1|M68kCacheController:inst                                                                                                                                                                                                ; work         ;
+;          |M68kCacheController:inst|                                                                 ; 70 (70)           ; 27 (27)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21|DramCache:inst1|M68kCacheController:inst                                                                                                                                                                                                ; work         ;
 ;          |TagMemory:inst5|                                                                          ; 0 (0)             ; 0 (0)        ; 736               ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21|DramCache:inst1|TagMemory:inst5                                                                                                                                                                                                         ; work         ;
 ;             |Tag_Data:inst|                                                                         ; 0 (0)             ; 0 (0)        ; 736               ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21|DramCache:inst1|TagMemory:inst5|Tag_Data:inst                                                                                                                                                                                           ; work         ;
 ;                |altsyncram:altsyncram_component|                                                    ; 0 (0)             ; 0 (0)        ; 736               ; 0          ; 0    ; 0            ; |MC68K|CachedDramController:inst21|DramCache:inst1|TagMemory:inst5|Tag_Data:inst|altsyncram:altsyncram_component                                                                                                                                                           ; work         ;
@@ -416,8 +416,8 @@ agreement for further details.
 ;                |altsyncram_edi1:auto_generated|                                                     ; 0 (0)             ; 0 (0)        ; 64                ; 0          ; 0    ; 0            ; |MC68K|IIC_SPI_Interface:inst32|simple_spi_top:inst1|fifo4:wfifo|altsyncram:mem_rtl_0|altsyncram_edi1:auto_generated                                                                                                                                                       ; work         ;
 ;    |InterruptPriorityEncoder:inst28|                                                                ; 3 (3)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|InterruptPriorityEncoder:inst28                                                                                                                                                                                                                                     ; work         ;
 ;    |M68000CPU:inst17|                                                                               ; 2587 (0)          ; 478 (0)      ; 1088              ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17                                                                                                                                                                                                                                                    ; work         ;
-;       |BusRequestLogic:inst1|                                                                       ; 3 (3)             ; 3 (3)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|BusRequestLogic:inst1                                                                                                                                                                                                                              ; work         ;
-;       |TG68:inst|                                                                                   ; 2584 (22)         ; 475 (14)     ; 1088              ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst                                                                                                                                                                                                                                          ; work         ;
+;       |BusRequestLogic:inst1|                                                                       ; 4 (4)             ; 3 (3)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|BusRequestLogic:inst1                                                                                                                                                                                                                              ; work         ;
+;       |TG68:inst|                                                                                   ; 2583 (21)         ; 475 (14)     ; 1088              ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst                                                                                                                                                                                                                                          ; work         ;
 ;          |TG68_fast:TG68_fast_inst|                                                                 ; 2562 (2562)       ; 461 (461)    ; 1088              ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst                                                                                                                                                                                                                 ; work         ;
 ;             |altsyncram:regfile_high_rtl_0|                                                         ; 0 (0)             ; 0 (0)        ; 272               ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_high_rtl_0                                                                                                                                                                                   ; work         ;
 ;                |altsyncram_uvj1:auto_generated|                                                     ; 0 (0)             ; 0 (0)        ; 272               ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_high_rtl_0|altsyncram_uvj1:auto_generated                                                                                                                                                    ; work         ;
@@ -427,11 +427,11 @@ agreement for further details.
 ;                |altsyncram_uvj1:auto_generated|                                                     ; 0 (0)             ; 0 (0)        ; 272               ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_low_rtl_0|altsyncram_uvj1:auto_generated                                                                                                                                                     ; work         ;
 ;             |altsyncram:regfile_low_rtl_1|                                                          ; 0 (0)             ; 0 (0)        ; 272               ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_low_rtl_1                                                                                                                                                                                    ; work         ;
 ;                |altsyncram_uvj1:auto_generated|                                                     ; 0 (0)             ; 0 (0)        ; 272               ; 0          ; 0    ; 0            ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|altsyncram:regfile_low_rtl_1|altsyncram_uvj1:auto_generated                                                                                                                                                     ; work         ;
-;    |OnChipIO:inst8|                                                                                 ; 696 (0)           ; 335 (0)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8                                                                                                                                                                                                                                                      ; work         ;
+;    |OnChipIO:inst8|                                                                                 ; 695 (0)           ; 335 (0)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8                                                                                                                                                                                                                                                      ; work         ;
 ;       |HexTo7SegmentDisplay:inst10|                                                                 ; 14 (14)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst10                                                                                                                                                                                                                          ; work         ;
 ;       |HexTo7SegmentDisplay:inst11|                                                                 ; 14 (14)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst11                                                                                                                                                                                                                          ; work         ;
 ;       |HexTo7SegmentDisplay:inst21|                                                                 ; 14 (14)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst21                                                                                                                                                                                                                          ; work         ;
-;       |IODecoder:inst1|                                                                             ; 33 (33)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|IODecoder:inst1                                                                                                                                                                                                                                      ; work         ;
+;       |IODecoder:inst1|                                                                             ; 32 (32)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|IODecoder:inst1                                                                                                                                                                                                                                      ; work         ;
 ;       |LCD_Controller:inst2|                                                                        ; 13 (13)           ; 20 (20)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|LCD_Controller:inst2                                                                                                                                                                                                                                 ; work         ;
 ;       |Latch8Bit:inst23|                                                                            ; 0 (0)             ; 8 (8)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|Latch8Bit:inst23                                                                                                                                                                                                                                     ; work         ;
 ;       |Latch8Bit:inst3|                                                                             ; 0 (0)             ; 8 (8)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|Latch8Bit:inst3                                                                                                                                                                                                                                      ; work         ;
@@ -451,8 +451,8 @@ agreement for further details.
 ;          |lpm_bustri:lpm_bustri_component|                                                          ; 12 (12)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|lpm_bustri2:inst15|lpm_bustri:lpm_bustri_component                                                                                                                                                                                                   ; work         ;
 ;       |lpm_bustri2:inst17|                                                                          ; 8 (0)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|lpm_bustri2:inst17                                                                                                                                                                                                                                   ; work         ;
 ;          |lpm_bustri:lpm_bustri_component|                                                          ; 8 (8)             ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipIO:inst8|lpm_bustri2:inst17|lpm_bustri:lpm_bustri_component                                                                                                                                                                                                   ; work         ;
-;    |OnChipM68xxIO:inst11|                                                                           ; 137 (0)           ; 115 (0)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipM68xxIO:inst11                                                                                                                                                                                                                                                ; work         ;
-;       |ACIA_6850:inst16|                                                                            ; 91 (21)           ; 99 (25)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipM68xxIO:inst11|ACIA_6850:inst16                                                                                                                                                                                                                               ; work         ;
+;    |OnChipM68xxIO:inst11|                                                                           ; 138 (0)           ; 115 (0)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipM68xxIO:inst11                                                                                                                                                                                                                                                ; work         ;
+;       |ACIA_6850:inst16|                                                                            ; 92 (22)           ; 99 (25)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipM68xxIO:inst11|ACIA_6850:inst16                                                                                                                                                                                                                               ; work         ;
 ;          |ACIA_RX:RxDev|                                                                            ; 35 (35)           ; 43 (43)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipM68xxIO:inst11|ACIA_6850:inst16|ACIA_RX:RxDev                                                                                                                                                                                                                 ; work         ;
 ;          |ACIA_TX:TxDev|                                                                            ; 35 (35)           ; 31 (31)      ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipM68xxIO:inst11|ACIA_6850:inst16|ACIA_TX:TxDev                                                                                                                                                                                                                 ; work         ;
 ;       |ACIA_BaudRate_Generator:inst1|                                                               ; 44 (0)            ; 16 (0)       ; 0                 ; 0          ; 0    ; 0            ; |MC68K|OnChipM68xxIO:inst11|ACIA_BaudRate_Generator:inst1                                                                                                                                                                                                                  ; work         ;
@@ -896,12 +896,12 @@ Encoding Type:  One-Hot
 ; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|opcode[14]     ; 101     ;
 ; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|opcode[13]     ; 55      ;
 ; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|trap_interrupt ; 3       ;
-; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|state[0]       ; 90      ;
+; M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|state[0]       ; 92      ;
 ; M68000CPU:inst17|TG68:inst|uds_s                                   ; 5       ;
 ; M68000CPU:inst17|TG68:inst|uds_e                                   ; 5       ;
-; M68000CPU:inst17|TG68:inst|as_s                                    ; 13      ;
-; M68000CPU:inst17|TG68:inst|as_e                                    ; 13      ;
-; M68000CPU:inst17|TG68:inst|rw_s                                    ; 15      ;
+; M68000CPU:inst17|TG68:inst|as_s                                    ; 12      ;
+; M68000CPU:inst17|TG68:inst|as_e                                    ; 12      ;
+; M68000CPU:inst17|TG68:inst|rw_s                                    ; 23      ;
 ; M68000CPU:inst17|TG68:inst|lds_s                                   ; 3       ;
 ; M68000CPU:inst17|TG68:inst|lds_e                                   ; 3       ;
 ; IIC_SPI_Interface:inst32|simple_spi_top:inst1|spssr[0]             ; 2       ;
@@ -1138,21 +1138,21 @@ Encoding Type:  One-Hot
 ; 4:1                ; 8 bits    ; 16 LEs        ; 8 LEs                ; 8 LEs                  ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|registerin[13]                                                                                                                                          ;
 ; 5:1                ; 2 bits    ; 6 LEs         ; 6 LEs                ; 0 LEs                  ; No         ; |MC68K|OnChipIO:inst8|LCD_Controller:inst2|E                                                                                                                                                                       ;
 ; 5:1                ; 2 bits    ; 6 LEs         ; 6 LEs                ; 0 LEs                  ; No         ; |MC68K|M68000CPU:inst17|BusRequestLogic:inst1|Next_state.MasterHasBus                                                                                                                                              ;
-; 16:1               ; 5 bits    ; 50 LEs        ; 40 LEs               ; 10 LEs                 ; No         ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst11|Display2[2]                                                                                                                                                      ;
-; 16:1               ; 5 bits    ; 50 LEs        ; 40 LEs               ; 10 LEs                 ; No         ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst11|Display1[5]                                                                                                                                                      ;
-; 16:1               ; 5 bits    ; 50 LEs        ; 40 LEs               ; 10 LEs                 ; No         ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst10|Display2[0]                                                                                                                                                      ;
-; 16:1               ; 5 bits    ; 50 LEs        ; 40 LEs               ; 10 LEs                 ; No         ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst10|Display1[5]                                                                                                                                                      ;
-; 16:1               ; 5 bits    ; 50 LEs        ; 40 LEs               ; 10 LEs                 ; No         ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst21|Display2[6]                                                                                                                                                      ;
+; 16:1               ; 5 bits    ; 50 LEs        ; 40 LEs               ; 10 LEs                 ; No         ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst11|Display2[0]                                                                                                                                                      ;
+; 16:1               ; 5 bits    ; 50 LEs        ; 40 LEs               ; 10 LEs                 ; No         ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst11|Display1[6]                                                                                                                                                      ;
+; 16:1               ; 5 bits    ; 50 LEs        ; 40 LEs               ; 10 LEs                 ; No         ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst10|Display2[6]                                                                                                                                                      ;
+; 16:1               ; 5 bits    ; 50 LEs        ; 40 LEs               ; 10 LEs                 ; No         ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst10|Display1[1]                                                                                                                                                      ;
+; 16:1               ; 5 bits    ; 50 LEs        ; 40 LEs               ; 10 LEs                 ; No         ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst21|Display2[5]                                                                                                                                                      ;
 ; 16:1               ; 5 bits    ; 50 LEs        ; 40 LEs               ; 10 LEs                 ; No         ; |MC68K|OnChipIO:inst8|HexTo7SegmentDisplay:inst21|Display1[0]                                                                                                                                                      ;
-; 5:1                ; 3 bits    ; 9 LEs         ; 9 LEs                ; 0 LEs                  ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|rf_dest_addr[2]                                                                                                                                         ;
+; 5:1                ; 3 bits    ; 9 LEs         ; 9 LEs                ; 0 LEs                  ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|rf_dest_addr[0]                                                                                                                                         ;
 ; 6:1                ; 2 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; No         ; |MC68K|OnChipIO:inst8|LCD_Controller:inst2|Next_state.RemoveE                                                                                                                                                      ;
 ; 5:1                ; 3 bits    ; 9 LEs         ; 6 LEs                ; 3 LEs                  ; No         ; |MC68K|OnChipM68xxIO:inst11|ACIA_6850:inst16|Selector3                                                                                                                                                             ;
-; 6:1                ; 2 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|memaddr_a[2]                                                                                                                                            ;
-; 6:1                ; 16 bits   ; 64 LEs        ; 32 LEs               ; 32 LEs                 ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|memaddr_a[17]                                                                                                                                           ;
+; 6:1                ; 2 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|memaddr_a[3]                                                                                                                                            ;
+; 6:1                ; 16 bits   ; 64 LEs        ; 32 LEs               ; 32 LEs                 ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|memaddr_a[20]                                                                                                                                           ;
 ; 6:1                ; 4 bits    ; 16 LEs        ; 8 LEs                ; 8 LEs                  ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|memaddr_a[7]                                                                                                                                            ;
-; 7:1                ; 4 bits    ; 16 LEs        ; 16 LEs               ; 0 LEs                  ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|OP2out[7]                                                                                                                                               ;
-; 7:1                ; 4 bits    ; 16 LEs        ; 16 LEs               ; 0 LEs                  ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|OP2out[2]                                                                                                                                               ;
-; 7:1                ; 8 bits    ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|memaddr_a[8]                                                                                                                                            ;
+; 7:1                ; 4 bits    ; 16 LEs        ; 16 LEs               ; 0 LEs                  ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|OP2out[5]                                                                                                                                               ;
+; 7:1                ; 4 bits    ; 16 LEs        ; 16 LEs               ; 0 LEs                  ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|OP2out[0]                                                                                                                                               ;
+; 7:1                ; 8 bits    ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|memaddr_a[14]                                                                                                                                           ;
 ; 8:1                ; 25 bits   ; 125 LEs       ; 100 LEs              ; 25 LEs                 ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|memaddr_in[27]                                                                                                                                          ;
 ; 8:1                ; 4 bits    ; 20 LEs        ; 16 LEs               ; 4 LEs                  ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|memaddr_in[5]                                                                                                                                           ;
 ; 8:1                ; 2 bits    ; 10 LEs        ; 8 LEs                ; 2 LEs                  ; No         ; |MC68K|M68000CPU:inst17|TG68:inst|TG68_fast:TG68_fast_inst|memaddr_in[2]                                                                                                                                           ;
@@ -2806,7 +2806,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 ;     SLD               ; 24                          ;
 ;     plain             ; 90                          ;
 ; arriav_io_obuf        ; 34                          ;
-; arriav_lcell_comb     ; 4236                        ;
+; arriav_lcell_comb     ; 4244                        ;
 ;     arith             ; 638                         ;
 ;         0 data inputs ; 14                          ;
 ;         1 data inputs ; 313                         ;
@@ -2814,16 +2814,16 @@ Note: In order to hide this table in the UI and the text report file, please set
 ;         3 data inputs ; 60                          ;
 ;         4 data inputs ; 22                          ;
 ;         5 data inputs ; 207                         ;
-;     extend            ; 118                         ;
-;         7 data inputs ; 118                         ;
-;     normal            ; 3476                        ;
+;     extend            ; 121                         ;
+;         7 data inputs ; 121                         ;
+;     normal            ; 3481                        ;
 ;         0 data inputs ; 2                           ;
 ;         1 data inputs ; 44                          ;
 ;         2 data inputs ; 410                         ;
-;         3 data inputs ; 419                         ;
-;         4 data inputs ; 628                         ;
-;         5 data inputs ; 794                         ;
-;         6 data inputs ; 1179                        ;
+;         3 data inputs ; 421                         ;
+;         4 data inputs ; 635                         ;
+;         5 data inputs ; 793                         ;
+;         6 data inputs ; 1176                        ;
 ;     shared            ; 4                           ;
 ;         0 data inputs ; 1                           ;
 ;         3 data inputs ; 3                           ;
@@ -2832,7 +2832,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 ; stratixv_ram_block    ; 432                         ;
 ;                       ;                             ;
 ; Max LUT depth         ; 18.80                       ;
-; Average LUT depth     ; 8.90                        ;
+; Average LUT depth     ; 8.91                        ;
 +-----------------------+-----------------------------+
 
 
@@ -2841,7 +2841,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 +----------------+--------------+
 ; Partition Name ; Elapsed Time ;
 +----------------+--------------+
-; Top            ; 00:02:02     ;
+; Top            ; 00:01:46     ;
 +----------------+--------------+
 
 
@@ -2851,7 +2851,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus II 64-Bit Analysis & Synthesis
     Info: Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
-    Info: Processing started: Fri Mar 08 12:49:47 2019
+    Info: Processing started: Fri Mar 08 15:07:02 2019
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off MC68K -c MC68K
 Warning (125092): Tcl Script File VideoRamFrameBuffer.qip not found
     Info (125063): set_global_assignment -name QIP_FILE VideoRamFrameBuffer.qip
@@ -3398,6 +3398,7 @@ Info (12133): Instantiated megafunction "Video_Controller800x480:inst1|ColourPal
 Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_b634.tdf
     Info (12023): Found entity 1: altsyncram_b634
 Info (12128): Elaborating entity "altsyncram_b634" for hierarchy "Video_Controller800x480:inst1|ColourPallette_2PortRam:inst3|altsyncram:altsyncram_component|altsyncram_b634:auto_generated"
+Critical Warning (127004): Memory depth (64) in the design file differs from memory depth (256) in the Memory Initialization File "C:/M68K/ColourPallette_2PortRam.mif" -- truncated remaining initial content value to fit RAM
 Warning (12125): Using design file graphicscontroller_verilog.v, which is not specified as a design file for the current project, but contains definitions for 1 design units and 1 entities in project
     Info (12023): Found entity 1: GraphicsController_Verilog
 Info (12128): Elaborating entity "GraphicsController_Verilog" for hierarchy "Video_Controller800x480:inst1|GraphicsController_Verilog:inst1"
@@ -3480,6 +3481,9 @@ Info (12128): Elaborating entity "altsyncram_cl54" for hierarchy "OnChipROM16KWo
 Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_na63.tdf
     Info (12023): Found entity 1: altsyncram_na63
 Info (12128): Elaborating entity "altsyncram_na63" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|altsyncram_na63:altsyncram1"
+Warning (113028): 808 out of 16384 addresses are uninitialized. The Quartus II software will initialize them to "0". There are 2 warnings found, and 2 warnings are reported.
+    Warning (113027): Addresses ranging from 96 to 511 are not initialized
+    Warning (113027): Addresses ranging from 15992 to 16383 are not initialized
 Info (12021): Found 1 design units, including 1 entities, in source file db/decode_5la.tdf
     Info (12023): Found entity 1: decode_5la
 Info (12128): Elaborating entity "decode_5la" for hierarchy "OnChipROM16KWords:inst16|OnChipRom16KWord:inst1|altsyncram:altsyncram_component|altsyncram_cl54:auto_generated|altsyncram_na63:altsyncram1|decode_5la:decode4"
@@ -3589,7 +3593,7 @@ Info (12128): Elaborating entity "SPI_BUS_Decoder" for hierarchy "IIC_SPI_Interf
 Info (12128): Elaborating entity "InterruptPriorityEncoder" for hierarchy "InterruptPriorityEncoder:inst28"
 Info (12128): Elaborating entity "TraceExceptionGenerator" for hierarchy "TraceExceptionGenerator:inst30"
 Info (11170): Start IP generation for the debug fabric within sld_hub.
-Info (11172): 2019.03.08.12:50:12 Progress: Loading sldbe7d4d23/alt_sld_fab_wrapper_hw.tcl
+Info (11172): 2019.03.08.15:07:30 Progress: Loading sldbe7d4d23/alt_sld_fab_wrapper_hw.tcl
 Info (11172): Alt_sld_fab.alt_sld_fab: SLD fabric agents which did not specify prefer_host were connected to JTAG
 Info (11172): Alt_sld_fab: Generating alt_sld_fab "alt_sld_fab" for QUARTUS_SYNTH
 Info (11172): Alt_sld_fab: "alt_sld_fab" instantiated alt_sld_fab "alt_sld_fab"
@@ -3826,18 +3830,18 @@ Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
 Warning (21074): Design contains 2 input pin(s) that do not drive logic
     Warning (15610): No output dependent on input pin "Can0_RX"
     Warning (15610): No output dependent on input pin "Can1_RX"
-Info (21057): Implemented 5427 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 5435 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 22 input pins
     Info (21059): Implemented 202 output pins
     Info (21060): Implemented 18 bidirectional pins
-    Info (21061): Implemented 4748 logic cells
+    Info (21061): Implemented 4756 logic cells
     Info (21064): Implemented 432 RAM segments
     Info (21065): Implemented 4 PLLs
-Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 147 warnings
-    Info: Peak virtual memory: 5009 megabytes
-    Info: Processing ended: Fri Mar 08 12:52:25 2019
-    Info: Elapsed time: 00:02:38
-    Info: Total CPU time (on all processors): 00:02:52
+Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 151 warnings
+    Info: Peak virtual memory: 5005 megabytes
+    Info: Processing ended: Fri Mar 08 15:09:27 2019
+    Info: Elapsed time: 00:02:25
+    Info: Total CPU time (on all processors): 00:02:38
 
 
 +------------------------------------------+

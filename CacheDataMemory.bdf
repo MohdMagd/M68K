@@ -526,21 +526,6 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(pt 1008 264)
-	(pt 960 264)
-	(bus)
-)
-(connector
-	(pt 960 264)
-	(pt 960 344)
-	(bus)
-)
-(connector
-	(pt 960 344)
-	(pt 960 496)
-	(bus)
-)
-(connector
 	(pt 960 496)
 	(pt 960 624)
 	(bus)
@@ -600,6 +585,21 @@ agreement for further details.
 (connector
 	(pt 496 376)
 	(pt 496 528)
+	(bus)
+)
+(connector
+	(pt 960 264)
+	(pt 1008 264)
+	(bus)
+)
+(connector
+	(pt 960 264)
+	(pt 960 344)
+	(bus)
+)
+(connector
+	(pt 960 344)
+	(pt 960 496)
 	(bus)
 )
 (junction (pt 296 440))

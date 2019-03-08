@@ -984,7 +984,7 @@ agreement for further details.
 	(drawing
 		(rectangle (rect 16 16 368 320))
 	)
-	(annotation_block (parameter)(rect 736 200 1032 368))
+	(annotation_block (parameter)(rect -80 168 216 336))
 )
 (symbol
 	(rect 824 808 1024 888)

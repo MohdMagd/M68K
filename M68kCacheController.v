@@ -124,20 +124,20 @@ module M68kCacheController(
 		Index						<= AddressBusInFrom68k[8:4];		// cache index is 68ks address bits [8:4]
 		
 		UDS_DramController_L		<= UDS_L;
-		LDS_DramController_L	   	<= LDS_L;
+		LDS_DramController_L	   <= LDS_L;
 		WE_DramController_L 		<= WE_L;
-		AS_DramController_L			<= AS_L;
+		AS_DramController_L		<= AS_L;
 		
 		DtackTo68k_L				<= 1;								// don't supply until we are ready
 		TagCache_WE_L 				<= 1;								// don't write Cache address
-		DataCache_WE_L 				<= 1;								// don't write Cache data
+		DataCache_WE_L 			<= 1;								// don't write Cache data
 		ValidBit_WE_L				<= 1;								// don't write valid data
 		ValidBitOut_H				<= 0;								// line invalid
-		DramSelectFromCache_L 		<= 1;								// don't give the Dram controller a select signal since we might not always want to cycle the Dram if we have a hit during a read
+		DramSelectFromCache_L 	<= 1;								// don't give the Dram controller a select signal since we might not always want to cycle the Dram if we have a hit during a read
 		WordAddress					<= 0;								// default is byte 0 in 8 byte Cache line	
 		
 		BurstCounterReset_L 		<= 1;								// default is that burst counter can run (and wrap around if needed), we'll control when to reset it		
-		NextState 					<= Idle ;							// default is to go to this state
+		NextState 					<= Idle ;						// default is to go to this state
 			
 //////////////////////////////////////////////////////////////////
 // Initial State following a reset
@@ -171,7 +171,7 @@ module M68kCacheController(
 // Main IDLE state: 
 ///////////////////////////////////////////////
 		else if(CurrentState == Idle) begin	  							// if we are in the idle state				
-			if(AS_L == 1 && DramSelect68k_H == 1) begin
+			if(AS_L == 0 && DramSelect68k_H == 1) begin
 				if(WE_L == 1) begin // 68k's access is a read
 					// activate UDS and LDS to Dram/Cache Memory controller to grab both bytes
 					UDS_DramController_L <= 0;
@@ -198,7 +198,7 @@ module M68kCacheController(
 			LDS_DramController_L <= 0;
 			if(CacheHit_H == 1 && ValidBitIn_H == 1) begin
 				// NOTE: By default DataBusOutTo68k <= DataBusInFromCache
-				WordAddress <= AddressBusInFrom68k [3:1];	// give the cache line the correct 3 bit word address specified by 68k
+				WordAddress <= AddressBusInFrom68k[3:1];	// give the cache line the correct 3 bit word address specified by 68k
 				DtackTo68k_L <= 0;
 				NextState <= WaitForEndOfCacheRead;
 			end else begin
@@ -220,7 +220,6 @@ module M68kCacheController(
 			// NOTE: By default DataBusOutTo68k <= DataBusInFromCache
 			WordAddress <= AddressBusInFrom68k [3:1];	// give the cache line the correct 3 bit word address specified by 68k
 			DtackTo68k_L <= 0;
-			NextState <= WaitForEndOfCacheRead;
 
 			if(AS_L == 0)
 				NextState <= WaitForEndOfCacheRead;

@@ -210,10 +210,6 @@ agreement for further details.
 	)
 )
 (connector
-	(pt 520 344)
-	(pt 616 344)
-)
-(connector
 	(pt 440 344)
 	(pt 472 344)
 )
@@ -223,16 +219,20 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(pt 616 360)
-	(pt 440 360)
-	(bus)
-)
-(connector
-	(pt 616 408)
-	(pt 440 408)
-)
-(connector
-	(pt 832 328)
 	(pt 1024 328)
+	(pt 832 328)
 	(bus)
+)
+(connector
+	(pt 520 344)
+	(pt 616 344)
+)
+(connector
+	(pt 440 360)
+	(pt 616 360)
+	(bus)
+)
+(connector
+	(pt 440 408)
+	(pt 616 408)
 )
