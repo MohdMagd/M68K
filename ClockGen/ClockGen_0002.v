@@ -38,7 +38,7 @@ module  ClockGen_0002(
 		.phase_shift2("0 ps"),
 		.duty_cycle2(50),
 		.output_clock_frequency3("90.000000 MHz"),
-		.phase_shift3("7716 ps"),
+		.phase_shift3("7099 ps"),
 		.duty_cycle3(50),
 		.output_clock_frequency4("0 MHz"),
 		.phase_shift4("0 ps"),

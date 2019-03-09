@@ -70,19 +70,19 @@ agreement for further details.
 )
 (pin
 	(input)
-	(rect 272 320 440 336)
-	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "TagData[22..0]" (rect 5 0 78 12)(font "Arial" ))
-	(pt 168 8)
+	(rect 264 320 440 336)
+	(text "INPUT" (rect 133 0 161 10)(font "Arial" (font_size 6)))
+	(text "TagDataIn[22..0]" (rect 5 0 88 12)(font "Arial" ))
+	(pt 176 8)
 	(drawing
-		(line (pt 84 12)(pt 109 12))
-		(line (pt 84 4)(pt 109 4))
-		(line (pt 113 8)(pt 168 8))
-		(line (pt 84 12)(pt 84 4))
-		(line (pt 109 4)(pt 113 8))
-		(line (pt 109 12)(pt 113 8))
+		(line (pt 92 12)(pt 117 12))
+		(line (pt 92 4)(pt 117 4))
+		(line (pt 121 8)(pt 176 8))
+		(line (pt 92 12)(pt 92 4))
+		(line (pt 117 4)(pt 121 8))
+		(line (pt 117 12)(pt 121 8))
 	)
-	(text "VCC" (rect 128 7 148 17)(font "Arial" (font_size 6)))
+	(text "VCC" (rect 136 7 156 17)(font "Arial" (font_size 6)))
 )
 (pin
 	(output)
@@ -219,11 +219,6 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(pt 1024 328)
-	(pt 832 328)
-	(bus)
-)
-(connector
 	(pt 520 344)
 	(pt 616 344)
 )
@@ -235,4 +230,9 @@ agreement for further details.
 (connector
 	(pt 440 408)
 	(pt 616 408)
+)
+(connector
+	(pt 832 328)
+	(pt 1024 328)
+	(bus)
 )

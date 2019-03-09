@@ -21,14 +21,14 @@ agreement for further details.
 */
 (header "symbol" (version "1.2"))
 (symbol
-	(rect 16 16 256 144)
+	(rect 16 16 264 144)
 	(text "TagMemory" (rect 5 0 71 14)(font "Arial" (font_size 8)))
 	(text "inst" (rect 8 112 25 124)(font "Arial" ))
 	(port
 		(pt 0 32)
 		(input)
-		(text "TagData[22..0]" (rect 0 0 82 14)(font "Arial" (font_size 8)))
-		(text "TagData[22..0]" (rect 21 27 103 41)(font "Arial" (font_size 8)))
+		(text "TagDataIn[22..0]" (rect 0 0 92 14)(font "Arial" (font_size 8)))
+		(text "TagDataIn[22..0]" (rect 21 27 113 41)(font "Arial" (font_size 8)))
 		(line (pt 0 32)(pt 16 32)(line_width 3))
 	)
 	(port
@@ -53,13 +53,13 @@ agreement for further details.
 		(line (pt 0 80)(pt 16 80))
 	)
 	(port
-		(pt 240 32)
+		(pt 248 32)
 		(output)
 		(text "TagDataOut[22..0]" (rect 0 0 102 14)(font "Arial" (font_size 8)))
-		(text "TagDataOut[22..0]" (rect 117 27 219 41)(font "Arial" (font_size 8)))
-		(line (pt 240 32)(pt 224 32)(line_width 3))
+		(text "TagDataOut[22..0]" (rect 125 27 227 41)(font "Arial" (font_size 8)))
+		(line (pt 248 32)(pt 232 32)(line_width 3))
 	)
 	(drawing
-		(rectangle (rect 16 16 224 112))
+		(rectangle (rect 16 16 232 112))
 	)
 )

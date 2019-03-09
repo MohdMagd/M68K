@@ -1,10 +1,11 @@
 |MC68K
 RS232_TxData <= OnChipM68xxIO:inst11.RS232_TxData
+CLOCK_50 => OnChipM68xxIO:inst11.Clock_50Mhz
 CLOCK_50 => ClockGen:inst7.refclk
 CLOCK_50 => Video_Controller800x480:inst1.Clock_50Mhz
 Reset_L => inst13.IN0
 Reset_L => DMAController:inst12.Reset_L
-Reset_L => CachedDramController:inst21.Reset_L
+Reset_L => CachedDramController:inst2.Reset_L
 Reset_L => CanBus:inst5.Reset_L
 Reset_L => Video_Controller800x480:inst1.Reset_L
 Reset_L => OnChipIO:inst8.Reset_L
@@ -27,22 +28,22 @@ DataBusOut[12] <= CPU_DMA_Mux:inst14.DataOut[12]
 DataBusOut[13] <= CPU_DMA_Mux:inst14.DataOut[13]
 DataBusOut[14] <= CPU_DMA_Mux:inst14.DataOut[14]
 DataBusOut[15] <= CPU_DMA_Mux:inst14.DataOut[15]
-DRAM_DQ[0] <> CachedDramController:inst21.DRAM_DQ[0]
-DRAM_DQ[1] <> CachedDramController:inst21.DRAM_DQ[1]
-DRAM_DQ[2] <> CachedDramController:inst21.DRAM_DQ[2]
-DRAM_DQ[3] <> CachedDramController:inst21.DRAM_DQ[3]
-DRAM_DQ[4] <> CachedDramController:inst21.DRAM_DQ[4]
-DRAM_DQ[5] <> CachedDramController:inst21.DRAM_DQ[5]
-DRAM_DQ[6] <> CachedDramController:inst21.DRAM_DQ[6]
-DRAM_DQ[7] <> CachedDramController:inst21.DRAM_DQ[7]
-DRAM_DQ[8] <> CachedDramController:inst21.DRAM_DQ[8]
-DRAM_DQ[9] <> CachedDramController:inst21.DRAM_DQ[9]
-DRAM_DQ[10] <> CachedDramController:inst21.DRAM_DQ[10]
-DRAM_DQ[11] <> CachedDramController:inst21.DRAM_DQ[11]
-DRAM_DQ[12] <> CachedDramController:inst21.DRAM_DQ[12]
-DRAM_DQ[13] <> CachedDramController:inst21.DRAM_DQ[13]
-DRAM_DQ[14] <> CachedDramController:inst21.DRAM_DQ[14]
-DRAM_DQ[15] <> CachedDramController:inst21.DRAM_DQ[15]
+DRAM_DQ[0] <> CachedDramController:inst2.DRAM_DQ[0]
+DRAM_DQ[1] <> CachedDramController:inst2.DRAM_DQ[1]
+DRAM_DQ[2] <> CachedDramController:inst2.DRAM_DQ[2]
+DRAM_DQ[3] <> CachedDramController:inst2.DRAM_DQ[3]
+DRAM_DQ[4] <> CachedDramController:inst2.DRAM_DQ[4]
+DRAM_DQ[5] <> CachedDramController:inst2.DRAM_DQ[5]
+DRAM_DQ[6] <> CachedDramController:inst2.DRAM_DQ[6]
+DRAM_DQ[7] <> CachedDramController:inst2.DRAM_DQ[7]
+DRAM_DQ[8] <> CachedDramController:inst2.DRAM_DQ[8]
+DRAM_DQ[9] <> CachedDramController:inst2.DRAM_DQ[9]
+DRAM_DQ[10] <> CachedDramController:inst2.DRAM_DQ[10]
+DRAM_DQ[11] <> CachedDramController:inst2.DRAM_DQ[11]
+DRAM_DQ[12] <> CachedDramController:inst2.DRAM_DQ[12]
+DRAM_DQ[13] <> CachedDramController:inst2.DRAM_DQ[13]
+DRAM_DQ[14] <> CachedDramController:inst2.DRAM_DQ[14]
+DRAM_DQ[15] <> CachedDramController:inst2.DRAM_DQ[15]
 Can0_RX => CanBus:inst5.Can0_RX
 Can1_RX => CanBus:inst5.Can1_RX
 SW[0] => OnChipIO:inst8.InPortA[0]
@@ -83,14 +84,14 @@ VGA_VS <= Video_Controller800x480:inst1.VGA_VS
 VGA_BLANK_N <= Video_Controller800x480:inst1.VGA_BLANK_N
 VGA_SYNC_N <= <GND>
 VGA_CLK <= Video_Controller800x480:inst1.VGA_CLK
-DRAM_CLK <= CachedDramController:inst21.DRAM_CLK
-DRAM_CKE <= CachedDramController:inst21.DRAM_CKE
-DRAM_CS_N <= CachedDramController:inst21.DRAM_CS_N
-DRAM_CAS_N <= CachedDramController:inst21.DRAM_CAS_N
-DRAM_RAS_N <= CachedDramController:inst21.DRAM_RAS_N
-DRAM_WE_N <= CachedDramController:inst21.DRAM_WE_N
-DRAM_UDQM <= CachedDramController:inst21.DRAM_UDQM
-DRAM_LDQM <= CachedDramController:inst21.DRAM_LDQM
+DRAM_CLK <= CachedDramController:inst2.DRAM_CLK
+DRAM_CKE <= CachedDramController:inst2.DRAM_CKE
+DRAM_CS_N <= CachedDramController:inst2.DRAM_CS_N
+DRAM_CAS_N <= CachedDramController:inst2.DRAM_CAS_N
+DRAM_RAS_N <= CachedDramController:inst2.DRAM_RAS_N
+DRAM_WE_N <= CachedDramController:inst2.DRAM_WE_N
+DRAM_UDQM <= CachedDramController:inst2.DRAM_UDQM
+DRAM_LDQM <= CachedDramController:inst2.DRAM_LDQM
 sck_o <= IIC_SPI_Interface:inst32.sck_o
 mosi_o <= IIC_SPI_Interface:inst32.mosi_o
 Can0_TX <= CanBus:inst5.Can0_TX
@@ -104,8 +105,8 @@ IOSelect_H <= AddressDecoder:inst3.IOSelect_H
 GraphicsSelect_L <= AddressDecoder:inst3.GraphicsCS_L
 CanBusSelect_H <= AddressDecoder:inst3.CanBusSelect_H
 BG_L <= M68000CPU:inst17.BG_L
-ResetOut <= CachedDramController:inst21.ResetOutTo68k
-DramDtack_L <= CachedDramController:inst21.CacheDtackTo68k_L
+ResetOut <= CachedDramController:inst2.ResetOutTo68k
+DramDtack_L <= CachedDramController:inst2.CacheDtackTo68k_L
 AS_L <= CPU_DMA_Mux:inst14.AS_L
 UDS_L <= CPU_DMA_Mux:inst14.UDS_L
 LDS_L <= CPU_DMA_Mux:inst14.LDS_L
@@ -146,21 +147,21 @@ AddressBus[28] <= Address[28].DB_MAX_OUTPUT_PORT_TYPE
 AddressBus[29] <= Address[29].DB_MAX_OUTPUT_PORT_TYPE
 AddressBus[30] <= Address[30].DB_MAX_OUTPUT_PORT_TYPE
 AddressBus[31] <= Address[31].DB_MAX_OUTPUT_PORT_TYPE
-DRAM_ADDR[0] <= CachedDramController:inst21.DRAM_ADDR[0]
-DRAM_ADDR[1] <= CachedDramController:inst21.DRAM_ADDR[1]
-DRAM_ADDR[2] <= CachedDramController:inst21.DRAM_ADDR[2]
-DRAM_ADDR[3] <= CachedDramController:inst21.DRAM_ADDR[3]
-DRAM_ADDR[4] <= CachedDramController:inst21.DRAM_ADDR[4]
-DRAM_ADDR[5] <= CachedDramController:inst21.DRAM_ADDR[5]
-DRAM_ADDR[6] <= CachedDramController:inst21.DRAM_ADDR[6]
-DRAM_ADDR[7] <= CachedDramController:inst21.DRAM_ADDR[7]
-DRAM_ADDR[8] <= CachedDramController:inst21.DRAM_ADDR[8]
-DRAM_ADDR[9] <= CachedDramController:inst21.DRAM_ADDR[9]
-DRAM_ADDR[10] <= CachedDramController:inst21.DRAM_ADDR[10]
-DRAM_ADDR[11] <= CachedDramController:inst21.DRAM_ADDR[11]
-DRAM_ADDR[12] <= CachedDramController:inst21.DRAM_ADDR[12]
-DRAM_BA[0] <= CachedDramController:inst21.DRAM_BA[0]
-DRAM_BA[1] <= CachedDramController:inst21.DRAM_BA[1]
+DRAM_ADDR[0] <= CachedDramController:inst2.DRAM_ADDR[0]
+DRAM_ADDR[1] <= CachedDramController:inst2.DRAM_ADDR[1]
+DRAM_ADDR[2] <= CachedDramController:inst2.DRAM_ADDR[2]
+DRAM_ADDR[3] <= CachedDramController:inst2.DRAM_ADDR[3]
+DRAM_ADDR[4] <= CachedDramController:inst2.DRAM_ADDR[4]
+DRAM_ADDR[5] <= CachedDramController:inst2.DRAM_ADDR[5]
+DRAM_ADDR[6] <= CachedDramController:inst2.DRAM_ADDR[6]
+DRAM_ADDR[7] <= CachedDramController:inst2.DRAM_ADDR[7]
+DRAM_ADDR[8] <= CachedDramController:inst2.DRAM_ADDR[8]
+DRAM_ADDR[9] <= CachedDramController:inst2.DRAM_ADDR[9]
+DRAM_ADDR[10] <= CachedDramController:inst2.DRAM_ADDR[10]
+DRAM_ADDR[11] <= CachedDramController:inst2.DRAM_ADDR[11]
+DRAM_ADDR[12] <= CachedDramController:inst2.DRAM_ADDR[12]
+DRAM_BA[0] <= CachedDramController:inst2.DRAM_BA[0]
+DRAM_BA[1] <= CachedDramController:inst2.DRAM_BA[1]
 HEX0[0] <= OnChipIO:inst8.HexDisplay0[0]
 HEX0[1] <= OnChipIO:inst8.HexDisplay0[1]
 HEX0[2] <= OnChipIO:inst8.HexDisplay0[2]
@@ -767,210 +768,6 @@ Q[1] <= Q[1]~reg0.DB_MAX_OUTPUT_PORT_TYPE
 Q[2] <= Q[2]~reg0.DB_MAX_OUTPUT_PORT_TYPE
 
 
-|MC68K|ClockGen:inst7
-refclk => ClockGen_0002:clockgen_inst.refclk
-rst => ClockGen_0002:clockgen_inst.rst
-outclk_0 <= ClockGen_0002:clockgen_inst.outclk_0
-outclk_1 <= ClockGen_0002:clockgen_inst.outclk_1
-outclk_2 <= ClockGen_0002:clockgen_inst.outclk_2
-outclk_3 <= ClockGen_0002:clockgen_inst.outclk_3
-locked <= ClockGen_0002:clockgen_inst.locked
-
-
-|MC68K|ClockGen:inst7|ClockGen_0002:clockgen_inst
-refclk => refclk.IN1
-rst => rst.IN1
-outclk_0 <= altera_pll:altera_pll_i.outclk
-outclk_1 <= altera_pll:altera_pll_i.outclk
-outclk_2 <= altera_pll:altera_pll_i.outclk
-outclk_3 <= altera_pll:altera_pll_i.outclk
-locked <= altera_pll:altera_pll_i.locked
-
-
-|MC68K|ClockGen:inst7|ClockGen_0002:clockgen_inst|altera_pll:altera_pll_i
-refclk => general[0].gpll.I_REFCLK
-refclk => general[1].gpll.I_REFCLK
-refclk => general[2].gpll.I_REFCLK
-refclk => general[3].gpll.I_REFCLK
-refclk1 => ~NO_FANOUT~
-fbclk => ~NO_FANOUT~
-rst => general[0].gpll.I_RST
-rst => general[1].gpll.I_RST
-rst => general[2].gpll.I_RST
-rst => general[3].gpll.I_RST
-phase_en => ~NO_FANOUT~
-updn => ~NO_FANOUT~
-num_phase_shifts[0] => ~NO_FANOUT~
-num_phase_shifts[1] => ~NO_FANOUT~
-num_phase_shifts[2] => ~NO_FANOUT~
-scanclk => ~NO_FANOUT~
-cntsel[0] => ~NO_FANOUT~
-cntsel[1] => ~NO_FANOUT~
-cntsel[2] => ~NO_FANOUT~
-cntsel[3] => ~NO_FANOUT~
-cntsel[4] => ~NO_FANOUT~
-reconfig_to_pll[0] => ~NO_FANOUT~
-reconfig_to_pll[1] => ~NO_FANOUT~
-reconfig_to_pll[2] => ~NO_FANOUT~
-reconfig_to_pll[3] => ~NO_FANOUT~
-reconfig_to_pll[4] => ~NO_FANOUT~
-reconfig_to_pll[5] => ~NO_FANOUT~
-reconfig_to_pll[6] => ~NO_FANOUT~
-reconfig_to_pll[7] => ~NO_FANOUT~
-reconfig_to_pll[8] => ~NO_FANOUT~
-reconfig_to_pll[9] => ~NO_FANOUT~
-reconfig_to_pll[10] => ~NO_FANOUT~
-reconfig_to_pll[11] => ~NO_FANOUT~
-reconfig_to_pll[12] => ~NO_FANOUT~
-reconfig_to_pll[13] => ~NO_FANOUT~
-reconfig_to_pll[14] => ~NO_FANOUT~
-reconfig_to_pll[15] => ~NO_FANOUT~
-reconfig_to_pll[16] => ~NO_FANOUT~
-reconfig_to_pll[17] => ~NO_FANOUT~
-reconfig_to_pll[18] => ~NO_FANOUT~
-reconfig_to_pll[19] => ~NO_FANOUT~
-reconfig_to_pll[20] => ~NO_FANOUT~
-reconfig_to_pll[21] => ~NO_FANOUT~
-reconfig_to_pll[22] => ~NO_FANOUT~
-reconfig_to_pll[23] => ~NO_FANOUT~
-reconfig_to_pll[24] => ~NO_FANOUT~
-reconfig_to_pll[25] => ~NO_FANOUT~
-reconfig_to_pll[26] => ~NO_FANOUT~
-reconfig_to_pll[27] => ~NO_FANOUT~
-reconfig_to_pll[28] => ~NO_FANOUT~
-reconfig_to_pll[29] => ~NO_FANOUT~
-reconfig_to_pll[30] => ~NO_FANOUT~
-reconfig_to_pll[31] => ~NO_FANOUT~
-reconfig_to_pll[32] => ~NO_FANOUT~
-reconfig_to_pll[33] => ~NO_FANOUT~
-reconfig_to_pll[34] => ~NO_FANOUT~
-reconfig_to_pll[35] => ~NO_FANOUT~
-reconfig_to_pll[36] => ~NO_FANOUT~
-reconfig_to_pll[37] => ~NO_FANOUT~
-reconfig_to_pll[38] => ~NO_FANOUT~
-reconfig_to_pll[39] => ~NO_FANOUT~
-reconfig_to_pll[40] => ~NO_FANOUT~
-reconfig_to_pll[41] => ~NO_FANOUT~
-reconfig_to_pll[42] => ~NO_FANOUT~
-reconfig_to_pll[43] => ~NO_FANOUT~
-reconfig_to_pll[44] => ~NO_FANOUT~
-reconfig_to_pll[45] => ~NO_FANOUT~
-reconfig_to_pll[46] => ~NO_FANOUT~
-reconfig_to_pll[47] => ~NO_FANOUT~
-reconfig_to_pll[48] => ~NO_FANOUT~
-reconfig_to_pll[49] => ~NO_FANOUT~
-reconfig_to_pll[50] => ~NO_FANOUT~
-reconfig_to_pll[51] => ~NO_FANOUT~
-reconfig_to_pll[52] => ~NO_FANOUT~
-reconfig_to_pll[53] => ~NO_FANOUT~
-reconfig_to_pll[54] => ~NO_FANOUT~
-reconfig_to_pll[55] => ~NO_FANOUT~
-reconfig_to_pll[56] => ~NO_FANOUT~
-reconfig_to_pll[57] => ~NO_FANOUT~
-reconfig_to_pll[58] => ~NO_FANOUT~
-reconfig_to_pll[59] => ~NO_FANOUT~
-reconfig_to_pll[60] => ~NO_FANOUT~
-reconfig_to_pll[61] => ~NO_FANOUT~
-reconfig_to_pll[62] => ~NO_FANOUT~
-reconfig_to_pll[63] => ~NO_FANOUT~
-extswitch => ~NO_FANOUT~
-adjpllin => ~NO_FANOUT~
-cclk => ~NO_FANOUT~
-outclk[0] <= general[0].gpll.O_OUTCLK
-outclk[1] <= general[1].gpll.O_OUTCLK
-outclk[2] <= general[2].gpll.O_OUTCLK
-outclk[3] <= general[3].gpll.O_OUTCLK
-fboutclk <= general[0].gpll.O_FBOUTCLK
-locked <= general[0].gpll.LOCKED
-phase_done <= <GND>
-reconfig_from_pll[0] <= <GND>
-reconfig_from_pll[1] <= <GND>
-reconfig_from_pll[2] <= <GND>
-reconfig_from_pll[3] <= <GND>
-reconfig_from_pll[4] <= <GND>
-reconfig_from_pll[5] <= <GND>
-reconfig_from_pll[6] <= <GND>
-reconfig_from_pll[7] <= <GND>
-reconfig_from_pll[8] <= <GND>
-reconfig_from_pll[9] <= <GND>
-reconfig_from_pll[10] <= <GND>
-reconfig_from_pll[11] <= <GND>
-reconfig_from_pll[12] <= <GND>
-reconfig_from_pll[13] <= <GND>
-reconfig_from_pll[14] <= <GND>
-reconfig_from_pll[15] <= <GND>
-reconfig_from_pll[16] <= <GND>
-reconfig_from_pll[17] <= <GND>
-reconfig_from_pll[18] <= <GND>
-reconfig_from_pll[19] <= <GND>
-reconfig_from_pll[20] <= <GND>
-reconfig_from_pll[21] <= <GND>
-reconfig_from_pll[22] <= <GND>
-reconfig_from_pll[23] <= <GND>
-reconfig_from_pll[24] <= <GND>
-reconfig_from_pll[25] <= <GND>
-reconfig_from_pll[26] <= <GND>
-reconfig_from_pll[27] <= <GND>
-reconfig_from_pll[28] <= <GND>
-reconfig_from_pll[29] <= <GND>
-reconfig_from_pll[30] <= <GND>
-reconfig_from_pll[31] <= <GND>
-reconfig_from_pll[32] <= <GND>
-reconfig_from_pll[33] <= <GND>
-reconfig_from_pll[34] <= <GND>
-reconfig_from_pll[35] <= <GND>
-reconfig_from_pll[36] <= <GND>
-reconfig_from_pll[37] <= <GND>
-reconfig_from_pll[38] <= <GND>
-reconfig_from_pll[39] <= <GND>
-reconfig_from_pll[40] <= <GND>
-reconfig_from_pll[41] <= <GND>
-reconfig_from_pll[42] <= <GND>
-reconfig_from_pll[43] <= <GND>
-reconfig_from_pll[44] <= <GND>
-reconfig_from_pll[45] <= <GND>
-reconfig_from_pll[46] <= <GND>
-reconfig_from_pll[47] <= <GND>
-reconfig_from_pll[48] <= <GND>
-reconfig_from_pll[49] <= <GND>
-reconfig_from_pll[50] <= <GND>
-reconfig_from_pll[51] <= <GND>
-reconfig_from_pll[52] <= <GND>
-reconfig_from_pll[53] <= <GND>
-reconfig_from_pll[54] <= <GND>
-reconfig_from_pll[55] <= <GND>
-reconfig_from_pll[56] <= <GND>
-reconfig_from_pll[57] <= <GND>
-reconfig_from_pll[58] <= <GND>
-reconfig_from_pll[59] <= <GND>
-reconfig_from_pll[60] <= <GND>
-reconfig_from_pll[61] <= <GND>
-reconfig_from_pll[62] <= <GND>
-reconfig_from_pll[63] <= <GND>
-activeclk <= <GND>
-clkbad[0] <= <GND>
-clkbad[1] <= <GND>
-phout[0] <= <GND>
-phout[1] <= <GND>
-phout[2] <= <GND>
-phout[3] <= <GND>
-phout[4] <= <GND>
-phout[5] <= <GND>
-phout[6] <= <GND>
-phout[7] <= <GND>
-lvds_clk[0] <= <GND>
-lvds_clk[1] <= <GND>
-loaden[0] <= <GND>
-loaden[1] <= <GND>
-extclk_out[0] <= <GND>
-extclk_out[1] <= <GND>
-cascade_out[0] <= <GND>
-cascade_out[1] <= <GND>
-cascade_out[2] <= <GND>
-cascade_out[3] <= <GND>
-zdbfbclk <> <GND>
-
-
 |MC68K|AddressDecoder:inst3
 Address[0] => ~NO_FANOUT~
 Address[1] => ~NO_FANOUT~
@@ -1391,6 +1188,210 @@ DataInFromMemory[14] => ~NO_FANOUT~
 DataInFromMemory[15] => ~NO_FANOUT~
 
 
+|MC68K|ClockGen:inst7
+refclk => ClockGen_0002:clockgen_inst.refclk
+rst => ClockGen_0002:clockgen_inst.rst
+outclk_0 <= ClockGen_0002:clockgen_inst.outclk_0
+outclk_1 <= ClockGen_0002:clockgen_inst.outclk_1
+outclk_2 <= ClockGen_0002:clockgen_inst.outclk_2
+outclk_3 <= ClockGen_0002:clockgen_inst.outclk_3
+locked <= ClockGen_0002:clockgen_inst.locked
+
+
+|MC68K|ClockGen:inst7|ClockGen_0002:clockgen_inst
+refclk => refclk.IN1
+rst => rst.IN1
+outclk_0 <= altera_pll:altera_pll_i.outclk
+outclk_1 <= altera_pll:altera_pll_i.outclk
+outclk_2 <= altera_pll:altera_pll_i.outclk
+outclk_3 <= altera_pll:altera_pll_i.outclk
+locked <= altera_pll:altera_pll_i.locked
+
+
+|MC68K|ClockGen:inst7|ClockGen_0002:clockgen_inst|altera_pll:altera_pll_i
+refclk => general[0].gpll.I_REFCLK
+refclk => general[1].gpll.I_REFCLK
+refclk => general[2].gpll.I_REFCLK
+refclk => general[3].gpll.I_REFCLK
+refclk1 => ~NO_FANOUT~
+fbclk => ~NO_FANOUT~
+rst => general[0].gpll.I_RST
+rst => general[1].gpll.I_RST
+rst => general[2].gpll.I_RST
+rst => general[3].gpll.I_RST
+phase_en => ~NO_FANOUT~
+updn => ~NO_FANOUT~
+num_phase_shifts[0] => ~NO_FANOUT~
+num_phase_shifts[1] => ~NO_FANOUT~
+num_phase_shifts[2] => ~NO_FANOUT~
+scanclk => ~NO_FANOUT~
+cntsel[0] => ~NO_FANOUT~
+cntsel[1] => ~NO_FANOUT~
+cntsel[2] => ~NO_FANOUT~
+cntsel[3] => ~NO_FANOUT~
+cntsel[4] => ~NO_FANOUT~
+reconfig_to_pll[0] => ~NO_FANOUT~
+reconfig_to_pll[1] => ~NO_FANOUT~
+reconfig_to_pll[2] => ~NO_FANOUT~
+reconfig_to_pll[3] => ~NO_FANOUT~
+reconfig_to_pll[4] => ~NO_FANOUT~
+reconfig_to_pll[5] => ~NO_FANOUT~
+reconfig_to_pll[6] => ~NO_FANOUT~
+reconfig_to_pll[7] => ~NO_FANOUT~
+reconfig_to_pll[8] => ~NO_FANOUT~
+reconfig_to_pll[9] => ~NO_FANOUT~
+reconfig_to_pll[10] => ~NO_FANOUT~
+reconfig_to_pll[11] => ~NO_FANOUT~
+reconfig_to_pll[12] => ~NO_FANOUT~
+reconfig_to_pll[13] => ~NO_FANOUT~
+reconfig_to_pll[14] => ~NO_FANOUT~
+reconfig_to_pll[15] => ~NO_FANOUT~
+reconfig_to_pll[16] => ~NO_FANOUT~
+reconfig_to_pll[17] => ~NO_FANOUT~
+reconfig_to_pll[18] => ~NO_FANOUT~
+reconfig_to_pll[19] => ~NO_FANOUT~
+reconfig_to_pll[20] => ~NO_FANOUT~
+reconfig_to_pll[21] => ~NO_FANOUT~
+reconfig_to_pll[22] => ~NO_FANOUT~
+reconfig_to_pll[23] => ~NO_FANOUT~
+reconfig_to_pll[24] => ~NO_FANOUT~
+reconfig_to_pll[25] => ~NO_FANOUT~
+reconfig_to_pll[26] => ~NO_FANOUT~
+reconfig_to_pll[27] => ~NO_FANOUT~
+reconfig_to_pll[28] => ~NO_FANOUT~
+reconfig_to_pll[29] => ~NO_FANOUT~
+reconfig_to_pll[30] => ~NO_FANOUT~
+reconfig_to_pll[31] => ~NO_FANOUT~
+reconfig_to_pll[32] => ~NO_FANOUT~
+reconfig_to_pll[33] => ~NO_FANOUT~
+reconfig_to_pll[34] => ~NO_FANOUT~
+reconfig_to_pll[35] => ~NO_FANOUT~
+reconfig_to_pll[36] => ~NO_FANOUT~
+reconfig_to_pll[37] => ~NO_FANOUT~
+reconfig_to_pll[38] => ~NO_FANOUT~
+reconfig_to_pll[39] => ~NO_FANOUT~
+reconfig_to_pll[40] => ~NO_FANOUT~
+reconfig_to_pll[41] => ~NO_FANOUT~
+reconfig_to_pll[42] => ~NO_FANOUT~
+reconfig_to_pll[43] => ~NO_FANOUT~
+reconfig_to_pll[44] => ~NO_FANOUT~
+reconfig_to_pll[45] => ~NO_FANOUT~
+reconfig_to_pll[46] => ~NO_FANOUT~
+reconfig_to_pll[47] => ~NO_FANOUT~
+reconfig_to_pll[48] => ~NO_FANOUT~
+reconfig_to_pll[49] => ~NO_FANOUT~
+reconfig_to_pll[50] => ~NO_FANOUT~
+reconfig_to_pll[51] => ~NO_FANOUT~
+reconfig_to_pll[52] => ~NO_FANOUT~
+reconfig_to_pll[53] => ~NO_FANOUT~
+reconfig_to_pll[54] => ~NO_FANOUT~
+reconfig_to_pll[55] => ~NO_FANOUT~
+reconfig_to_pll[56] => ~NO_FANOUT~
+reconfig_to_pll[57] => ~NO_FANOUT~
+reconfig_to_pll[58] => ~NO_FANOUT~
+reconfig_to_pll[59] => ~NO_FANOUT~
+reconfig_to_pll[60] => ~NO_FANOUT~
+reconfig_to_pll[61] => ~NO_FANOUT~
+reconfig_to_pll[62] => ~NO_FANOUT~
+reconfig_to_pll[63] => ~NO_FANOUT~
+extswitch => ~NO_FANOUT~
+adjpllin => ~NO_FANOUT~
+cclk => ~NO_FANOUT~
+outclk[0] <= general[0].gpll.O_OUTCLK
+outclk[1] <= general[1].gpll.O_OUTCLK
+outclk[2] <= general[2].gpll.O_OUTCLK
+outclk[3] <= general[3].gpll.O_OUTCLK
+fboutclk <= general[0].gpll.O_FBOUTCLK
+locked <= general[0].gpll.LOCKED
+phase_done <= <GND>
+reconfig_from_pll[0] <= <GND>
+reconfig_from_pll[1] <= <GND>
+reconfig_from_pll[2] <= <GND>
+reconfig_from_pll[3] <= <GND>
+reconfig_from_pll[4] <= <GND>
+reconfig_from_pll[5] <= <GND>
+reconfig_from_pll[6] <= <GND>
+reconfig_from_pll[7] <= <GND>
+reconfig_from_pll[8] <= <GND>
+reconfig_from_pll[9] <= <GND>
+reconfig_from_pll[10] <= <GND>
+reconfig_from_pll[11] <= <GND>
+reconfig_from_pll[12] <= <GND>
+reconfig_from_pll[13] <= <GND>
+reconfig_from_pll[14] <= <GND>
+reconfig_from_pll[15] <= <GND>
+reconfig_from_pll[16] <= <GND>
+reconfig_from_pll[17] <= <GND>
+reconfig_from_pll[18] <= <GND>
+reconfig_from_pll[19] <= <GND>
+reconfig_from_pll[20] <= <GND>
+reconfig_from_pll[21] <= <GND>
+reconfig_from_pll[22] <= <GND>
+reconfig_from_pll[23] <= <GND>
+reconfig_from_pll[24] <= <GND>
+reconfig_from_pll[25] <= <GND>
+reconfig_from_pll[26] <= <GND>
+reconfig_from_pll[27] <= <GND>
+reconfig_from_pll[28] <= <GND>
+reconfig_from_pll[29] <= <GND>
+reconfig_from_pll[30] <= <GND>
+reconfig_from_pll[31] <= <GND>
+reconfig_from_pll[32] <= <GND>
+reconfig_from_pll[33] <= <GND>
+reconfig_from_pll[34] <= <GND>
+reconfig_from_pll[35] <= <GND>
+reconfig_from_pll[36] <= <GND>
+reconfig_from_pll[37] <= <GND>
+reconfig_from_pll[38] <= <GND>
+reconfig_from_pll[39] <= <GND>
+reconfig_from_pll[40] <= <GND>
+reconfig_from_pll[41] <= <GND>
+reconfig_from_pll[42] <= <GND>
+reconfig_from_pll[43] <= <GND>
+reconfig_from_pll[44] <= <GND>
+reconfig_from_pll[45] <= <GND>
+reconfig_from_pll[46] <= <GND>
+reconfig_from_pll[47] <= <GND>
+reconfig_from_pll[48] <= <GND>
+reconfig_from_pll[49] <= <GND>
+reconfig_from_pll[50] <= <GND>
+reconfig_from_pll[51] <= <GND>
+reconfig_from_pll[52] <= <GND>
+reconfig_from_pll[53] <= <GND>
+reconfig_from_pll[54] <= <GND>
+reconfig_from_pll[55] <= <GND>
+reconfig_from_pll[56] <= <GND>
+reconfig_from_pll[57] <= <GND>
+reconfig_from_pll[58] <= <GND>
+reconfig_from_pll[59] <= <GND>
+reconfig_from_pll[60] <= <GND>
+reconfig_from_pll[61] <= <GND>
+reconfig_from_pll[62] <= <GND>
+reconfig_from_pll[63] <= <GND>
+activeclk <= <GND>
+clkbad[0] <= <GND>
+clkbad[1] <= <GND>
+phout[0] <= <GND>
+phout[1] <= <GND>
+phout[2] <= <GND>
+phout[3] <= <GND>
+phout[4] <= <GND>
+phout[5] <= <GND>
+phout[6] <= <GND>
+phout[7] <= <GND>
+lvds_clk[0] <= <GND>
+lvds_clk[1] <= <GND>
+loaden[0] <= <GND>
+loaden[1] <= <GND>
+extclk_out[0] <= <GND>
+extclk_out[1] <= <GND>
+cascade_out[0] <= <GND>
+cascade_out[1] <= <GND>
+cascade_out[2] <= <GND>
+cascade_out[3] <= <GND>
+zdbfbclk <> <GND>
+
+
 |MC68K|Dtack_Generator:inst
 AS_L => DtackOut_L.OUTPUTSELECT
 DramSelect_H => DtackOut_L.OUTPUTSELECT
@@ -1400,7 +1401,7 @@ CanBusSelect_H => DtackOut_L.OUTPUTSELECT
 CanBusDtack_L => DtackOut_L.DATAB
 
 
-|MC68K|CachedDramController:inst21
+|MC68K|CachedDramController:inst2
 DRAM_CKE <= CacheEnabledDramController:inst.SDram_CKE_H
 Clock_Inverted => CacheEnabledDramController:inst.Clock
 Reset_L => CacheEnabledDramController:inst.Reset_L
@@ -1545,7 +1546,7 @@ WordAddress[1] <= DramCache:inst1.WordAddress[1]
 WordAddress[2] <= DramCache:inst1.WordAddress[2]
 
 
-|MC68K|CachedDramController:inst21|CacheEnabledDramController:inst
+|MC68K|CachedDramController:inst2|CacheEnabledDramController:inst
 Clock => SDram_DQ[0]~reg0.CLK
 Clock => SDram_DQ[0]~en.CLK
 Clock => SDram_DQ[1]~reg0.CLK
@@ -1826,10 +1827,10 @@ Dtack_L <= Dtack_L~reg0.DB_MAX_OUTPUT_PORT_TYPE
 ResetOut_L <= ResetOut_L~reg0.DB_MAX_OUTPUT_PORT_TYPE
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1
+|MC68K|CachedDramController:inst2|DramCache:inst1
 UDS_DramController_L <= M68kCacheController:inst.UDS_DramController_L
 Clock => M68kCacheController:inst.Clock
-Clock => TagMemory:inst5.Clock
+Clock => TagMemory:inst3.Clock
 Clock => Valid:inst2.Clock
 Clock => CacheDataMemory:inst4.Clock
 Reset_L => M68kCacheController:inst.Reset_L
@@ -2021,7 +2022,7 @@ WordAddress[1] <= M68kCacheController:inst.WordAddress[1]
 WordAddress[2] <= M68kCacheController:inst.WordAddress[2]
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|M68kCacheController:inst
+|MC68K|CachedDramController:inst2|DramCache:inst1|M68kCacheController:inst
 Clock => BurstCounter[0].CLK
 Clock => BurstCounter[1].CLK
 Clock => BurstCounter[2].CLK
@@ -2309,7 +2310,7 @@ CacheState[3] <= WideOr0.DB_MAX_OUTPUT_PORT_TYPE
 CacheState[4] <= <GND>
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|AddressComparator:inst1
+|MC68K|CachedDramController:inst2|DramCache:inst1|AddressComparator:inst1
 AddressBus[0] => Equal0.IN22
 AddressBus[1] => Equal0.IN21
 AddressBus[2] => Equal0.IN20
@@ -2359,7 +2360,7 @@ TagData[22] => Equal0.IN23
 Hit_H <= Equal0.DB_MAX_OUTPUT_PORT_TYPE
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|TagMemory:inst5
+|MC68K|CachedDramController:inst2|DramCache:inst1|TagMemory:inst3
 TagDataOut[0] <= Tag_Data:inst.q[0]
 TagDataOut[1] <= Tag_Data:inst.q[1]
 TagDataOut[2] <= Tag_Data:inst.q[2]
@@ -2390,32 +2391,32 @@ Index[1] => Tag_Data:inst.address[1]
 Index[2] => Tag_Data:inst.address[2]
 Index[3] => Tag_Data:inst.address[3]
 Index[4] => Tag_Data:inst.address[4]
-TagData[0] => Tag_Data:inst.data[0]
-TagData[1] => Tag_Data:inst.data[1]
-TagData[2] => Tag_Data:inst.data[2]
-TagData[3] => Tag_Data:inst.data[3]
-TagData[4] => Tag_Data:inst.data[4]
-TagData[5] => Tag_Data:inst.data[5]
-TagData[6] => Tag_Data:inst.data[6]
-TagData[7] => Tag_Data:inst.data[7]
-TagData[8] => Tag_Data:inst.data[8]
-TagData[9] => Tag_Data:inst.data[9]
-TagData[10] => Tag_Data:inst.data[10]
-TagData[11] => Tag_Data:inst.data[11]
-TagData[12] => Tag_Data:inst.data[12]
-TagData[13] => Tag_Data:inst.data[13]
-TagData[14] => Tag_Data:inst.data[14]
-TagData[15] => Tag_Data:inst.data[15]
-TagData[16] => Tag_Data:inst.data[16]
-TagData[17] => Tag_Data:inst.data[17]
-TagData[18] => Tag_Data:inst.data[18]
-TagData[19] => Tag_Data:inst.data[19]
-TagData[20] => Tag_Data:inst.data[20]
-TagData[21] => Tag_Data:inst.data[21]
-TagData[22] => Tag_Data:inst.data[22]
+TagDataIn[0] => Tag_Data:inst.data[0]
+TagDataIn[1] => Tag_Data:inst.data[1]
+TagDataIn[2] => Tag_Data:inst.data[2]
+TagDataIn[3] => Tag_Data:inst.data[3]
+TagDataIn[4] => Tag_Data:inst.data[4]
+TagDataIn[5] => Tag_Data:inst.data[5]
+TagDataIn[6] => Tag_Data:inst.data[6]
+TagDataIn[7] => Tag_Data:inst.data[7]
+TagDataIn[8] => Tag_Data:inst.data[8]
+TagDataIn[9] => Tag_Data:inst.data[9]
+TagDataIn[10] => Tag_Data:inst.data[10]
+TagDataIn[11] => Tag_Data:inst.data[11]
+TagDataIn[12] => Tag_Data:inst.data[12]
+TagDataIn[13] => Tag_Data:inst.data[13]
+TagDataIn[14] => Tag_Data:inst.data[14]
+TagDataIn[15] => Tag_Data:inst.data[15]
+TagDataIn[16] => Tag_Data:inst.data[16]
+TagDataIn[17] => Tag_Data:inst.data[17]
+TagDataIn[18] => Tag_Data:inst.data[18]
+TagDataIn[19] => Tag_Data:inst.data[19]
+TagDataIn[20] => Tag_Data:inst.data[20]
+TagDataIn[21] => Tag_Data:inst.data[21]
+TagDataIn[22] => Tag_Data:inst.data[22]
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|TagMemory:inst5|Tag_Data:inst
+|MC68K|CachedDramController:inst2|DramCache:inst1|TagMemory:inst3|Tag_Data:inst
 address[0] => altsyncram:altsyncram_component.address_a[0]
 address[1] => altsyncram:altsyncram_component.address_a[1]
 address[2] => altsyncram:altsyncram_component.address_a[2]
@@ -2471,7 +2472,7 @@ q[21] <= altsyncram:altsyncram_component.q_a[21]
 q[22] <= altsyncram:altsyncram_component.q_a[22]
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|TagMemory:inst5|Tag_Data:inst|altsyncram:altsyncram_component
+|MC68K|CachedDramController:inst2|DramCache:inst1|TagMemory:inst3|Tag_Data:inst|altsyncram:altsyncram_component
 wren_a => altsyncram_2504:auto_generated.wren_a
 rden_a => ~NO_FANOUT~
 wren_b => ~NO_FANOUT~
@@ -2547,7 +2548,7 @@ eccstatus[1] <= <GND>
 eccstatus[2] <= <GND>
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|TagMemory:inst5|Tag_Data:inst|altsyncram:altsyncram_component|altsyncram_2504:auto_generated
+|MC68K|CachedDramController:inst2|DramCache:inst1|TagMemory:inst3|Tag_Data:inst|altsyncram:altsyncram_component|altsyncram_2504:auto_generated
 address_a[0] => ram_block1a0.PORTAADDR
 address_a[0] => ram_block1a1.PORTAADDR
 address_a[0] => ram_block1a2.PORTAADDR
@@ -2757,7 +2758,7 @@ wren_a => ram_block1a21.PORTAWE
 wren_a => ram_block1a22.PORTAWE
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|Valid:inst2
+|MC68K|CachedDramController:inst2|DramCache:inst1|Valid:inst2
 ValidityBitOut <= Valid_Data:inst.q[0]
 WE_L => inst1.IN0
 Clock => Valid_Data:inst.clock
@@ -2769,7 +2770,7 @@ Index[4] => Valid_Data:inst.address[4]
 ValidityBitIn => Valid_Data:inst.data[0]
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|Valid:inst2|Valid_Data:inst
+|MC68K|CachedDramController:inst2|DramCache:inst1|Valid:inst2|Valid_Data:inst
 address[0] => altsyncram:altsyncram_component.address_a[0]
 address[1] => altsyncram:altsyncram_component.address_a[1]
 address[2] => altsyncram:altsyncram_component.address_a[2]
@@ -2781,7 +2782,7 @@ wren => altsyncram:altsyncram_component.wren_a
 q[0] <= altsyncram:altsyncram_component.q_a[0]
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|Valid:inst2|Valid_Data:inst|altsyncram:altsyncram_component
+|MC68K|CachedDramController:inst2|DramCache:inst1|Valid:inst2|Valid_Data:inst|altsyncram:altsyncram_component
 wren_a => altsyncram_e304:auto_generated.wren_a
 rden_a => ~NO_FANOUT~
 wren_b => ~NO_FANOUT~
@@ -2813,7 +2814,7 @@ eccstatus[1] <= <GND>
 eccstatus[2] <= <GND>
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|Valid:inst2|Valid_Data:inst|altsyncram:altsyncram_component|altsyncram_e304:auto_generated
+|MC68K|CachedDramController:inst2|DramCache:inst1|Valid:inst2|Valid_Data:inst|altsyncram:altsyncram_component|altsyncram_e304:auto_generated
 address_a[0] => ram_block1a0.PORTAADDR
 address_a[1] => ram_block1a0.PORTAADDR1
 address_a[2] => ram_block1a0.PORTAADDR2
@@ -2825,7 +2826,7 @@ q_a[0] <= ram_block1a0.PORTADATAOUT
 wren_a => ram_block1a0.PORTAWE
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|CacheDataMemory:inst4
+|MC68K|CachedDramController:inst2|DramCache:inst1|CacheDataMemory:inst4
 DataOut[0] <= CacheData:inst1.q[0]
 DataOut[1] <= CacheData:inst1.q[1]
 DataOut[2] <= CacheData:inst1.q[2]
@@ -2847,6 +2848,12 @@ WE_L => inst2.IN1
 WE_L => inst4.IN0
 Clock => CacheData:inst1.clock
 Clock => CacheData:inst6.clock
+Word[0] => CacheData:inst1.address[0]
+Word[0] => CacheData:inst6.address[0]
+Word[1] => CacheData:inst1.address[1]
+Word[1] => CacheData:inst6.address[1]
+Word[2] => CacheData:inst1.address[2]
+Word[2] => CacheData:inst6.address[2]
 Index[0] => CacheData:inst1.address[3]
 Index[0] => CacheData:inst6.address[3]
 Index[1] => CacheData:inst1.address[4]
@@ -2857,12 +2864,6 @@ Index[3] => CacheData:inst1.address[6]
 Index[3] => CacheData:inst6.address[6]
 Index[4] => CacheData:inst1.address[7]
 Index[4] => CacheData:inst6.address[7]
-Word[0] => CacheData:inst1.address[0]
-Word[0] => CacheData:inst6.address[0]
-Word[1] => CacheData:inst1.address[1]
-Word[1] => CacheData:inst6.address[1]
-Word[2] => CacheData:inst1.address[2]
-Word[2] => CacheData:inst6.address[2]
 DataIn[0] => CacheData:inst1.data[0]
 DataIn[1] => CacheData:inst1.data[1]
 DataIn[2] => CacheData:inst1.data[2]
@@ -2882,7 +2883,7 @@ DataIn[15] => CacheData:inst6.data[7]
 UDS_L => inst4.IN1
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|CacheDataMemory:inst4|CacheData:inst1
+|MC68K|CachedDramController:inst2|DramCache:inst1|CacheDataMemory:inst4|CacheData:inst1
 address[0] => altsyncram:altsyncram_component.address_a[0]
 address[1] => altsyncram:altsyncram_component.address_a[1]
 address[2] => altsyncram:altsyncram_component.address_a[2]
@@ -2911,7 +2912,7 @@ q[6] <= altsyncram:altsyncram_component.q_a[6]
 q[7] <= altsyncram:altsyncram_component.q_a[7]
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|CacheDataMemory:inst4|CacheData:inst1|altsyncram:altsyncram_component
+|MC68K|CachedDramController:inst2|DramCache:inst1|CacheDataMemory:inst4|CacheData:inst1|altsyncram:altsyncram_component
 wren_a => altsyncram_g504:auto_generated.wren_a
 rden_a => ~NO_FANOUT~
 wren_b => ~NO_FANOUT~
@@ -2960,7 +2961,7 @@ eccstatus[1] <= <GND>
 eccstatus[2] <= <GND>
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|CacheDataMemory:inst4|CacheData:inst1|altsyncram:altsyncram_component|altsyncram_g504:auto_generated
+|MC68K|CachedDramController:inst2|DramCache:inst1|CacheDataMemory:inst4|CacheData:inst1|altsyncram:altsyncram_component|altsyncram_g504:auto_generated
 address_a[0] => ram_block1a0.PORTAADDR
 address_a[0] => ram_block1a1.PORTAADDR
 address_a[0] => ram_block1a2.PORTAADDR
@@ -3059,7 +3060,7 @@ wren_a => ram_block1a6.PORTAWE
 wren_a => ram_block1a7.PORTAWE
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|CacheDataMemory:inst4|CacheData:inst6
+|MC68K|CachedDramController:inst2|DramCache:inst1|CacheDataMemory:inst4|CacheData:inst6
 address[0] => altsyncram:altsyncram_component.address_a[0]
 address[1] => altsyncram:altsyncram_component.address_a[1]
 address[2] => altsyncram:altsyncram_component.address_a[2]
@@ -3088,7 +3089,7 @@ q[6] <= altsyncram:altsyncram_component.q_a[6]
 q[7] <= altsyncram:altsyncram_component.q_a[7]
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|CacheDataMemory:inst4|CacheData:inst6|altsyncram:altsyncram_component
+|MC68K|CachedDramController:inst2|DramCache:inst1|CacheDataMemory:inst4|CacheData:inst6|altsyncram:altsyncram_component
 wren_a => altsyncram_g504:auto_generated.wren_a
 rden_a => ~NO_FANOUT~
 wren_b => ~NO_FANOUT~
@@ -3137,7 +3138,7 @@ eccstatus[1] <= <GND>
 eccstatus[2] <= <GND>
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|CacheDataMemory:inst4|CacheData:inst6|altsyncram:altsyncram_component|altsyncram_g504:auto_generated
+|MC68K|CachedDramController:inst2|DramCache:inst1|CacheDataMemory:inst4|CacheData:inst6|altsyncram:altsyncram_component|altsyncram_g504:auto_generated
 address_a[0] => ram_block1a0.PORTAADDR
 address_a[0] => ram_block1a1.PORTAADDR
 address_a[0] => ram_block1a2.PORTAADDR
@@ -3236,7 +3237,7 @@ wren_a => ram_block1a6.PORTAWE
 wren_a => ram_block1a7.PORTAWE
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|lpm_bustri0:inst7
+|MC68K|CachedDramController:inst2|DramCache:inst1|lpm_bustri0:inst7
 data[0] => lpm_bustri:lpm_bustri_component.data[0]
 data[1] => lpm_bustri:lpm_bustri_component.data[1]
 data[2] => lpm_bustri:lpm_bustri_component.data[2]
@@ -3272,7 +3273,7 @@ tridata[14] <> lpm_bustri:lpm_bustri_component.tridata[14]
 tridata[15] <> lpm_bustri:lpm_bustri_component.tridata[15]
 
 
-|MC68K|CachedDramController:inst21|DramCache:inst1|lpm_bustri0:inst7|lpm_bustri:lpm_bustri_component
+|MC68K|CachedDramController:inst2|DramCache:inst1|lpm_bustri0:inst7|lpm_bustri:lpm_bustri_component
 tridata[0] <> dout[0]
 tridata[1] <> dout[1]
 tridata[2] <> dout[2]

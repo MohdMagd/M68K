@@ -22,22 +22,6 @@ agreement for further details.
 (header "graphic" (version "1.4"))
 (pin
 	(input)
-	(rect 80 312 248 328)
-	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "ValidityBitIn" (rect 5 0 64 12)(font "Arial" ))
-	(pt 168 8)
-	(drawing
-		(line (pt 84 12)(pt 109 12))
-		(line (pt 84 4)(pt 109 4))
-		(line (pt 113 8)(pt 168 8))
-		(line (pt 84 12)(pt 84 4))
-		(line (pt 109 4)(pt 113 8))
-		(line (pt 109 12)(pt 113 8))
-	)
-	(text "VCC" (rect 128 7 148 17)(font "Arial" (font_size 6)))
-)
-(pin
-	(input)
 	(rect 80 328 248 344)
 	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
 	(text "WE_L" (rect 5 0 34 12)(font "Arial" ))
@@ -54,7 +38,7 @@ agreement for further details.
 )
 (pin
 	(input)
-	(rect 80 352 248 368)
+	(rect 80 344 248 360)
 	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
 	(text "Index[4..0]" (rect 5 0 58 12)(font "Arial" ))
 	(pt 168 8)
@@ -73,6 +57,22 @@ agreement for further details.
 	(rect 80 392 248 408)
 	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
 	(text "Clock" (rect 5 0 33 12)(font "Arial" ))
+	(pt 168 8)
+	(drawing
+		(line (pt 84 12)(pt 109 12))
+		(line (pt 84 4)(pt 109 4))
+		(line (pt 113 8)(pt 168 8))
+		(line (pt 84 12)(pt 84 4))
+		(line (pt 109 4)(pt 113 8))
+		(line (pt 109 12)(pt 113 8))
+	)
+	(text "VCC" (rect 128 7 148 17)(font "Arial" (font_size 6)))
+)
+(pin
+	(input)
+	(rect 80 312 248 328)
+	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
+	(text "ValidityBitIn" (rect 5 0 65 12)(font "Arial" ))
 	(pt 168 8)
 	(drawing
 		(line (pt 84 12)(pt 109 12))
@@ -227,21 +227,11 @@ agreement for further details.
 	(pt 248 320)
 )
 (connector
-	(pt 400 352)
-	(pt 336 352)
-	(bus)
-)
-(connector
-	(pt 336 352)
-	(pt 336 360)
-	(bus)
-)
-(connector
-	(pt 336 360)
-	(pt 248 360)
-	(bus)
-)
-(connector
 	(pt 400 400)
 	(pt 248 400)
+)
+(connector
+	(pt 248 352)
+	(pt 400 352)
+	(bus)
 )

@@ -104,7 +104,7 @@ micro_state.div13 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 micro_state.div14 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
 micro_state.div15 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
 
-State Machine - |MC68K|CachedDramController:inst21|DramCache:inst1|M68kCacheController:inst|CurrentState
+State Machine - |MC68K|CachedDramController:inst2|DramCache:inst1|M68kCacheController:inst|CurrentState
 Name CurrentState.WaitForEndOfCacheRead CurrentState.WriteDataToDram CurrentState.EndBurstFill CurrentState.BurstFill CurrentState.CASDelay2 CurrentState.CASDelay1 CurrentState.ReadDataFromDramIntoCache CurrentState.CheckForCacheHit CurrentState.Idle CurrentState.InvalidateCache CurrentState.Reset 
 CurrentState.Reset 0 0 0 0 0 0 0 0 0 0 0 
 CurrentState.InvalidateCache 0 0 0 0 0 0 0 0 0 1 1 

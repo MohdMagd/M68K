@@ -48,15 +48,15 @@ agreement for further details.
 	(port
 		(pt 0 80)
 		(input)
-		(text "WE_L" (rect 0 0 33 14)(font "Arial" (font_size 8)))
-		(text "WE_L" (rect 21 75 54 89)(font "Arial" (font_size 8)))
+		(text "UDS_L" (rect 0 0 38 14)(font "Arial" (font_size 8)))
+		(text "UDS_L" (rect 21 75 59 89)(font "Arial" (font_size 8)))
 		(line (pt 0 80)(pt 16 80))
 	)
 	(port
 		(pt 0 96)
 		(input)
-		(text "UDS_L" (rect 0 0 38 14)(font "Arial" (font_size 8)))
-		(text "UDS_L" (rect 21 91 59 105)(font "Arial" (font_size 8)))
+		(text "WE_L" (rect 0 0 33 14)(font "Arial" (font_size 8)))
+		(text "WE_L" (rect 21 91 54 105)(font "Arial" (font_size 8)))
 		(line (pt 0 96)(pt 16 96))
 	)
 	(port

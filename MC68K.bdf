@@ -3105,7 +3105,7 @@ agreement for further details.
 (symbol
 	(rect 1496 -256 1784 128)
 	(text "CachedDramController" (rect 5 0 132 14)(font "Arial" (font_size 8)))
-	(text "inst21" (rect 8 368 37 380)(font "Arial" ))
+	(text "inst2" (rect 8 368 31 380)(font "Arial" ))
 	(port
 		(pt 0 32)
 		(input)
@@ -5294,11 +5294,6 @@ agreement for further details.
 	(pt 1472 1728)
 )
 (connector
-	(text "Clock90Mhz" (rect 1416 1688 1475 1700)(font "Arial" ))
-	(pt 1528 1728)
-	(pt 1472 1728)
-)
-(connector
 	(pt -560 -880)
 	(pt -560 -976)
 )
@@ -5320,7 +5315,7 @@ agreement for further details.
 	(pt 1376 2816)
 )
 (connector
-	(text "Clock45Mhz" (rect 1356 2292 1368 2351)(font "Arial" )(vertical))
+	(text "Clock45Mhz" (rect 1358 2290 1370 2349)(font "Arial" )(vertical))
 	(pt 1376 2328)
 	(pt 1376 2448)
 )
@@ -5606,6 +5601,11 @@ agreement for further details.
 (connector
 	(pt 1824 -16)
 	(pt 2080 -16)
+)
+(connector
+	(text "Clock50Mhz" (rect 1416 1688 1475 1700)(font "Arial" ))
+	(pt 1528 1728)
+	(pt 1472 1728)
 )
 (junction (pt 1280 224))
 (junction (pt 1376 224))
