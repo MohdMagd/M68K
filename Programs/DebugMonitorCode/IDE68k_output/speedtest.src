@@ -1,0 +1,4607 @@
+       section   code
+**********************************************************************************************************
+* CSTART.ASM  -  C startup-code
+*
+*          Initialises the system prior to running the users main() program
+*
+*          1) Sets up the user program stack pointer
+*          2) Switches to User mode in the 68000
+*          3) Enables All Interrupts 1-7 on 68000
+*          4) Copies all initialised C program variables from Rom to Ram prior to running main()
+*
+**********************************************************************************************************
+                align
+
+
+**********************************************************************************************************
+* The Following ORG Statement marks the address of the start of the this CStart Program
+*
+* The debug Monitor and Flash Load and Program routines assume your program lives here
+**********************************************************************************************************
+                org       $08000000
+start:          move.w    #$2000,SR             clear interrupts to enable all, move to supervisor mode
+
+******************************************************************************************
+* Set unitialised global variables to 0 at startup
+******************************************************************************************
+mainloop        movea.l   #BssStart,a0          point a0 to the start of the initialised data section held in ROM
+                move.l    #BssLength,d0         figure out how many bytes of C program variables data to copy
+                beq       go_main               if no data to copy go straight to program
+Zeroinit        move.b    #0,(a0)+              copy the C program initialise variables from rom to ram
+                subq.l    #1,d0
+                bne       Zeroinit
+
+*******************************************************************************************
+* last minute initialisation before calling main
+*******************************************************************************************
+
+                move.l    #-1,__ungetbuf         required for use of scanf() etc in C programs
+                clr.l     __allocp               used by malloc() in C
+                move.l    #heap,__heap           pointer to free memory
+go_main         jsr       _main
+                bra       start
+
+; C:\M68K\PROGRAMS\DEBUGMONITORCODE\SPEED TEST\SPEEDTEST.C - Compiled by CC68K  Version 5.00 (c) 1991-2005  Peter J. Fondse
+; #include <stdio.h>
+; // #include <ctype.h>
+; /*********************************************************************************************
+; **  RS232 port addresses
+; *********************************************************************************************/
+; #define RS232_Control     *(volatile unsigned char *)(0x00400040)
+; #define RS232_Status      *(volatile unsigned char *)(0x00400040)
+; #define RS232_TxData      *(volatile unsigned char *)(0x00400042)
+; #define RS232_RxData      *(volatile unsigned char *)(0x00400042)
+; #define RS232_Baud        *(volatile unsigned char *)(0x00400044)
+; /*************************************************************
+; ** SPI Controller registers
+; **************************************************************/
+; // SPI Registers
+; #define SPI_Control         (*(volatile unsigned char *)(0x00408020))
+; #define SPI_Status          (*(volatile unsigned char *)(0x00408022))
+; #define SPI_Data            (*(volatile unsigned char *)(0x00408024))
+; #define SPI_Ext             (*(volatile unsigned char *)(0x00408026))
+; #define SPI_CS              (*(volatile unsigned char *)(0x00408028))
+; // these two macros enable or disable the flash memory chip enable off SSN_O[7..0]
+; // in this case we assume there is only 1 device connected to SSN_O[0] so we can
+; // write hex FE to the SPI_CS to enable it (the enable on the flash chip is active low)
+; // and write FF to disable it
+; #define   Enable_SPI_CS()             SPI_CS = 0xFE
+; #define   Disable_SPI_CS()            SPI_CS = 0xFF
+; /*******************************************************************************************
+; ** Function Prototypes
+; *******************************************************************************************/
+; int _getch( void )
+; {
+__getch:
+       link      A6,#-4
+; char c ;
+; while((RS232_Status & (char)(0x01)) != (char)(0x01))    // wait for Rx bit in 6850 serial comms chip status register to be '1'
+_getch_1:
+       move.b    4194368,D0
+       and.b     #1,D0
+       cmp.b     #1,D0
+       beq.s     _getch_3
+       bra       _getch_1
+_getch_3:
+; ;
+; return (RS232_RxData & (char)(0x7f));                   // read received character, mask off top bit and return as 7 bit ASCII character
+       move.b    4194370,D0
+       and.l     #255,D0
+       and.l     #127,D0
+       unlk      A6
+       rts
+; }
+; int _putch( int c)
+; {
+__putch:
+       link      A6,#0
+; while((RS232_Status & (char)(0x02)) != (char)(0x02))    // wait for Tx bit in status register or 6850 serial comms chip to be '1'
+_putch_1:
+       move.b    4194368,D0
+       and.b     #2,D0
+       cmp.b     #2,D0
+       beq.s     _putch_3
+       bra       _putch_1
+_putch_3:
+; ;
+; RS232_TxData = (c & (char)(0x7f));                      // write to the data register to output the character (mask off bit 8 to keep it 7 bit ASCII)
+       move.l    8(A6),D0
+       and.l     #127,D0
+       move.b    D0,4194370
+; return c ;                                              // putchar() expects the character to be returned
+       move.l    8(A6),D0
+       unlk      A6
+       rts
+; }
+; int a[100][100], b[100][100], c[100][100];
+; int i, j, k, sum;
+; void SpeedTest(void){
+_SpeedTest:
+       movem.l   A2/A3/A4/A5,-(A7)
+       lea       _i.L,A2
+       lea       _k.L,A3
+       lea       _j.L,A4
+       lea       _sum.L,A5
+; printf("\n\nStart.....");
+       pea       @speedt~1_1.L
+       jsr       _printf
+       addq.w    #4,A7
+; for(i=0; i <50; i ++)  {
+       clr.l     (A2)
+SpeedTest_1:
+       move.l    (A2),D0
+       cmp.l     #50,D0
+       bge       SpeedTest_3
+; printf("%d ", i);
+       move.l    (A2),-(A7)
+       pea       @speedt~1_2.L
+       jsr       _printf
+       addq.w    #8,A7
+; for(j=0; j < 50; j++)  {
+       clr.l     (A4)
+SpeedTest_4:
+       move.l    (A4),D0
+       cmp.l     #50,D0
+       bge       SpeedTest_6
+; sum = 0 ;
+       clr.l     (A5)
+; for(k=0; k <50; k++)   {
+       clr.l     (A3)
+SpeedTest_7:
+       move.l    (A3),D0
+       cmp.l     #50,D0
+       bge       SpeedTest_9
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+       addq.l    #1,(A3)
+       bra       SpeedTest_7
+SpeedTest_9:
+; }
+; c[i][j] = sum ;
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A0
+       add.l     D0,A0
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    (A5),0(A0,D0.L)
+       addq.l    #1,(A4)
+       bra       SpeedTest_4
+SpeedTest_6:
+       addq.l    #1,(A2)
+       bra       SpeedTest_1
+SpeedTest_3:
+; }
+; }
+; printf("\n\nDone.....");
+       pea       @speedt~1_3.L
+       jsr       _printf
+       addq.w    #4,A7
+       movem.l   (A7)+,A2/A3/A4/A5
+       rts
+; }
+; /******************************************************************************************************************************
+; * Start of user program
+; ******************************************************************************************************************************/
+; void main()
+; {
+_main:
+; scanflush() ;                       // flush any text that may have been typed ahead
+       jsr       _scanflush
+; printf("\r\nHello CPEN 412 TA\r\nWelcome to Lab3!!!\r\n");
+       pea       @speedt~1_4.L
+       jsr       _printf
+       addq.w    #4,A7
+; SpeedTest();
+       jsr       _SpeedTest
+; while(1);
+main_1:
+       bra       main_1
+; // programs should NOT exit as there is nothing to Exit TO !!!!!!
+; // There is no OS - just press the reset button to end program and call debug
+; }
+ULMUL:
+       link    A6,#0
+       movem.l D0/D1,-(A7)
+       move.l  8(A6),D1
+       move.l  12(A6),D0
+       bra.s   lmul_3
+LMUL:
+       link    A6,#0
+       movem.l D0/D1,-(A7)
+       move.l  8(A6),D1
+       move.l  12(A6),D0
+       tst.l   D0
+       bpl.s   lmul_1
+       neg.l   D0
+       tst.l   D1
+       bpl.s   lmul_2
+       neg.l   D1
+       bra.s   lmul_3
+lmul_1:
+       tst.l   D1
+       bpl.s   lmul_3
+       neg.l   D1
+lmul_2:
+       bsr.s   domul
+       neg.l   D1
+       negx.l  D0
+       bra.s   lmul_4
+lmul_3:
+       bsr.s   domul
+lmul_4:
+       move.l  D1,8(A6)
+       movem.l (A7)+,D0/D1
+       unlk    A6
+       rts
+domul:
+       cmpi.l  #$FFFF,D1
+       bhi.s   domul_1
+       cmpi.l  #$FFFF,D0
+       bhi.s   domul_2
+       mulu    D0,D1
+       rts
+domul_1:
+       cmpi.l  #$FFFF,D0
+       bhi.s   domul_4
+       bra.s   domul_3
+domul_2
+       exg     D0,D1
+domul_3:
+       move.l  D2,-(A7)
+       move.l  D1,D2
+       swap    D2
+       mulu    D0,D1
+       mulu    D0,D2
+       swap    D2
+       clr.w   D2
+       add.l   D2,D1
+       move.l  (A7)+,D2
+       rts
+domul_4:
+       movem.l D2/D3,-(A7)
+       move.l  D1,D2
+       move.l  D1,D3
+       mulu    D0,D1
+       swap    D2
+       mulu    D0,D2
+       swap    D0
+       mulu    D0,D3
+       add.l   D3,D2
+       swap    D2
+       clr.w   D2
+       add.l   D2,D1
+       movem.l (A7)+,D2/D3
+       rts
+@vsscanf_scanread:
+       link      A6,#-4
+       movem.l   A2,-(A7)
+       lea       @vsscanf_bufx,A2
+       tst.l     8(A6)
+       beq.s     @vsscanf_scanread_1
+       move.l    8(A6),A0
+       addq.l    #4,8(A6)
+       move.l    (A0),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,-4(A6)
+       beq.s     @vsscanf_scanread_3
+       move.l    -4(A6),D0
+       bra.s     @vsscanf_scanread_4
+@vsscanf_scanread_3:
+       moveq     #-1,D0
+@vsscanf_scanread_4:
+       bra       @vsscanf_scanread_5
+@vsscanf_scanread_1:
+       move.l    (A2),A0
+       move.b    (A0),D0
+       bne.s     @vsscanf_scanread_6
+       pea       @vsscanf_buf
+       bsr       _gets
+       addq.w    #4,A7
+       move.l    D0,(A2)
+       pea       @vsscanf_1
+       pea       @vsscanf_buf
+       bsr       _strcat
+       addq.w    #8,A7
+@vsscanf_scanread_6:
+       move.l    (A2),A0
+       addq.l    #1,(A2)
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+@vsscanf_scanread_5:
+       movem.l   (A7)+,A2
+       unlk      A6
+       rts
+@vsscanf_scanputback:
+       link      A6,#0
+       movem.l   D2/D3,-(A7)
+       move.l    12(A6),D2
+       move.l    8(A6),D3
+       beq.s     @vsscanf_scanputback_1
+       cmp.l     #-1,D2
+       beq.s     @vsscanf_scanputback_3
+       subq.l    #4,D3
+       move.l    D3,A0
+       move.l    (A0),A0
+       move.b    D2,(A0)
+       bra.s     @vsscanf_scanputback_4
+@vsscanf_scanputback_3:
+       move.l    D3,A0
+       subq.l    #1,(A0)
+@vsscanf_scanputback_4:
+       bra.s     @vsscanf_scanputback_6
+@vsscanf_scanputback_1:
+       lea       @vsscanf_buf,A0
+       move.l    A0,D0
+       cmp.l     @vsscanf_bufx,D0
+       bne.s     @vsscanf_scanputback_5
+       clr.b     @vsscanf_buf
+       move.l    D2,-(A7)
+       bsr       _ungetch
+       addq.w    #4,A7
+       bra.s     @vsscanf_scanputback_6
+@vsscanf_scanputback_5:
+       subq.l    #1,@vsscanf_bufx
+       move.l    @vsscanf_bufx,A0
+       move.b    D2,(A0)
+@vsscanf_scanputback_6:
+       move.l    D2,D0
+       movem.l   (A7)+,D2/D3
+       unlk      A6
+       rts
+@vsscanf_scanspace:
+       link      A6,#0
+       movem.l   D2,-(A7)
+@vsscanf_scanspace_1:
+       move.l    8(A6),-(A7)
+       bsr       @vsscanf_scanread
+       addq.w    #4,A7
+       move.l    D0,D2
+       move.l    12(A6),A0
+       addq.l    #1,(A0)
+       move.l    D2,A0
+       lea       __ctype,A1
+       move.b    1(A0,A1.L),D0
+       andi.b    #16,D0
+       bne       @vsscanf_scanspace_1
+       move.l    D2,D0
+       movem.l   (A7)+,D2
+       unlk      A6
+       rts
+@vsscanf_scanselect:
+       link      A6,#0
+       movem.l   D2/D3/D4/D5/D6/D7/A2,-(A7)
+       move.l    12(A6),D3
+       move.l    24(A6),D6
+       move.l    20(A6),D7
+       move.l    D3,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #94,D0
+       bne.s     @vsscanf_scanselect_1
+       move.w    #1,A2
+       addq.l    #1,D3
+       bra.s     @vsscanf_scanselect_2
+@vsscanf_scanselect_1:
+       move.w    #0,A2
+@vsscanf_scanselect_2:
+       move.l    16(A6),D0
+       subq.l    #1,16(A6)
+       tst.l     D0
+       beq       @vsscanf_scanselect_5
+       move.l    8(A6),-(A7)
+       bsr       @vsscanf_scanread
+       addq.w    #4,A7
+       move.l    D0,D4
+       cmp.l     #-1,D4
+       bne.s     @vsscanf_scanselect_6
+       bra       @vsscanf_scanselect_5
+@vsscanf_scanselect_6:
+       move.l    28(A6),A0
+       addq.l    #1,(A0)
+       clr.l     D5
+       clr.l     D2
+@vsscanf_scanselect_8:
+       move.l    D3,A0
+       move.b    0(A0,D2.L),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #93,D0
+       beq       @vsscanf_scanselect_10
+       tst.l     D2
+       beq.s     @vsscanf_scanselect_11
+       move.l    D3,A0
+       move.b    0(A0,D2.L),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #93,D0
+       bne.s     @vsscanf_scanselect_11
+       bra       @vsscanf_scanselect_10
+@vsscanf_scanselect_11:
+       tst.l     D2
+       beq       @vsscanf_scanselect_15
+       move.l    D3,A0
+       move.b    0(A0,D2.L),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #45,D0
+       bne       @vsscanf_scanselect_15
+       move.l    D3,A0
+       move.l    D2,D0
+       subq.l    #1,D0
+       move.l    D3,A1
+       move.l    A0,-(A7)
+       move.l    D2,A0
+       move.b    0(A0,D0.L),D1
+       cmp.b     1(A0,A1.L),D1
+       bge       @vsscanf_scanselect_15
+       move.l    (A7)+,A0
+       move.l    D3,A0
+       move.l    D2,D0
+       subq.l    #1,D0
+       move.b    0(A0,D0.L),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     D0,D4
+       blt.s     @vsscanf_scanselect_17
+       move.l    D3,A0
+       move.l    D2,A1
+       move.b    1(A1,A0.L),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     D0,D4
+       bgt.s     @vsscanf_scanselect_17
+       bra.s     @vsscanf_scanselect_10
+@vsscanf_scanselect_17:
+       addq.l    #1,D2
+       bra.s     @vsscanf_scanselect_19
+@vsscanf_scanselect_15:
+       move.l    D3,A0
+       move.b    0(A0,D2.L),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     D0,D4
+       bne.s     @vsscanf_scanselect_19
+       bra.s     @vsscanf_scanselect_10
+@vsscanf_scanselect_19:
+       addq.l    #1,D2
+       bra       @vsscanf_scanselect_8
+@vsscanf_scanselect_10:
+       tst.l     D2
+       beq.s     @vsscanf_scanselect_23
+       move.l    D3,A0
+       move.b    0(A0,D2.L),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #93,D0
+       beq.s     @vsscanf_scanselect_21
+@vsscanf_scanselect_23:
+       moveq     #1,D5
+@vsscanf_scanselect_21:
+       move.l    A2,D0
+       beq.s     @vsscanf_scanselect_24
+       tst.l     D5
+       bne.s     @vsscanf_scanselect_26
+       tst.l     D7
+       bne.s     @vsscanf_scanselect_28
+       move.l    D6,A0
+       addq.l    #1,D6
+       move.b    D4,(A0)
+@vsscanf_scanselect_28:
+       bra.s     @vsscanf_scanselect_4
+@vsscanf_scanselect_26:
+       bra.s     @vsscanf_scanselect_5
+@vsscanf_scanselect_24:
+       tst.l     D5
+       beq.s     @vsscanf_scanselect_30
+       tst.l     D7
+       bne.s     @vsscanf_scanselect_32
+       move.l    D6,A0
+       addq.l    #1,D6
+       move.b    D4,(A0)
+@vsscanf_scanselect_32:
+       bra.s     @vsscanf_scanselect_4
+@vsscanf_scanselect_30:
+       bra.s     @vsscanf_scanselect_5
+@vsscanf_scanselect_4:
+       bra       @vsscanf_scanselect_2
+@vsscanf_scanselect_5:
+       cmp.l     #-1,D4
+       beq.s     @vsscanf_scanselect_34
+       move.l    D4,-(A7)
+       move.l    8(A6),-(A7)
+       bsr       @vsscanf_scanputback
+       addq.w    #8,A7
+       move.l    28(A6),A0
+       subq.l    #1,(A0)
+@vsscanf_scanselect_34:
+       tst.l     D7
+       bne.s     @vsscanf_scanselect_36
+       move.l    D6,A0
+       clr.b     (A0)
+@vsscanf_scanselect_36:
+       addq.l    #1,D3
+       move.l    D3,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #93,D0
+       beq.s     @vsscanf_scanselect_40
+       bra       @vsscanf_scanselect_36
+@vsscanf_scanselect_40:
+       addq.l    #1,D3
+       move.l    D3,D0
+       movem.l   (A7)+,D2/D3/D4/D5/D6/D7/A2
+       unlk      A6
+       rts
+_scanflush:
+       lea       @vsscanf_buf,A0
+       move.l    A0,@vsscanf_bufx
+       clr.b     @vsscanf_buf
+       pea       -1
+       bsr       _ungetch
+       addq.w    #4,A7
+       rts
+_vsscanf:
+       link      A6,#-124
+       movem.l   D2/D3/D4/D5/D6/D7/A2/A3/A4/A5,-(A7)
+       lea       @vsscanf_scanread,A2
+       lea       @vsscanf_scanputback,A5
+       tst.l     8(A6)
+       beq.s     vsscanf_1
+       lea       8(A6),A0
+       bra.s     vsscanf_2
+vsscanf_1:
+       clr.l     D0
+       move.l    D0,A0
+vsscanf_2:
+       move.l    A0,D5
+       clr.l     -32(A6)
+       clr.l     D4
+vsscanf_3:
+       move.l    12(A6),A0
+       addq.l    #1,12(A6)
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,D3
+       beq       vsscanf_5
+       clr.l     D6
+       clr.l     D7
+       cmp.l     #32,D3
+       beq.s     vsscanf_8
+       cmp.l     #9,D3
+       beq.s     vsscanf_8
+       cmp.l     #10,D3
+       bne       vsscanf_6
+vsscanf_8:
+       move.l    D5,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-32(A6)
+       cmp.l     #-1,D2
+       bne.s     vsscanf_11
+       tst.l     D4
+       beq.s     vsscanf_13
+       move.l    D4,D0
+       bra.s     vsscanf_14
+vsscanf_13:
+       moveq     #-1,D0
+vsscanf_14:
+       bra       vsscanf_15
+vsscanf_11:
+       move.l    D2,A0
+       lea       __ctype,A1
+       move.b    1(A0,A1.L),D0
+       andi.b    #16,D0
+       bne       vsscanf_8
+       subq.l    #1,-32(A6)
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       (A5)
+       addq.w    #8,A7
+       bra       vsscanf_185
+vsscanf_6:
+       cmp.l     #37,D3
+       bne       vsscanf_173
+       move.l    12(A6),A0
+       addq.l    #1,12(A6)
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,D3
+       clr.l     -24(A6)
+       clr.l     D6
+       clr.l     -28(A6)
+       move.w    #32767,A4
+       cmp.l     #42,D3
+       bne.s     vsscanf_18
+       moveq     #1,D6
+       move.l    12(A6),A0
+       addq.l    #1,12(A6)
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,D3
+vsscanf_18:
+       move.l    D3,A0
+       lea       __ctype,A1
+       move.b    1(A0,A1.L),D0
+       andi.b    #4,D0
+       beq       vsscanf_24
+       move.l    D3,D0
+       sub.l     #48,D0
+       move.l    D0,A4
+vsscanf_22:
+       move.l    12(A6),A0
+       addq.l    #1,12(A6)
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,D3
+       move.l    D0,A0
+       lea       __ctype,A1
+       move.b    1(A0,A1.L),D0
+       andi.b    #4,D0
+       beq.s     vsscanf_24
+       moveq     #-48,D0
+       move.l    A4,-(A7)
+       pea       10
+       bsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       add.l     D3,D1
+       add.l     D1,D0
+       move.l    D0,A4
+       bra       vsscanf_22
+vsscanf_24:
+       cmp.l     #108,D3
+       beq.s     vsscanf_27
+       cmp.l     #76,D3
+       bne.s     vsscanf_25
+vsscanf_27:
+       move.l    #1,-28(A6)
+       move.l    12(A6),A0
+       addq.l    #1,12(A6)
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,D3
+       bra.s     vsscanf_28
+vsscanf_25:
+       cmp.l     #104,D3
+       bne.s     vsscanf_28
+       move.l    #1,-24(A6)
+       move.l    12(A6),A0
+       addq.l    #1,12(A6)
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,D3
+vsscanf_28:
+       cmp.l     #91,D3
+       bne       vsscanf_30
+       tst.l     D6
+       bne.s     vsscanf_32
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),A3
+vsscanf_32:
+       pea       -32(A6)
+       move.l    A3,-(A7)
+       move.l    D6,-(A7)
+       move.l    A4,-(A7)
+       move.l    12(A6),-(A7)
+       move.l    D5,-(A7)
+       bsr       @vsscanf_scanselect
+       add.w     #24,A7
+       move.l    D0,12(A6)
+       tst.l     D6
+       bne.s     vsscanf_34
+       addq.l    #1,D4
+vsscanf_34:
+       bra       vsscanf_185
+vsscanf_30:
+       cmp.l     #110,D3
+       bne.s     vsscanf_36
+       tst.l     D6
+       bne.s     vsscanf_38
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),A3
+       move.l    -32(A6),(A3)
+       addq.l    #1,D4
+vsscanf_38:
+       bra       vsscanf_185
+vsscanf_36:
+       cmp.l     #115,D3
+       bne       vsscanf_40
+       pea       -32(A6)
+       move.l    D5,-(A7)
+       bsr       @vsscanf_scanspace
+       addq.w    #8,A7
+       move.l    D0,D2
+       tst.l     D6
+       bne.s     vsscanf_42
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),A3
+vsscanf_42:
+       addq.l    #1,-32(A6)
+vsscanf_44:
+       move.l    A4,D0
+       subq.w    #1,A4
+       tst.l     D0
+       beq       vsscanf_46
+       move.l    D2,A0
+       lea       __ctype,A1
+       move.b    1(A0,A1.L),D0
+       andi.b    #16,D0
+       bne.s     vsscanf_46
+       cmp.l     #-1,D2
+       beq.s     vsscanf_46
+       moveq     #1,D7
+       tst.l     D6
+       bne.s     vsscanf_47
+       move.b    D2,(A3)+
+vsscanf_47:
+       move.l    D5,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-32(A6)
+       bra       vsscanf_44
+vsscanf_46:
+       tst.l     D6
+       bne.s     vsscanf_51
+       clr.b     (A3)
+       tst.l     D7
+       beq.s     vsscanf_51
+       addq.l    #1,D4
+vsscanf_51:
+       cmp.l     #-1,D2
+       beq.s     vsscanf_55
+       tst.l     D6
+       bne.s     vsscanf_53
+       tst.l     D7
+       bne.s     vsscanf_53
+vsscanf_55:
+       tst.l     D4
+       beq.s     vsscanf_56
+       move.l    D4,D0
+       bra.s     vsscanf_59
+vsscanf_56:
+       cmp.l     #-1,D2
+       bne.s     vsscanf_58
+       moveq     #-1,D0
+       bra.s     vsscanf_59
+vsscanf_58:
+       move.l    D4,D0
+vsscanf_59:
+       bra       vsscanf_15
+vsscanf_53:
+       subq.l    #1,-32(A6)
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       (A5)
+       addq.w    #8,A7
+       bra       vsscanf_185
+vsscanf_40:
+       cmp.l     #99,D3
+       bne       vsscanf_60
+       tst.l     D6
+       bne.s     vsscanf_62
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),A3
+vsscanf_62:
+       move.l    D5,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-32(A6)
+       move.l    A4,D0
+       cmp.l     #32767,D0
+       bne.s     vsscanf_64
+       move.w    #1,A4
+vsscanf_64:
+       cmp.l     #-1,D2
+       bne.s     vsscanf_66
+       tst.l     D6
+       bne.s     vsscanf_66
+       subq.l    #1,D4
+vsscanf_66:
+       move.l    A4,D0
+       subq.w    #1,A4
+       tst.l     D0
+       beq.s     vsscanf_70
+       cmp.l     #-1,D2
+       beq.s     vsscanf_70
+       tst.l     D6
+       bne.s     vsscanf_71
+       move.b    D2,(A3)+
+vsscanf_71:
+       move.l    D5,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-32(A6)
+       bra       vsscanf_66
+vsscanf_70:
+       cmp.l     #-1,D2
+       bne.s     vsscanf_73
+       tst.l     D4
+       beq.s     vsscanf_75
+       move.l    D4,D0
+       bra.s     vsscanf_76
+vsscanf_75:
+       moveq     #-1,D0
+vsscanf_76:
+       bra       vsscanf_15
+vsscanf_73:
+       tst.l     D6
+       bne.s     vsscanf_77
+       addq.l    #1,D4
+vsscanf_77:
+       subq.l    #1,-32(A6)
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       (A5)
+       addq.w    #8,A7
+       bra       vsscanf_185
+vsscanf_60:
+       cmp.l     #105,D3
+       bne       vsscanf_82
+       pea       -32(A6)
+       move.l    D5,-(A7)
+       bsr       @vsscanf_scanspace
+       addq.w    #8,A7
+       move.l    D0,D2
+       cmp.l     #48,D2
+       bne       vsscanf_81
+       moveq     #1,D7
+       move.l    D5,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D0,D2
+       move.l    D2,-(A7)
+       bsr       _tolower
+       addq.w    #4,A7
+       cmp.l     #120,D0
+       bne.s     vsscanf_83
+       moveq     #120,D3
+       bra.s     vsscanf_84
+vsscanf_83:
+       subq.l    #1,-32(A6)
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       (A5)
+       addq.w    #8,A7
+       moveq     #111,D3
+vsscanf_84:
+       addq.l    #1,-32(A6)
+       bra.s     vsscanf_82
+vsscanf_81:
+       subq.l    #1,-32(A6)
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       (A5)
+       addq.w    #8,A7
+       moveq     #100,D3
+vsscanf_82:
+       cmp.l     #100,D3
+       beq.s     vsscanf_87
+       cmp.l     #117,D3
+       beq.s     vsscanf_87
+       cmp.l     #120,D3
+       beq.s     vsscanf_87
+       cmp.l     #111,D3
+       bne       vsscanf_85
+vsscanf_87:
+       pea       -32(A6)
+       move.l    D5,-(A7)
+       bsr       @vsscanf_scanspace
+       addq.w    #8,A7
+       move.l    D0,D2
+       move.l    #10,-8(A6)
+       cmp.l     #120,D3
+       bne.s     vsscanf_88
+       move.l    #16,-8(A6)
+vsscanf_88:
+       cmp.l     #111,D3
+       bne.s     vsscanf_90
+       move.l    #8,-8(A6)
+vsscanf_90:
+       tst.l     D6
+       bne.s     vsscanf_92
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),A3
+vsscanf_92:
+       clr.l     -36(A6)
+       addq.l    #1,-32(A6)
+       cmp.l     #117,D3
+       beq.s     vsscanf_94
+       cmp.l     #45,D2
+       bne.s     vsscanf_94
+       move.l    D5,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-32(A6)
+       move.l    #1,-36(A6)
+       moveq     #1,D7
+vsscanf_94:
+       clr.l     -4(A6)
+       cmp.l     #-1,D2
+       bne.s     vsscanf_96
+       tst.l     D4
+       beq.s     vsscanf_98
+       move.l    D4,D0
+       bra.s     vsscanf_99
+vsscanf_98:
+       moveq     #-1,D0
+vsscanf_99:
+       bra       vsscanf_15
+vsscanf_96:
+       move.l    A4,D0
+       subq.w    #1,A4
+       tst.l     D0
+       beq       vsscanf_102
+       cmp.l     #120,D3
+       bne.s     vsscanf_104
+       move.l    D2,-(A7)
+       bsr       _toupper
+       addq.w    #4,A7
+       cmp.l     #65,D0
+       blt.s     vsscanf_104
+       move.l    D2,-(A7)
+       bsr       _toupper
+       addq.w    #4,A7
+       cmp.l     #70,D0
+       ble.s     vsscanf_103
+vsscanf_104:
+       move.l    D2,A0
+       lea       __ctype,A1
+       move.b    1(A0,A1.L),D0
+       andi.b    #4,D0
+       beq       vsscanf_102
+vsscanf_103:
+       move.l    D2,A0
+       lea       __ctype,A1
+       move.b    1(A0,A1.L),D0
+       andi.b    #4,D0
+       bne.s     vsscanf_105
+       moveq     #-7,D0
+       move.l    D0,-(A7)
+       move.l    D2,-(A7)
+       bsr       _toupper
+       addq.w    #4,A7
+       move.l    D0,D1
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,D2
+vsscanf_105:
+       move.l    -4(A6),-(A7)
+       move.l    -8(A6),-(A7)
+       bsr       LMUL
+       move.l    (A7),D0
+       addq.w    #8,A7
+       add.l     D2,D0
+       sub.l     #48,D0
+       move.l    D0,-4(A6)
+       move.l    D5,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-32(A6)
+       moveq     #1,D7
+       bra       vsscanf_96
+vsscanf_102:
+       cmp.l     #-1,D2
+       beq.s     vsscanf_107
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       (A5)
+       addq.w    #8,A7
+       subq.l    #1,-32(A6)
+       tst.l     D7
+       bne.s     vsscanf_109
+       move.l    D4,D0
+       bra       vsscanf_15
+vsscanf_109:
+       bra.s     vsscanf_111
+vsscanf_107:
+       tst.l     D7
+       bne.s     vsscanf_111
+       tst.l     D4
+       beq.s     vsscanf_113
+       move.l    D4,D0
+       bra.s     vsscanf_114
+vsscanf_113:
+       moveq     #-1,D0
+vsscanf_114:
+       bra       vsscanf_15
+vsscanf_111:
+       tst.l     -36(A6)
+       beq.s     vsscanf_115
+       move.l    -4(A6),D0
+       neg.l     D0
+       move.l    D0,-4(A6)
+vsscanf_115:
+       tst.l     D6
+       bne.s     vsscanf_117
+       tst.l     -28(A6)
+       beq.s     vsscanf_119
+       move.l    -4(A6),(A3)
+       bra.s     vsscanf_122
+vsscanf_119:
+       tst.l     -24(A6)
+       beq.s     vsscanf_121
+       move.l    -4(A6),D0
+       move.w    D0,(A3)
+       bra.s     vsscanf_122
+vsscanf_121:
+       move.l    -4(A6),(A3)
+vsscanf_122:
+       addq.l    #1,D4
+vsscanf_117:
+       cmp.l     #-1,D2
+       bne.s     vsscanf_123
+       tst.l     D4
+       beq.s     vsscanf_125
+       move.l    D4,D0
+       bra.s     vsscanf_126
+vsscanf_125:
+       moveq     #-1,D0
+vsscanf_126:
+       bra       vsscanf_15
+vsscanf_123:
+       bra       vsscanf_185
+vsscanf_85:
+       cmp.l     #103,D3
+       beq.s     vsscanf_129
+       cmp.l     #102,D3
+       beq.s     vsscanf_129
+       cmp.l     #101,D3
+       bne       vsscanf_127
+vsscanf_129:
+       clr.l     -36(A6)
+       clr.l     -12(A6)
+       clr.l     -16(A6)
+       clr.l     -20(A6)
+       pea       -32(A6)
+       move.l    D5,-(A7)
+       bsr       @vsscanf_scanspace
+       addq.w    #8,A7
+       move.l    D0,D2
+       tst.l     D6
+       bne.s     vsscanf_130
+       move.l    16(A6),A0
+       addq.l    #1,16(A6)
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,-120(A6)
+vsscanf_130:
+       lea       -116(A6),A0
+       move.l    A0,-124(A6)
+       addq.l    #1,-32(A6)
+       cmp.l     #45,D2
+       bne.s     vsscanf_132
+       move.l    -124(A6),A0
+       addq.l    #1,-124(A6)
+       move.b    D2,(A0)
+       move.l    #1,-36(A6)
+       move.l    D5,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-32(A6)
+       moveq     #1,D7
+       bra.s     vsscanf_134
+vsscanf_132:
+       cmp.l     #43,D2
+       bne.s     vsscanf_134
+       move.l    D5,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-32(A6)
+       moveq     #1,D7
+vsscanf_134:
+       move.l    A4,D0
+       subq.w    #1,A4
+       tst.l     D0
+       beq       vsscanf_138
+       move.l    D2,A0
+       lea       __ctype,A1
+       move.b    1(A0,A1.L),D0
+       andi.l    #255,D0
+       andi.l    #16,D0
+       bne       vsscanf_138
+       cmp.l     #-1,D2
+       beq       vsscanf_138
+       move.l    D2,A0
+       lea       __ctype,A1
+       move.b    1(A0,A1.L),D0
+       andi.b    #4,D0
+       beq.s     vsscanf_139
+       move.l    -124(A6),A0
+       addq.l    #1,-124(A6)
+       move.b    D2,(A0)
+       move.l    D5,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-32(A6)
+       moveq     #1,D7
+       bra       vsscanf_137
+vsscanf_139:
+       cmp.l     #46,D2
+       bne       vsscanf_141
+       tst.l     -20(A6)
+       bne.s     vsscanf_145
+       tst.l     -16(A6)
+       beq.s     vsscanf_143
+vsscanf_145:
+       bra       vsscanf_138
+vsscanf_143:
+       move.l    #1,-20(A6)
+       move.l    -124(A6),A0
+       addq.l    #1,-124(A6)
+       move.b    D2,(A0)
+       move.l    D5,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-32(A6)
+       moveq     #1,D7
+       bra       vsscanf_137
+vsscanf_141:
+       move.l    D2,-(A7)
+       bsr       _tolower
+       addq.w    #4,A7
+       cmp.l     #101,D0
+       bne       vsscanf_152
+       tst.l     -16(A6)
+       beq.s     vsscanf_148
+       bra       vsscanf_138
+vsscanf_148:
+       move.l    #1,-16(A6)
+       move.l    -124(A6),A0
+       addq.l    #1,-124(A6)
+       move.b    #101,(A0)
+       move.l    D5,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-32(A6)
+       moveq     #1,D7
+       move.l    D2,A0
+       lea       __ctype,A1
+       move.b    1(A0,A1.L),D0
+       andi.b    #4,D0
+       beq.s     vsscanf_150
+       bra       vsscanf_137
+vsscanf_150:
+       cmp.l     #32,D2
+       beq.s     vsscanf_154
+       cmp.l     #43,D2
+       beq.s     vsscanf_154
+       cmp.l     #45,D2
+       bne.s     vsscanf_152
+vsscanf_154:
+       cmp.l     #45,D2
+       bne.s     vsscanf_155
+       move.l    -124(A6),A0
+       addq.l    #1,-124(A6)
+       move.b    D2,(A0)
+vsscanf_155:
+       move.l    D5,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-32(A6)
+       moveq     #1,D7
+       bra.s     vsscanf_137
+vsscanf_152:
+       bra.s     vsscanf_138
+vsscanf_137:
+       bra       vsscanf_134
+vsscanf_138:
+       move.l    -124(A6),A0
+       clr.b     (A0)
+       cmp.l     #-1,D2
+       beq.s     vsscanf_157
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       (A5)
+       addq.w    #8,A7
+       subq.l    #1,-32(A6)
+       tst.l     D7
+       bne.s     vsscanf_159
+       move.l    D4,D0
+       bra       vsscanf_15
+vsscanf_159:
+       bra.s     vsscanf_161
+vsscanf_157:
+       tst.l     D7
+       bne.s     vsscanf_161
+       tst.l     D4
+       beq.s     vsscanf_163
+       move.l    D4,D0
+       bra.s     vsscanf_164
+vsscanf_163:
+       moveq     #-1,D0
+vsscanf_164:
+       bra       vsscanf_15
+vsscanf_161:
+       tst.l     D6
+       bne       vsscanf_165
+       tst.l     -28(A6)
+       beq.s     vsscanf_167
+       clr.l     -(A7)
+       pea       -116(A6)
+       bsr       _strtod
+       addq.w    #8,A7
+       move.l    -120(A6),D0
+       move.l    D0,A0
+       fmove.d   FP0,(A0)
+       bra.s     vsscanf_168
+vsscanf_167:
+       clr.l     -(A7)
+       pea       -116(A6)
+       bsr       _strtod
+       addq.w    #8,A7
+       move.l    -120(A6),D0
+       move.l    D0,A0
+       fmove.s   FP0,(A0)
+vsscanf_168:
+       addq.l    #1,D4
+vsscanf_165:
+       cmp.l     #-1,D2
+       bne.s     vsscanf_169
+       tst.l     D4
+       beq.s     vsscanf_171
+       move.l    D4,D0
+       bra.s     vsscanf_172
+vsscanf_171:
+       moveq     #-1,D0
+vsscanf_172:
+       bra       vsscanf_15
+vsscanf_169:
+       bra       vsscanf_185
+vsscanf_127:
+       cmp.l     #37,D3
+       bne       vsscanf_173
+       move.l    D5,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D0,D2
+       cmp.l     #-1,D2
+       bne.s     vsscanf_175
+       tst.l     D4
+       beq.s     vsscanf_177
+       move.l    D4,D0
+       bra.s     vsscanf_178
+vsscanf_177:
+       moveq     #-1,D0
+vsscanf_178:
+       bra       vsscanf_15
+vsscanf_175:
+       addq.l    #1,-32(A6)
+       cmp.l     D3,D2
+       beq.s     vsscanf_179
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       (A5)
+       addq.w    #8,A7
+       subq.l    #1,-32(A6)
+       move.l    D4,D0
+       bra       vsscanf_15
+vsscanf_179:
+       bra       vsscanf_185
+vsscanf_173:
+       move.l    D5,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-32(A6)
+       cmp.l     #-1,D2
+       bne.s     vsscanf_181
+       tst.l     D4
+       beq.s     vsscanf_183
+       move.l    D4,D0
+       bra.s     vsscanf_184
+vsscanf_183:
+       moveq     #-1,D0
+vsscanf_184:
+       bra.s     vsscanf_15
+vsscanf_181:
+       cmp.l     D3,D2
+       beq.s     vsscanf_185
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       (A5)
+       addq.w    #8,A7
+       subq.l    #1,-32(A6)
+       move.l    D4,D0
+       bra.s     vsscanf_15
+vsscanf_185:
+       bra       vsscanf_3
+vsscanf_5:
+       move.l    D4,D0
+vsscanf_15:
+       movem.l   (A7)+,D2/D3/D4/D5/D6/D7/A2/A3/A4/A5
+       unlk      A6
+       rts
+_printf:
+       link      A6,#-4
+       movem.l   D2,-(A7)
+       lea       8(A6),A0
+       addq.w    #4,A0
+       move.l    A0,D2
+       move.l    D2,-(A7)
+       move.l    8(A6),-(A7)
+       clr.l     -(A7)
+       bsr       _vsprintf
+       add.w     #12,A7
+       move.l    D0,-4(A6)
+       clr.l     D2
+       move.l    -4(A6),D0
+       movem.l   (A7)+,D2
+       unlk      A6
+       rts
+_strtod:
+       link      A6,#-104
+       movem.l   D2/D3/D4/D5/D6/D7/A2/A3/A4/A5,-(A7)
+       move.l    8(A6),D3
+       lea       -100(A6),A2
+       lea       -48(A6),A3
+       lea       -88(A6),A4
+       lea       __ctype,A5
+       clr.l     -8(A6)
+       clr.l     -4(A6)
+       clr.l     D7
+       clr.l     D5
+strtod_4:
+       move.l    D3,A0
+       move.b    (A0),D0
+       ext.w     D0
+       move.w    D0,A0
+       move.b    1(A0,A5.L),D0
+       andi.b    #16,D0
+       beq.s     strtod_6
+       addq.l    #1,D3
+       bra       strtod_4
+strtod_6:
+       move.l    D3,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #45,D0
+       bne.s     strtod_7
+       move.l    #1,-4(A6)
+       addq.l    #1,D3
+       bra.s     strtod_9
+strtod_7:
+       move.l    D3,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #43,D0
+       bne.s     strtod_9
+       addq.l    #1,D3
+strtod_9:
+       move.l    D3,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #78,D0
+       bne       strtod_11
+       move.l    D3,A0
+       move.b    1(A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #65,D0
+       bne.s     strtod_11
+       move.l    D3,A0
+       move.b    2(A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #78,D0
+       bne.s     strtod_11
+       clr.l     D2
+strtod_13:
+       cmp.l     #12,D2
+       bge.s     strtod_15
+       lea       strtod_nan,A0
+       move.b    0(A0,D2.L),0(A2,D2.L)
+       addq.l    #1,D2
+       bra       strtod_13
+strtod_15:
+       bra       strtod_3
+strtod_11:
+       move.l    D3,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #73,D0
+       bne       strtod_16
+       move.l    D3,A0
+       move.b    1(A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #78,D0
+       bne.s     strtod_16
+       move.l    D3,A0
+       move.b    2(A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #70,D0
+       bne.s     strtod_16
+       clr.l     D2
+strtod_18:
+       cmp.l     #12,D2
+       bge.s     strtod_20
+       lea       strtod_inf,A0
+       move.b    0(A0,D2.L),0(A2,D2.L)
+       addq.l    #1,D2
+       bra       strtod_18
+strtod_20:
+       bra       strtod_3
+strtod_16:
+       clr.l     D6
+strtod_21:
+       move.l    D3,A0
+       move.b    (A0),D0
+       ext.w     D0
+       move.w    D0,A0
+       move.b    1(A0,A5.L),D0
+       andi.b    #4,D0
+       beq.s     strtod_23
+       tst.l     -8(A6)
+       bne.s     strtod_26
+       move.l    D3,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #48,D0
+       beq.s     strtod_24
+strtod_26:
+       move.l    D3,A0
+       move.l    D6,D0
+       addq.l    #1,D6
+       move.b    (A0),0(A4,D0.L)
+       move.l    #1,-8(A6)
+strtod_24:
+       addq.l    #1,D3
+       bra       strtod_21
+strtod_23:
+       clr.b     0(A4,D6.L)
+       clr.l     D2
+       move.l    D3,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #46,D0
+       bne.s     strtod_31
+       addq.l    #1,D3
+strtod_29:
+       move.l    D3,A0
+       move.b    (A0),D0
+       ext.w     D0
+       move.w    D0,A0
+       move.b    1(A0,A5.L),D0
+       andi.b    #4,D0
+       beq.s     strtod_31
+       move.l    D3,A0
+       addq.l    #1,D3
+       move.l    D2,D0
+       addq.l    #1,D2
+       move.b    (A0),0(A3,D0.L)
+       bra       strtod_29
+strtod_31:
+       clr.b     0(A3,D2.L)
+       move.l    D3,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #101,D0
+       beq.s     strtod_34
+       move.l    D3,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #69,D0
+       bne       strtod_41
+strtod_34:
+       addq.l    #1,D3
+       move.l    D3,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #43,D0
+       bne.s     strtod_35
+       clr.l     D7
+       addq.l    #1,D3
+       bra.s     strtod_38
+strtod_35:
+       move.l    D3,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #45,D0
+       bne.s     strtod_37
+       moveq     #1,D7
+       addq.l    #1,D3
+       bra.s     strtod_38
+strtod_37:
+       clr.l     D7
+strtod_38:
+       move.l    D3,A0
+       move.b    (A0),D0
+       ext.w     D0
+       move.w    D0,A0
+       move.b    1(A0,A5.L),D0
+       andi.b    #4,D0
+       beq.s     strtod_41
+       move.l    D5,-(A7)
+       pea       10
+       bsr       LMUL
+       move.l    (A7),D0
+       addq.w    #8,A7
+       move.l    D3,A0
+       addq.l    #1,D3
+       move.b    (A0),D1
+       ext.w     D1
+       ext.l     D1
+       add.l     D1,D0
+       sub.l     #48,D0
+       move.l    D0,D5
+       bra       strtod_38
+strtod_41:
+       tst.l     D7
+       beq.s     strtod_42
+       move.l    D5,D0
+       neg.l     D0
+       move.l    D0,D5
+strtod_42:
+       tst.l     12(A6)
+       beq.s     strtod_44
+       move.l    12(A6),A0
+       move.l    D3,(A0)
+strtod_44:
+       clr.l     D2
+strtod_46:
+       cmp.l     #12,D2
+       bge.s     strtod_48
+       clr.b     0(A2,D2.L)
+       addq.l    #1,D2
+       bra       strtod_46
+strtod_48:
+       tst.l     D6
+       beq       strtod_49
+       move.l    D6,D0
+       subq.l    #1,D0
+       add.l     D0,D5
+       moveq     #7,D4
+       clr.l     D2
+strtod_51:
+       tst.b     0(A4,D2.L)
+       beq       strtod_53
+       cmp.l     #24,D4
+       bge       strtod_53
+       move.l    D4,D0
+       andi.l    #1,D0
+       beq.s     strtod_54
+       move.l    D4,D0
+       asr.l     #1,D0
+       move.b    0(A4,D2.L),D1
+       ext.w     D1
+       ext.l     D1
+       sub.l     #48,D1
+       andi.l    #15,D1
+       or.b      D1,0(A2,D0.L)
+       bra.s     strtod_55
+strtod_54:
+       move.l    D4,D0
+       asr.l     #1,D0
+       move.b    0(A4,D2.L),D1
+       ext.w     D1
+       ext.l     D1
+       sub.l     #48,D1
+       asl.l     #4,D1
+       or.b      D1,0(A2,D0.L)
+strtod_55:
+       addq.l    #1,D4
+       addq.l    #1,D2
+       bra       strtod_51
+strtod_53:
+       clr.l     D2
+strtod_56:
+       tst.b     0(A3,D2.L)
+       beq       strtod_58
+       cmp.l     #24,D4
+       bge       strtod_58
+       move.l    D4,D0
+       andi.l    #1,D0
+       beq.s     strtod_59
+       move.l    D4,D0
+       asr.l     #1,D0
+       move.b    0(A3,D2.L),D1
+       ext.w     D1
+       ext.l     D1
+       sub.l     #48,D1
+       andi.l    #15,D1
+       or.b      D1,0(A2,D0.L)
+       bra.s     strtod_60
+strtod_59:
+       move.l    D4,D0
+       asr.l     #1,D0
+       move.b    0(A3,D2.L),D1
+       ext.w     D1
+       ext.l     D1
+       sub.l     #48,D1
+       asl.l     #4,D1
+       or.b      D1,0(A2,D0.L)
+strtod_60:
+       addq.l    #1,D4
+       addq.l    #1,D2
+       bra       strtod_56
+strtod_58:
+       bra       strtod_66
+strtod_49:
+       subq.l    #1,D5
+       clr.l     D2
+strtod_61:
+       move.b    0(A3,D2.L),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #48,D0
+       bne.s     strtod_63
+       subq.l    #1,D5
+       addq.l    #1,D2
+       bra       strtod_61
+strtod_63:
+       moveq     #7,D4
+strtod_64:
+       tst.b     0(A3,D2.L)
+       beq       strtod_66
+       cmp.l     #24,D4
+       bge       strtod_66
+       move.l    D4,D0
+       andi.l    #1,D0
+       beq.s     strtod_67
+       move.l    D4,D0
+       asr.l     #1,D0
+       move.b    0(A3,D2.L),D1
+       ext.w     D1
+       ext.l     D1
+       sub.l     #48,D1
+       andi.l    #15,D1
+       or.b      D1,0(A2,D0.L)
+       bra.s     strtod_68
+strtod_67:
+       move.l    D4,D0
+       asr.l     #1,D0
+       move.b    0(A3,D2.L),D1
+       ext.w     D1
+       ext.l     D1
+       sub.l     #48,D1
+       asl.l     #4,D1
+       or.b      D1,0(A2,D0.L)
+strtod_68:
+       addq.l    #1,D4
+       addq.l    #1,D2
+       bra       strtod_64
+strtod_66:
+       cmp.l     #0,D5
+       bge.s     strtod_69
+       ori.b     #64,(A2)
+       move.l    D5,D0
+       neg.l     D0
+       move.l    D0,D5
+strtod_69:
+       move.l    D5,-(A7)
+       pea       100
+       bsr       LDIV
+       move.l    (A7),D0
+       addq.w    #8,A7
+       andi.l    #15,D0
+       or.b      D0,(A2)
+       move.l    D5,-(A7)
+       pea       100
+       bsr       LDIV
+       move.l    4(A7),D0
+       addq.w    #8,A7
+       move.l    D0,-(A7)
+       pea       10
+       bsr       LDIV
+       move.l    (A7),D0
+       addq.w    #8,A7
+       asl.l     #4,D0
+       move.l    D5,-(A7)
+       pea       10
+       bsr       LDIV
+       move.l    4(A7),D1
+       addq.w    #8,A7
+       or.l      D1,D0
+       move.b    D0,1(A2)
+strtod_3:
+       tst.l     -4(A6)
+       beq.s     strtod_71
+       ori.b     #128,(A2)
+strtod_71:
+       move.l    A2,-(A7)
+       bsr       _pack
+       addq.w    #4,A7
+       movem.l   (A7)+,D2/D3/D4/D5/D6/D7/A2/A3/A4/A5
+       unlk      A6
+       rts
+_atof:
+       link      A6,#0
+       clr.l     -(A7)
+       move.l    8(A6),-(A7)
+       bsr       _strtod
+       addq.w    #8,A7
+       unlk      A6
+       rts
+_gets:
+       link      A6,#0
+       movem.l   D2/D3/D4/A2,-(A7)
+       lea       _putch,A2
+       move.l    8(A6),D4
+       move.l    D4,D2
+gets_1:
+       bsr       _getch
+       move.l    D0,D3
+       cmp.l     #10,D0
+       beq       gets_3
+       cmp.l     #8,D3
+       beq.s     gets_4
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.b    D3,(A0)
+       ext.w     D3
+       ext.l     D3
+       move.l    D3,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       bra.s     gets_6
+gets_4:
+       cmp.l     D4,D2
+       bls.s     gets_6
+       pea       8
+       jsr       (A2)
+       addq.w    #4,A7
+       pea       32
+       jsr       (A2)
+       addq.w    #4,A7
+       pea       8
+       jsr       (A2)
+       addq.w    #4,A7
+       subq.l    #1,D2
+gets_6:
+       bra       gets_1
+gets_3:
+       pea       10
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D2,A0
+       clr.b     (A0)
+       move.l    D4,D0
+       movem.l   (A7)+,D2/D3/D4/A2
+       unlk      A6
+       rts
+_tolower:
+       link      A6,#0
+       movem.l   D2,-(A7)
+       move.l    8(A6),D2
+       cmp.l     #65,D2
+       blt.s     tolower_1
+       cmp.l     #90,D2
+       bgt.s     tolower_1
+       ori.l     #32,D2
+tolower_1:
+       move.l    D2,D0
+       movem.l   (A7)+,D2
+       unlk      A6
+       rts
+_strcat:
+       move.l    (4,A7),A0	
+       move.l    (8,A7),A1	
+       move.l    A0,D0		
+strcat_0:
+       tst.b     (A0)+
+       bne       strcat_0
+       subq      #1,A0
+strcat_1:
+       move.b    (A1)+,(A0)+
+       bne       strcat_1
+       rts
+_toupper:
+       link      A6,#0
+       movem.l   D2,-(A7)
+       move.l    8(A6),D2
+       cmp.l     #97,D2
+       blt.s     toupper_1
+       cmp.l     #122,D2
+       bgt.s     toupper_1
+       andi.l    #95,D2
+toupper_1:
+       move.l    D2,D0
+       movem.l   (A7)+,D2
+       unlk      A6
+       rts
+_ungetch:
+       link      A6,#0
+       move.l    8(A6),__ungetbuf
+       move.l    8(A6),D0
+       unlk      A6
+       rts
+@vsprintf_copy:
+       link      A6,#0
+       move.l    8(A6),A0
+       tst.l     (A0)
+       beq.s     @vsprintf_copy_1
+       move.l    12(A6),D0
+       move.l    8(A6),A0
+       move.l    (A0),A1
+       addq.l    #1,(A0)
+       move.b    D0,(A1)
+       bra.s     @vsprintf_copy_2
+@vsprintf_copy_1:
+       move.l    12(A6),-(A7)
+       bsr       _putch
+       addq.w    #4,A7
+@vsprintf_copy_2:
+       unlk      A6
+       rts
+@vsprintf_getval:
+       link      A6,#0
+       movem.l   D2/D3,-(A7)
+       move.l    8(A6),D2
+       clr.l     D3
+       move.l    D2,A0
+       move.l    (A0),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #42,D0
+       bne.s     @vsprintf_getval_1
+       move.l    12(A6),A0
+       move.l    (A0),A1
+       addq.l    #4,(A0)
+       move.l    (A1),D3
+       move.l    D2,A0
+       addq.l    #1,(A0)
+       bra       @vsprintf_getval_5
+@vsprintf_getval_1:
+       move.l    D2,A0
+       move.l    (A0),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #48,D0
+       blt       @vsprintf_getval_5
+       move.l    D2,A0
+       move.l    (A0),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #57,D0
+       bgt.s     @vsprintf_getval_5
+       move.l    D3,-(A7)
+       pea       10
+       bsr       LMUL
+       move.l    (A7),D0
+       addq.w    #8,A7
+       move.l    D2,A0
+       move.l    (A0),A1
+       addq.l    #1,(A0)
+       move.b    (A1),D1
+       ext.w     D1
+       ext.l     D1
+       add.l     D1,D0
+       sub.l     #48,D0
+       move.l    D0,D3
+       bra       @vsprintf_getval_1
+@vsprintf_getval_5:
+       move.l    D3,D0
+       movem.l   (A7)+,D2/D3
+       unlk      A6
+       rts
+@vsprintf_fround:
+       link      A6,#-8
+       movem.l   D2/D3/D4/D5,-(A7)
+       move.l    12(A6),D5
+       move.l    8(A6),D0
+       add.l     D5,D0
+       addq.l    #1,D0
+       move.l    D0,D2
+       move.l    D0,-8(A6)
+       move.l    D2,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #48,D0
+       blt       @vsprintf_fround_15
+       move.l    D2,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #57,D0
+       bgt       @vsprintf_fround_15
+       move.l    D2,A0
+       subq.l    #1,D2
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #52,D0
+       ble       @vsprintf_fround_15
+@vsprintf_fround_5:
+       move.l    D2,A0
+       addq.b    #1,(A0)
+       move.b    (A0),D0
+       ext.w     D0
+       move.w    D0,A0
+       move.l    A0,D0
+       cmp.l     #57,D0
+       ble.s     @vsprintf_fround_7
+       move.l    D2,A0
+       subq.l    #1,D2
+       move.b    #48,(A0)
+       bra       @vsprintf_fround_5
+@vsprintf_fround_7:
+       move.l    D2,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #47,D0
+       bne       @vsprintf_fround_15
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.b    #49,(A0)
+       tst.l     D5
+       bne.s     @vsprintf_fround_12
+       tst.l     16(A6)
+       beq.s     @vsprintf_fround_10
+@vsprintf_fround_12:
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.b    #46,(A0)
+@vsprintf_fround_10:
+       clr.l     D4
+       moveq     #48,D3
+@vsprintf_fround_13:
+       cmp.l     D5,D4
+       bge.s     @vsprintf_fround_15
+       move.l    D2,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,-4(A6)
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.b    D3,(A0)
+       move.l    -4(A6),D3
+       addq.l    #1,D4
+       bra       @vsprintf_fround_13
+@vsprintf_fround_15:
+       move.l    -8(A6),D0
+       movem.l   (A7)+,D2/D3/D4/D5
+       unlk      A6
+       rts
+@vsprintf_fconv:
+       link      A6,#-4
+       movem.l   D2/D3/D4/D5/D6/D7/A2/A3/A4/A5,-(A7)
+       move.l    20(A6),D5
+       move.l    24(A6),A2
+       move.l    28(A6),A3
+       move.l    8(A6),A4
+       move.l    A4,-(A7)
+       fmove.d   12(A6),FP0
+       fmove.d   FP0,-(A7)
+       bsr       _ftoa
+       add.w     #12,A7
+       move.l    D0,D3
+       cmp.l     #1000,D3
+       blt.s     @vsprintf_fconv_2
+       bra       @vsprintf_fconv_98
+@vsprintf_fconv_2:
+       move.l    A4,D2
+       move.b    (A4),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #45,D0
+       bne.s     @vsprintf_fconv_5
+       addq.l    #1,D2
+@vsprintf_fconv_5:
+       move.l    D2,A0
+       move.l    D2,A1
+       move.b    (A0),1(A1)
+       move.l    D2,A0
+       move.b    #46,(A0)
+       addq.l    #1,D3
+       cmp.l     #16,D5
+       ble.s     @vsprintf_fconv_7
+       moveq     #16,D5
+@vsprintf_fconv_7:
+       move.l    D5,-4(A6)
+       cmp.l     #-1,D5
+       bne.s     @vsprintf_fconv_9
+       moveq     #6,D5
+@vsprintf_fconv_9:
+       move.l    A3,D0
+       cmp.l     #101,D0
+       beq       @vsprintf_fconv_19
+       bgt.s     @vsprintf_fconv_18
+       cmp.l     #71,D0
+       beq.s     @vsprintf_fconv_13
+       bgt       @vsprintf_fconv_98
+       cmp.l     #69,D0
+       beq       @vsprintf_fconv_19
+       bra       @vsprintf_fconv_98
+@vsprintf_fconv_18:
+       cmp.l     #103,D0
+       beq.s     @vsprintf_fconv_13
+       bgt       @vsprintf_fconv_98
+       cmp.l     #102,D0
+       beq       @vsprintf_fconv_17
+       bra       @vsprintf_fconv_98
+@vsprintf_fconv_13:
+       move.l    D5,D6
+       moveq     #6,D5
+       cmp.l     #-4,D3
+       ble.s     @vsprintf_fconv_19
+       moveq     #1,D0
+       add.l     D6,D0
+       cmp.l     D0,D3
+       bgt.s     @vsprintf_fconv_19
+       bra       @vsprintf_fconv_17
+@vsprintf_fconv_19:
+       move.l    A2,-(A7)
+       cmp.l     #15,D5
+       ble.s     @vsprintf_fconv_21
+       moveq     #16,D1
+       bra.s     @vsprintf_fconv_22
+@vsprintf_fconv_21:
+       move.l    D5,D1
+       addq.l    #1,D1
+@vsprintf_fconv_22:
+       move.l    D1,-(A7)
+       move.l    D2,-(A7)
+       bsr       @vsprintf_fround
+       add.w     #12,A7
+       move.l    D0,D7
+       move.l    D2,D0
+       addq.l    #1,D0
+       move.l    D0,D4
+       move.l    D0,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,D6
+       cmp.l     #46,D0
+       beq.s     @vsprintf_fconv_23
+       move.l    D2,A0
+       move.b    D6,(A0)
+       tst.l     D5
+       bne.s     @vsprintf_fconv_27
+       move.l    A2,D0
+       beq.s     @vsprintf_fconv_25
+@vsprintf_fconv_27:
+       move.l    D4,A0
+       move.b    #46,(A0)
+       bra.s     @vsprintf_fconv_26
+@vsprintf_fconv_25:
+       move.l    D4,A0
+       clr.b     (A0)
+       move.l    D4,D7
+@vsprintf_fconv_26:
+       subq.l    #1,D3
+@vsprintf_fconv_23:
+       move.l    A2,D0
+       bne.s     @vsprintf_fconv_28
+       tst.l     D5
+       bne.s     @vsprintf_fconv_28
+       move.l    D7,D0
+       subq.l    #1,D0
+       move.l    D0,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #46,D0
+       bne.s     @vsprintf_fconv_28
+       move.l    D7,A0
+       subq.l    #1,D7
+       clr.b     (A0)
+@vsprintf_fconv_28:
+       moveq     #-15,D0
+       move.l    D5,D1
+       subq.l    #1,D5
+       add.l     D1,D0
+       cmp.l     #0,D0
+       ble.s     @vsprintf_fconv_32
+       move.l    D7,A0
+       addq.l    #1,D7
+       move.b    #48,(A0)
+       bra       @vsprintf_fconv_28
+@vsprintf_fconv_32:
+       move.l    A3,D0
+       cmp.l     #69,D0
+       beq.s     @vsprintf_fconv_35
+       move.l    A3,D0
+       cmp.l     #71,D0
+       bne.s     @vsprintf_fconv_33
+@vsprintf_fconv_35:
+       moveq     #69,D0
+       bra.s     @vsprintf_fconv_34
+@vsprintf_fconv_33:
+       moveq     #101,D0
+@vsprintf_fconv_34:
+       move.l    D7,A0
+       addq.l    #1,D7
+       move.b    D0,(A0)
+       cmp.l     #0,D3
+       bge.s     @vsprintf_fconv_36
+       move.l    D3,D0
+       neg.l     D0
+       move.l    D0,D3
+       move.l    D7,A0
+       addq.l    #1,D7
+       move.b    #45,(A0)
+       bra.s     @vsprintf_fconv_37
+@vsprintf_fconv_36:
+       move.l    D7,A0
+       addq.l    #1,D7
+       move.b    #43,(A0)
+@vsprintf_fconv_37:
+       cmp.l     #10,D3
+       bge.s     @vsprintf_fconv_38
+       move.l    D7,A0
+       addq.l    #1,D7
+       move.b    #48,(A0)
+@vsprintf_fconv_38:
+       pea       10
+       move.l    D7,-(A7)
+       move.l    D3,-(A7)
+       bsr       _ltoa
+       add.w     #12,A7
+       bra       @vsprintf_fconv_98
+@vsprintf_fconv_17:
+       cmp.l     #0,D3
+       ble       @vsprintf_fconv_40
+       move.l    D3,D0
+       add.l     D5,D0
+       move.l    D0,D6
+       cmp.l     #16,D6
+       bge.s     @vsprintf_fconv_42
+       move.l    A2,-(A7)
+       move.l    D6,-(A7)
+       move.l    D2,-(A7)
+       bsr       @vsprintf_fround
+       add.w     #12,A7
+@vsprintf_fconv_42:
+       move.l    D2,D0
+       addq.l    #1,D0
+       move.l    D0,D4
+       move.l    D2,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #46,D0
+       beq.s     @vsprintf_fconv_44
+       move.l    D2,A0
+       move.l    D4,A1
+       move.b    (A0),(A1)
+       move.l    D2,A0
+       move.b    #46,(A0)
+       addq.l    #1,D3
+@vsprintf_fconv_44:
+       cmp.l     #16,D3
+       ble.s     @vsprintf_fconv_46
+       moveq     #16,D0
+       bra.s     @vsprintf_fconv_47
+@vsprintf_fconv_46:
+       move.l    D3,D0
+@vsprintf_fconv_47:
+       move.l    D0,D6
+       move.l    D3,D0
+       sub.l     D6,D0
+       move.l    D0,A5
+@vsprintf_fconv_48:
+       move.l    D6,D0
+       subq.l    #1,D6
+       tst.l     D0
+       beq.s     @vsprintf_fconv_50
+       move.l    D4,A0
+       addq.l    #1,D4
+       move.l    D2,A1
+       addq.l    #1,D2
+       move.b    (A0),(A1)
+       bra       @vsprintf_fconv_48
+@vsprintf_fconv_50:
+       move.l    A5,D0
+       subq.w    #1,A5
+       tst.l     D0
+       beq.s     @vsprintf_fconv_53
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.b    #48,(A0)
+       bra       @vsprintf_fconv_50
+@vsprintf_fconv_53:
+       moveq     #16,D0
+       sub.l     D3,D0
+       move.l    D0,D6
+       cmp.l     #0,D0
+       bge.s     @vsprintf_fconv_54
+       clr.l     D6
+@vsprintf_fconv_54:
+       move.l    D5,D0
+       sub.l     D6,D0
+       move.l    D0,A5
+       cmp.l     #0,D0
+       bge.s     @vsprintf_fconv_56
+       move.l    D5,D6
+       move.w    #0,A5
+@vsprintf_fconv_56:
+       tst.l     D6
+       beq.s     @vsprintf_fconv_58
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.b    #46,(A0)
+@vsprintf_fconv_58:
+       move.l    D6,D0
+       subq.l    #1,D6
+       tst.l     D0
+       beq.s     @vsprintf_fconv_62
+       addq.l    #1,D2
+       bra       @vsprintf_fconv_58
+@vsprintf_fconv_62:
+       move.l    A5,D0
+       subq.w    #1,A5
+       tst.l     D0
+       beq.s     @vsprintf_fconv_65
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.b    #48,(A0)
+       bra       @vsprintf_fconv_62
+@vsprintf_fconv_65:
+       move.l    D2,A0
+       clr.b     (A0)
+       bra       @vsprintf_fconv_67
+@vsprintf_fconv_40:
+       cmp.l     #0,D3
+       bge       @vsprintf_fconv_66
+       move.l    D3,D0
+       neg.l     D0
+       move.l    D0,D3
+       cmp.l     #16,D3
+       ble.s     @vsprintf_fconv_68
+       moveq     #16,D3
+@vsprintf_fconv_68:
+       moveq     #16,D0
+       sub.l     D3,D0
+       move.l    D0,D6
+       move.l    D2,D0
+       add.l     #16,D0
+       move.l    D0,D4
+       move.l    D2,D0
+       add.l     D6,D0
+       move.l    D0,D7
+@vsprintf_fconv_70:
+       move.l    D6,D0
+       subq.l    #1,D6
+       tst.l     D0
+       beq.s     @vsprintf_fconv_72
+       move.l    D7,A0
+       move.l    D4,A1
+       subq.l    #1,D4
+       move.b    (A0),(A1)
+       move.l    D7,A0
+       subq.l    #1,D7
+       move.b    #48,(A0)
+       bra       @vsprintf_fconv_70
+@vsprintf_fconv_72:
+       cmp.l     D2,D4
+       beq.s     @vsprintf_fconv_75
+       move.l    D4,A0
+       subq.l    #1,D4
+       move.b    #48,(A0)
+       bra       @vsprintf_fconv_72
+@vsprintf_fconv_75:
+       move.l    A2,-(A7)
+       move.l    D5,-(A7)
+       move.l    D2,-(A7)
+       bsr       @vsprintf_fround
+       add.w     #12,A7
+       move.l    D0,D4
+       move.l    D4,A0
+       clr.b     (A0)
+       move.l    D2,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #46,D0
+       bne.s     @vsprintf_fconv_76
+@vsprintf_fconv_78:
+       move.l    D4,A0
+       move.l    D4,A1
+       move.b    (A0),1(A1)
+       move.l    D4,D0
+       subq.l    #1,D4
+       cmp.l     D2,D0
+       bne       @vsprintf_fconv_78
+       move.l    D2,A0
+       move.b    #48,(A0)
+@vsprintf_fconv_76:
+       bra       @vsprintf_fconv_67
+@vsprintf_fconv_66:
+       move.l    A2,-(A7)
+       move.l    D5,-(A7)
+       move.l    D2,-(A7)
+       bsr       @vsprintf_fround
+       add.w     #12,A7
+       move.l    D2,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #46,D0
+       bne.s     @vsprintf_fconv_80
+       move.l    D2,D0
+       add.l     D5,D0
+       addq.l    #1,D0
+       move.l    D0,D4
+@vsprintf_fconv_82:
+       cmp.l     D2,D4
+       beq.s     @vsprintf_fconv_84
+       move.l    D4,D0
+       subq.l    #1,D0
+       move.l    D0,A0
+       move.l    D4,A1
+       move.b    (A0),(A1)
+       subq.l    #1,D4
+       bra       @vsprintf_fconv_82
+@vsprintf_fconv_84:
+       move.l    D2,A0
+       move.b    #48,(A0)
+@vsprintf_fconv_80:
+       addq.l    #1,D2
+       move.l    D2,A0
+       add.l     D5,A0
+       clr.b     1(A0)
+@vsprintf_fconv_67:
+       move.l    A3,D0
+       cmp.l     #71,D0
+       beq.s     @vsprintf_fconv_87
+       move.l    A3,D0
+       cmp.l     #103,D0
+       beq.s     @vsprintf_fconv_87
+       tst.l     D5
+       beq.s     @vsprintf_fconv_87
+       move.l    -4(A6),D0
+       cmp.l     #-1,D0
+       bne       @vsprintf_fconv_98
+@vsprintf_fconv_87:
+       pea       46
+       move.l    A4,-(A7)
+       bsr       _strchr
+       addq.w    #8,A7
+       tst.l     D0
+       beq       @vsprintf_fconv_88
+       move.l    A4,D0
+       move.l    D0,-(A7)
+       move.l    A4,-(A7)
+       bsr       _strlen
+       addq.w    #4,A7
+       move.l    D0,D1
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       subq.l    #1,D0
+       move.l    D0,D2
+       move.l    A3,D0
+       cmp.l     #71,D0
+       beq.s     @vsprintf_fconv_92
+       move.l    A3,D0
+       cmp.l     #103,D0
+       bne.s     @vsprintf_fconv_95
+@vsprintf_fconv_92:
+       move.l    D2,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #48,D0
+       bne.s     @vsprintf_fconv_95
+       move.l    D2,A0
+       subq.l    #1,D2
+       clr.b     (A0)
+       bra       @vsprintf_fconv_92
+@vsprintf_fconv_95:
+       move.l    A2,D0
+       bne.s     @vsprintf_fconv_96
+       move.l    D2,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #46,D0
+       bne.s     @vsprintf_fconv_96
+       move.l    D2,A0
+       clr.b     (A0)
+@vsprintf_fconv_96:
+       bra.s     @vsprintf_fconv_98
+@vsprintf_fconv_88:
+       move.l    A2,D0
+       beq.s     @vsprintf_fconv_98
+       pea       @vsprintf_1
+       move.l    A4,-(A7)
+       bsr       _strcat
+       addq.w    #8,A7
+@vsprintf_fconv_98:
+       movem.l   (A7)+,D2/D3/D4/D5/D6/D7/A2/A3/A4/A5
+       unlk      A6
+       rts
+_vsprintf:
+       link      A6,#-52
+       movem.l   D2/D3/D4/D5/D6/D7/A2/A3/A4/A5,-(A7)
+       lea       8(A6),A2
+       lea       @vsprintf_copy,A3
+       lea       _ultoa,A4
+       clr.l     D6
+vsprintf_1:
+       move.l    12(A6),A0
+       tst.b     (A0)
+       beq       vsprintf_3
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #37,D0
+       beq.s     vsprintf_4
+       move.l    12(A6),A0
+       addq.l    #1,12(A6)
+       move.b    (A0),D1
+       ext.w     D1
+       ext.l     D1
+       move.l    D1,-(A7)
+       move.l    A2,-(A7)
+       jsr       (A3)
+       addq.w    #8,A7
+       addq.l    #1,D6
+       bra       vsprintf_2
+vsprintf_4:
+       addq.l    #1,12(A6)
+       clr.b     -45(A6)
+       clr.b     -46(A6)
+       clr.b     -48(A6)
+       clr.b     -49(A6)
+       clr.b     -50(A6)
+       clr.b     -51(A6)
+       clr.l     -4(A6)
+       moveq     #-1,D4
+       lea       -36(A6),A0
+       move.l    A0,D2
+       move.l    A0,D3
+vsprintf_6:
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #43,D0
+       beq.s     vsprintf_12
+       bgt.s     vsprintf_15
+       cmp.l     #35,D0
+       beq       vsprintf_14
+       bgt       vsprintf_9
+       cmp.l     #32,D0
+       beq.s     vsprintf_13
+       bra.s     vsprintf_9
+vsprintf_15:
+       cmp.l     #45,D0
+       beq.s     vsprintf_11
+       bra.s     vsprintf_9
+vsprintf_11:
+       move.b    #1,-51(A6)
+       addq.l    #1,12(A6)
+       bra.s     vsprintf_7
+vsprintf_12:
+       move.b    #1,-50(A6)
+       addq.l    #1,12(A6)
+       bra.s     vsprintf_7
+vsprintf_13:
+       move.b    #1,-49(A6)
+       addq.l    #1,12(A6)
+       bra.s     vsprintf_7
+vsprintf_14:
+       move.b    #1,-48(A6)
+       addq.l    #1,12(A6)
+       bra.s     vsprintf_7
+vsprintf_9:
+       bra.s     vsprintf_8
+vsprintf_7:
+       bra       vsprintf_6
+vsprintf_8:
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #48,D0
+       bne.s     vsprintf_16
+       addq.l    #1,12(A6)
+       move.b    #1,-46(A6)
+vsprintf_16:
+       pea       16(A6)
+       pea       12(A6)
+       bsr       @vsprintf_getval
+       addq.w    #8,A7
+       move.l    D0,A5
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #46,D0
+       bne.s     vsprintf_18
+       addq.l    #1,12(A6)
+       pea       16(A6)
+       pea       12(A6)
+       bsr       @vsprintf_getval
+       addq.w    #8,A7
+       move.l    D0,D4
+vsprintf_18:
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #108,D0
+       bne.s     vsprintf_20
+       addq.l    #1,12(A6)
+       move.b    #1,-45(A6)
+vsprintf_20:
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #102,D0
+       beq       vsprintf_32
+       bgt       vsprintf_38
+       cmp.l     #99,D0
+       beq       vsprintf_30
+       bgt.s     vsprintf_39
+       cmp.l     #71,D0
+       beq       vsprintf_32
+       bgt.s     vsprintf_40
+       cmp.l     #69,D0
+       beq       vsprintf_32
+       bra       vsprintf_22
+vsprintf_40:
+       cmp.l     #88,D0
+       beq       vsprintf_28
+       bra       vsprintf_22
+vsprintf_39:
+       cmp.l     #101,D0
+       beq       vsprintf_32
+       bgt       vsprintf_22
+       cmp.l     #100,D0
+       beq       vsprintf_24
+       bra       vsprintf_22
+vsprintf_38:
+       cmp.l     #115,D0
+       beq       vsprintf_31
+       bgt.s     vsprintf_41
+       cmp.l     #105,D0
+       beq.s     vsprintf_24
+       bgt.s     vsprintf_42
+       cmp.l     #103,D0
+       beq       vsprintf_32
+       bra       vsprintf_22
+vsprintf_42:
+       cmp.l     #111,D0
+       beq       vsprintf_27
+       bra       vsprintf_22
+vsprintf_41:
+       cmp.l     #120,D0
+       beq       vsprintf_28
+       bgt       vsprintf_22
+       cmp.l     #117,D0
+       beq       vsprintf_26
+       bra       vsprintf_22
+vsprintf_24:
+       tst.b     -45(A6)
+       beq.s     vsprintf_43
+       pea       10
+       move.l    D2,-(A7)
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),-(A7)
+       bsr       _ltoa
+       add.w     #12,A7
+       bra.s     vsprintf_44
+vsprintf_43:
+       pea       10
+       move.l    D2,-(A7)
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),-(A7)
+       bsr       _ltoa
+       add.w     #12,A7
+vsprintf_44:
+       bra       vsprintf_23
+vsprintf_26:
+       tst.b     -45(A6)
+       beq.s     vsprintf_45
+       pea       10
+       move.l    D2,-(A7)
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),-(A7)
+       jsr       (A4)
+       add.w     #12,A7
+       bra.s     vsprintf_46
+vsprintf_45:
+       pea       10
+       move.l    D2,-(A7)
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),-(A7)
+       jsr       (A4)
+       add.w     #12,A7
+vsprintf_46:
+       bra       vsprintf_23
+vsprintf_27:
+       tst.b     -45(A6)
+       beq.s     vsprintf_47
+       pea       8
+       move.l    D2,-(A7)
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),-(A7)
+       jsr       (A4)
+       add.w     #12,A7
+       bra.s     vsprintf_48
+vsprintf_47:
+       pea       8
+       move.l    D2,-(A7)
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),-(A7)
+       jsr       (A4)
+       add.w     #12,A7
+vsprintf_48:
+       bra       vsprintf_23
+vsprintf_28:
+       tst.b     -45(A6)
+       beq.s     vsprintf_49
+       pea       16
+       move.l    D2,-(A7)
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),-(A7)
+       jsr       (A4)
+       add.w     #12,A7
+       bra.s     vsprintf_50
+vsprintf_49:
+       pea       16
+       move.l    D2,-(A7)
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),-(A7)
+       jsr       (A4)
+       add.w     #12,A7
+vsprintf_50:
+       bra       vsprintf_23
+vsprintf_30:
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),D0
+       move.l    D3,A0
+       addq.l    #1,D3
+       move.b    D0,(A0)
+       move.l    D3,A0
+       clr.b     (A0)
+       move.l    A5,D0
+       beq.s     vsprintf_51
+       move.l    A5,D0
+       bra.s     vsprintf_52
+vsprintf_51:
+       moveq     #1,D0
+vsprintf_52:
+       move.l    D0,D4
+       bra       vsprintf_23
+vsprintf_31:
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),D2
+       cmp.l     #-1,D4
+       bne.s     vsprintf_53
+       move.l    D2,-(A7)
+       bsr       _strlen
+       addq.w    #4,A7
+       move.l    D0,D4
+vsprintf_53:
+       bra       vsprintf_23
+vsprintf_32:
+       tst.b     -45(A6)
+       beq       vsprintf_55
+       move.l    12(A6),A0
+       move.b    (A0),D1
+       ext.w     D1
+       ext.l     D1
+       move.l    D1,-(A7)
+       move.b    -48(A6),D1
+       ext.w     D1
+       ext.l     D1
+       move.l    D1,-(A7)
+       move.l    D4,-(A7)
+       move.l    16(A6),A0
+       addq.l    #8,16(A6)
+       fmove.d   (A0),FP0
+       fmove.d   FP0,-(A7)
+       move.l    D2,-(A7)
+       bsr       @vsprintf_fconv
+       add.w     #24,A7
+       bra       vsprintf_56
+vsprintf_55:
+       move.l    12(A6),A0
+       move.b    (A0),D1
+       ext.w     D1
+       ext.l     D1
+       move.l    D1,-(A7)
+       move.b    -48(A6),D1
+       ext.w     D1
+       ext.l     D1
+       move.l    D1,-(A7)
+       move.l    D4,-(A7)
+       move.l    16(A6),A0
+       addq.l    #6,16(A6)
+       fmove.s   (A0),FP0
+       fmove.d   FP0,-(A7)
+       move.l    D2,-(A7)
+       bsr       @vsprintf_fconv
+       add.w     #24,A7
+vsprintf_56:
+       cmp.l     #-1,D4
+       bne.s     vsprintf_57
+       moveq     #6,D4
+vsprintf_57:
+       bra.s     vsprintf_23
+vsprintf_22:
+       move.l    12(A6),A0
+       move.l    D3,A1
+       addq.l    #1,D3
+       move.b    (A0),(A1)
+       move.l    D3,A0
+       clr.b     (A0)
+vsprintf_23:
+       move.l    D2,-(A7)
+       bsr       _strlen
+       addq.w    #4,A7
+       move.b    D0,D5
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #115,D0
+       bne.s     vsprintf_59
+       cmp.l     #0,D4
+       blt.s     vsprintf_59
+       ext.w     D5
+       ext.l     D5
+       cmp.l     D4,D5
+       ble.s     vsprintf_61
+       move.b    D4,D0
+       bra.s     vsprintf_62
+vsprintf_61:
+       move.b    D5,D0
+vsprintf_62:
+       move.b    D0,D5
+vsprintf_59:
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #88,D0
+       bne       vsprintf_67
+       lea       -36(A6),A0
+       move.l    A0,D3
+vsprintf_65:
+       move.l    D3,A0
+       tst.b     (A0)
+       beq.s     vsprintf_67
+       move.l    D3,A0
+       move.b    (A0),D1
+       ext.w     D1
+       ext.l     D1
+       move.l    D1,-(A7)
+       bsr       _toupper
+       addq.w    #4,A7
+       move.l    D3,A0
+       move.b    D0,(A0)
+       addq.l    #1,D3
+       bra       vsprintf_65
+vsprintf_67:
+       clr.l     D7
+       lea       -44(A6),A0
+       move.l    A0,D3
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #100,D0
+       beq       vsprintf_70
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #105,D0
+       beq       vsprintf_70
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #102,D0
+       beq       vsprintf_70
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #101,D0
+       beq       vsprintf_70
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #103,D0
+       beq.s     vsprintf_70
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #69,D0
+       beq.s     vsprintf_70
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #71,D0
+       bne       vsprintf_76
+vsprintf_70:
+       tst.b     -50(A6)
+       bne.s     vsprintf_73
+       move.l    D2,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #45,D0
+       bne       vsprintf_71
+vsprintf_73:
+       move.l    D2,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #45,D0
+       bne.s     vsprintf_74
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.l    D3,A1
+       addq.l    #1,D3
+       move.b    (A0),(A1)
+       subq.b    #1,D5
+       bra.s     vsprintf_75
+vsprintf_74:
+       move.l    D3,A0
+       addq.l    #1,D3
+       move.b    #43,(A0)
+vsprintf_75:
+       addq.l    #1,D7
+       bra       vsprintf_76
+vsprintf_71:
+       tst.b     -49(A6)
+       beq       vsprintf_76
+       move.l    D2,A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #45,D0
+       bne.s     vsprintf_78
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.l    D3,A1
+       addq.l    #1,D3
+       move.b    (A0),(A1)
+       subq.b    #1,D5
+       bra.s     vsprintf_79
+vsprintf_78:
+       move.l    D3,A0
+       addq.l    #1,D3
+       move.b    #32,(A0)
+vsprintf_79:
+       addq.l    #1,D7
+vsprintf_76:
+       tst.b     -48(A6)
+       beq       vsprintf_88
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #111,D0
+       beq.s     vsprintf_84
+       bgt.s     vsprintf_87
+       cmp.l     #88,D0
+       beq.s     vsprintf_84
+       bra       vsprintf_88
+vsprintf_87:
+       cmp.l     #120,D0
+       beq.s     vsprintf_84
+       bra       vsprintf_88
+vsprintf_84:
+       move.l    D3,A0
+       addq.l    #1,D3
+       move.b    #48,(A0)
+       addq.l    #1,D7
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #120,D0
+       beq.s     vsprintf_90
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #88,D0
+       bne.s     vsprintf_88
+vsprintf_90:
+       move.l    D3,A0
+       addq.l    #1,D3
+       move.b    #120,(A0)
+       addq.l    #1,D7
+vsprintf_88:
+       move.l    D3,A0
+       clr.b     (A0)
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #102,D0
+       beq       vsprintf_93
+       bgt       vsprintf_107
+       cmp.l     #99,D0
+       beq       vsprintf_112
+       bgt.s     vsprintf_108
+       cmp.l     #71,D0
+       beq       vsprintf_93
+       bgt.s     vsprintf_109
+       cmp.l     #69,D0
+       beq       vsprintf_93
+       bra       vsprintf_91
+vsprintf_109:
+       cmp.l     #88,D0
+       beq       vsprintf_93
+       bra       vsprintf_91
+vsprintf_108:
+       cmp.l     #101,D0
+       beq       vsprintf_93
+       bgt       vsprintf_91
+       cmp.l     #100,D0
+       beq       vsprintf_93
+       bra       vsprintf_91
+vsprintf_107:
+       cmp.l     #115,D0
+       beq       vsprintf_112
+       bgt.s     vsprintf_110
+       cmp.l     #105,D0
+       beq.s     vsprintf_93
+       bgt.s     vsprintf_111
+       cmp.l     #103,D0
+       beq.s     vsprintf_93
+       bra       vsprintf_91
+vsprintf_111:
+       cmp.l     #111,D0
+       beq.s     vsprintf_93
+       bra       vsprintf_91
+vsprintf_110:
+       cmp.l     #120,D0
+       beq.s     vsprintf_93
+       bgt       vsprintf_91
+       cmp.l     #117,D0
+       beq.s     vsprintf_93
+       bra       vsprintf_91
+vsprintf_93:
+       tst.b     -46(A6)
+       beq.s     vsprintf_112
+       tst.b     -51(A6)
+       bne.s     vsprintf_112
+       move.l    A5,D0
+       sub.l     D7,D0
+       ext.w     D5
+       ext.l     D5
+       sub.l     D5,D0
+       move.l    D0,-4(A6)
+vsprintf_112:
+       move.l    -4(A6),D0
+       cmp.l     #0,D0
+       bge.s     vsprintf_114
+       clr.l     -4(A6)
+vsprintf_114:
+       tst.b     -51(A6)
+       bne       vsprintf_120
+       ext.w     D5
+       ext.l     D5
+       move.l    D5,D0
+       add.l     -4(A6),D0
+       add.l     D7,D0
+       move.b    D0,-47(A6)
+vsprintf_118:
+       move.b    -47(A6),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    A5,D1
+       subq.w    #1,A5
+       cmp.l     D1,D0
+       bge.s     vsprintf_120
+       pea       32
+       move.l    A2,-(A7)
+       jsr       (A3)
+       addq.w    #8,A7
+       addq.l    #1,D6
+       bra       vsprintf_118
+vsprintf_120:
+       lea       -44(A6),A0
+       move.l    A0,D3
+vsprintf_121:
+       move.l    D3,A0
+       tst.b     (A0)
+       beq.s     vsprintf_123
+       move.l    D3,A0
+       addq.l    #1,D3
+       move.b    (A0),D1
+       ext.w     D1
+       ext.l     D1
+       move.l    D1,-(A7)
+       move.l    A2,-(A7)
+       jsr       (A3)
+       addq.w    #8,A7
+       addq.l    #1,D6
+       bra       vsprintf_121
+vsprintf_123:
+       move.l    -4(A6),D0
+       move.b    D0,-47(A6)
+vsprintf_124:
+       move.b    -47(A6),D0
+       subq.b    #1,-47(A6)
+       tst.b     D0
+       beq.s     vsprintf_126
+       pea       48
+       move.l    A2,-(A7)
+       jsr       (A3)
+       addq.w    #8,A7
+       addq.l    #1,D6
+       bra       vsprintf_124
+vsprintf_126:
+       move.l    D2,A0
+       tst.b     (A0)
+       beq       vsprintf_129
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #115,D0
+       beq.s     vsprintf_132
+       bgt.s     vsprintf_135
+       cmp.l     #99,D0
+       beq.s     vsprintf_132
+       bra.s     vsprintf_135
+vsprintf_132:
+       move.l    D4,D0
+       subq.l    #1,D4
+       cmp.l     #0,D0
+       bgt.s     vsprintf_135
+       bra.s     vsprintf_131
+vsprintf_135:
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.b    (A0),D1
+       ext.w     D1
+       ext.l     D1
+       move.l    D1,-(A7)
+       move.l    A2,-(A7)
+       jsr       (A3)
+       addq.w    #8,A7
+       addq.l    #1,D6
+       bra.s     vsprintf_128
+vsprintf_131:
+       bra.s     vsprintf_129
+vsprintf_128:
+       bra       vsprintf_126
+vsprintf_129:
+       tst.b     -51(A6)
+       beq       vsprintf_141
+       ext.w     D5
+       ext.l     D5
+       move.l    D5,D0
+       add.l     -4(A6),D0
+       add.l     D7,D0
+       move.b    D0,-47(A6)
+vsprintf_139:
+       move.b    -47(A6),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    A5,D1
+       subq.w    #1,A5
+       cmp.l     D1,D0
+       bge.s     vsprintf_141
+       pea       32
+       move.l    A2,-(A7)
+       jsr       (A3)
+       addq.w    #8,A7
+       subq.l    #1,D6
+       bra       vsprintf_139
+vsprintf_141:
+       bra.s     vsprintf_92
+vsprintf_91:
+       move.l    12(A6),A0
+       move.b    (A0),D1
+       ext.w     D1
+       ext.l     D1
+       move.l    D1,-(A7)
+       move.l    A2,-(A7)
+       jsr       (A3)
+       addq.w    #8,A7
+       addq.l    #1,D6
+vsprintf_92:
+       addq.l    #1,12(A6)
+vsprintf_2:
+       bra       vsprintf_1
+vsprintf_3:
+       tst.l     (A2)
+       beq.s     vsprintf_142
+       clr.b     D1
+       andi.l    #255,D1
+       move.l    D1,-(A7)
+       move.l    A2,-(A7)
+       jsr       (A3)
+       addq.w    #8,A7
+vsprintf_142:
+       move.l    D6,D0
+       movem.l   (A7)+,D2/D3/D4/D5/D6/D7/A2/A3/A4/A5
+       unlk      A6
+       rts
+ULDIV:
+       link    A6,#0
+       movem.l D0/D1,-(A7)
+       move.l  8(A6),D1
+       move.l  12(A6),D0
+       bra.s   ldiv_3
+LDIV:
+       link    A6,#0
+       movem.l D0/D1,-(A7)
+       move.l  8(A6),D1
+       move.l  12(A6),D0
+       tst.l   D0
+       bpl.s   ldiv_1
+       neg.l   D0
+       tst.l   D1
+       bpl.s   ldiv_2
+       neg.l   D1
+       bsr.s   dodiv
+       neg.l   D1
+       bra.s   ldiv_4
+ldiv_1:
+       tst.l   D1
+       bpl.s   ldiv_3
+       neg.l   D1
+       bsr.s   dodiv
+       neg.l   D0
+       bra.s   ldiv_4
+ldiv_2:
+       bsr.s   dodiv
+       neg.l   D0
+       neg.l   D1
+       bra.s   ldiv_4
+ldiv_3:
+       bsr.s   dodiv
+ldiv_4:
+       move.l  D0,8(A6)
+       move.l  D1,12(A6)
+       movem.l (A7)+,D0/D1
+       unlk    A6
+       rts
+dodiv:
+       cmpi.l  #$FFFF,D1
+       bhi.s   dodiv_2
+       cmpi.l  #$FFFF,D0
+       bhi.s   dodiv_1
+       divu    D1,D0
+       move.l  D0,D1
+       clr.w   D1
+       swap    D1
+       andi.l  #$FFFF,D0
+       rts
+dodiv_1:
+       movem.w D0/D2,-(A7)
+       clr.w   D0
+       swap    D0
+       divu    D1,D0
+       move.w  D0,D2
+       move.w  (A7)+,D0
+       divu    D1,D0
+       swap    D0
+       clr.l   D1
+       move.w  D0,D1
+       move.w  D2,D0
+       swap    D0
+       move.w  (A7)+,D2
+       rts
+dodiv_2:
+       movem.l D2/D3/D4,-(A7)
+       move.l  D1,D2
+       clr.w   D2
+       swap    D2
+       addq.l  #1,D2
+       move.l  D0,D3
+       move.l  D1,D4
+       move.l  D2,D1
+       bsr.s   dodiv_1
+       move.l  D4,D1
+       divu    D2,D1
+       divu    D1,D0
+       andi.l  #$FFFF,D0
+dodiv_3:
+       move.l  D4,D1
+       move.l  D4,D2
+       swap    D2
+       mulu    D0,D1
+       mulu    D0,D2
+       swap    D2
+       add.l   D2,D1
+       sub.l   D3,D1
+       bhi.s   dodiv_4
+       neg.l   D1
+       cmp.l   D1,D4
+       bhi.s   dodiv_5
+       addq.l  #1,D0
+       bra.s   dodiv_3
+dodiv_4:
+       subq.l  #1,D0
+       bra.s   dodiv_3
+dodiv_5:
+       movem.l (A7)+,D2/D3/D4
+       rts
+_pack:
+       move.l    4(A7),A0
+       fmove.p   (A0),FP0
+       rts
+_putch:
+       link      A6,#0
+       movem.l   D2,-(A7)
+       move.l    8(A6),D2
+       cmp.l     #10,D2
+       bne.s     putch_1
+       pea       13
+       bsr       __putch
+       addq.w    #4,A7
+putch_1:
+       move.l    D2,-(A7)
+       bsr       __putch
+       addq.w    #4,A7
+       move.l    D2,D0
+       movem.l   (A7)+,D2
+       unlk      A6
+       rts
+_getch:
+       movem.l   D2,-(A7)
+       move.l    __ungetbuf,D2
+       move.l    __ungetbuf,D0
+       cmp.l     #-1,D0
+       beq.s     getch_1
+       move.l    #-1,__ungetbuf
+       bra.s     getch_3
+getch_1:
+       bsr       __getch
+       move.l    D0,D2
+       cmp.l     #13,D0
+       bne.s     getch_3
+       moveq     #10,D2
+getch_3:
+       move.l    D2,D0
+       movem.l   (A7)+,D2
+       rts
+@itoa_convert:
+       link      A6,#0
+       movem.l   D2/D3/D4/D5,-(A7)
+       move.l    8(A6),D2
+       move.l    16(A6),D3
+       move.l    12(A6),D5
+       move.l    D5,-(A7)
+       move.l    D3,-(A7)
+       bsr       ULDIV
+       move.l    4(A7),D0
+       addq.w    #8,A7
+       move.l    D0,D4
+       cmp.l     D3,D5
+       blo.s     @itoa_convert_1
+       move.l    D3,-(A7)
+       move.l    D5,-(A7)
+       move.l    D3,-(A7)
+       bsr       ULDIV
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    D1,-(A7)
+       move.l    D2,-(A7)
+       bsr       @itoa_convert
+       add.w     #12,A7
+       move.l    D0,D2
+@itoa_convert_1:
+       cmp.l     #9,D4
+       bgt.s     @itoa_convert_3
+       move.l    D4,D0
+       add.l     #48,D0
+       bra.s     @itoa_convert_4
+@itoa_convert_3:
+       move.l    D4,D0
+       add.l     #97,D0
+       sub.l     #10,D0
+@itoa_convert_4:
+       move.l    D2,A0
+       move.b    D0,(A0)
+       move.l    D2,D0
+       addq.l    #1,D0
+       movem.l   (A7)+,D2/D3/D4/D5
+       unlk      A6
+       rts
+_ltoa:
+       link      A6,#0
+       movem.l   D2/D3/D4/D5,-(A7)
+       move.l    8(A6),D2
+       move.l    12(A6),D3
+       move.l    16(A6),D5
+       move.l    D3,D4
+       cmp.l     #2,D5
+       blt.s     ltoa_3
+       cmp.l     #36,D5
+       ble.s     ltoa_1
+ltoa_3:
+       move.l    D3,D0
+       bra       ltoa_4
+ltoa_1:
+       cmp.l     #10,D5
+       bne       ltoa_5
+       cmp.l     #0,D2
+       bge.s     ltoa_5
+       move.l    D2,D0
+       neg.l     D0
+       move.l    D0,D2
+       cmp.l     #0,D2
+       bge.s     ltoa_7
+       pea       @itoa_1
+       move.l    D3,-(A7)
+       bsr       _strcpy
+       addq.w    #8,A7
+       move.l    D3,D0
+       bra.s     ltoa_4
+ltoa_7:
+       move.l    D4,A0
+       addq.l    #1,D4
+       move.b    #45,(A0)
+ltoa_5:
+       move.l    D5,-(A7)
+       move.l    D2,-(A7)
+       move.l    D4,-(A7)
+       bsr       @itoa_convert
+       add.w     #12,A7
+       move.l    D0,D4
+       move.l    D4,A0
+       clr.b     (A0)
+       move.l    D3,D0
+ltoa_4:
+       movem.l   (A7)+,D2/D3/D4/D5
+       unlk      A6
+       rts
+_ultoa:
+       link      A6,#0
+       movem.l   D2/D3/D4,-(A7)
+       move.l    16(A6),D3
+       move.l    12(A6),D4
+       move.l    D4,D2
+       cmp.l     #2,D3
+       blt.s     ultoa_3
+       cmp.l     #36,D3
+       ble.s     ultoa_1
+ultoa_3:
+       move.l    D4,D0
+       bra.s     ultoa_4
+ultoa_1:
+       move.l    D3,-(A7)
+       move.l    8(A6),-(A7)
+       move.l    D2,-(A7)
+       bsr       @itoa_convert
+       add.w     #12,A7
+       move.l    D0,D2
+       move.l    D2,A0
+       clr.b     (A0)
+       move.l    D4,D0
+ultoa_4:
+       movem.l   (A7)+,D2/D3/D4
+       unlk      A6
+       rts
+_itoa:
+       link      A6,#0
+       move.l    16(A6),-(A7)
+       move.l    12(A6),-(A7)
+       move.l    8(A6),-(A7)
+       bsr       _ltoa
+       add.w     #12,A7
+       unlk      A6
+       rts
+_ftoa:
+       link      A6,#-12
+       move.l    16(A6),A0
+       lea       -12(A6),A1
+       fmove.d   8(A6),FP0
+       fmove.p   FP0,(A1){#17}
+       move.w    (A1),D0
+       bmi.s     ftoa_1
+       moveq     #0,D1
+       bra.s     ftoa_2
+ftoa_1:
+       move.b    #'-',(A0)+
+       moveq     #1,D1
+ftoa_2:
+       and.w     #$7FFF,D0
+       cmp.w     #$7FFF,D0
+       bne.s     ftoa_7
+       move.l    -8(A6),D0
+       or.l      -4(A6),D0
+       beq.s     ftoa_8
+       tst.l     D1
+       bne.s     ftoa_9
+       move.b    #'+',(A0)+
+ftoa_9:
+       move.b    #'N',(A0)+
+       move.b    #'A',(A0)+
+       move.b    #'N',(A0)+
+       clr.b     (A0)
+       move.w    #1000,D0
+       bra       ftoa_6
+ftoa_8:
+       tst.l     D1
+       bne.s     ftoa_10
+       move.b    #'+',(A0)+
+ftoa_10:
+       move.b    #'I',(A0)+
+       move.b    #'N',(A0)+
+       move.b    #'F',(A0)+
+       clr.b     (A0)
+       move.w    #1000,D0
+       bra       ftoa_6
+ftoa_7:
+       lea       -9(A6),A1
+       move.b    (A1)+,D0
+       and.b     #$0F,D0
+       or.b      #$30,D0
+       move.b    D0,(A0)+
+       move.b    #'.',(A0)+
+       moveq     #7,D1
+ftoa_3:
+       move.b    (A1),D0
+       lsr.b     #4,D0
+       or.b      #$30,D0
+       move.b    D0,(A0)+
+       move.b    (A1)+,D0
+       and.b     #$0F,D0
+       or.b      #$30,D0
+       move.b    D0,(A0)+
+       dbf       D1,ftoa_3
+       move.b    #'E',(A0)+
+       lea       -12(A6),A1
+       move.b    (A1),D0
+       and.b     #$40,D0
+       bne.s     ftoa_4
+       move.b    #'+',(A0)+
+       clr.l     D0
+       bra.s     ftoa_5
+ftoa_4:
+       move.b    #'-',(A0)+
+       move.l    #$80000000,D0
+ftoa_5:
+       move.b    (A1)+,D0
+       and.w     #$0F,D0
+       move.w    D0,D1
+       beq.s     ftoa_11
+       or.b      #$30,D0
+       move.b    D0,(A0)+
+ftoa_11:
+       move.b    (A1),D0
+       lsr.b     #4,D0
+       muls      #10,D1
+       add.w     D0,D1
+       or.b      #$30,D0
+       move.b    D0,(A0)+
+       move.b    (A1)+,D0
+       and.b     #$0F,D0
+       muls      #10,D1
+       add.w     D0,D1
+       or.b      #$30,D0
+       move.b    D0,(A0)+
+       clr.b     (A0)
+       move.w    D1,D0
+       tst.l     D0
+       bpl.s     ftoa_6
+       neg.w     D0
+ftoa_6
+       ext.l     D0
+       unlk      A6
+       rts
+_strlen:
+       move.l    (4,A7),A0
+       move.l    A0,A1
+strlen_1:
+       tst.b     (A1)+
+       bne       strlen_1
+       move.l    A1,D0
+       sub.l     A0,D0
+       subq.l    #1,D0
+       rts
+_strchr:
+       move.l    (4,A7),A0
+       move.l    (8,A7),D0
+strchr_0:
+       tst.b     (A0)
+       beq.s     strchr_1
+       cmp.b     (A0)+,D0
+       bne       strchr_0
+       move.l    A0,D0
+       subq.l    #1,D0
+       rts
+strchr_1:
+       clr.l     D0
+       rts
+_strcpy:
+       move.l    (4,A7),A0
+       move.l    (8,A7),A1
+       move.l    A0,D0
+strcpy_1:
+       move.b    (A1)+,(A0)+
+       bne       strcpy_1
+       rts
+       section   const
+                align
+
+
+@speedt~1_1:
+       dc.b      10,10,83,116,97,114,116,46,46,46,46,46,0
+@speedt~1_2:
+       dc.b      37,100,32,0
+@speedt~1_3:
+       dc.b      10,10,68,111,110,101,46,46,46,46,46,0
+@speedt~1_4:
+       dc.b      13,10,72,101,108,108,111,32,67,80,69,78,32,52
+       dc.b      49,50,32,84,65,13,10,87,101,108,99,111,109,101
+       dc.b      32,116,111,32,76,97,98,51,33,33,33,13,10,0
+       section   data
+                align
+
+*********************************************************************************************************************************************************
+* Section for Initialised Data (in theory should be copied to Ram at startup) but is part of program code as we copy whole program to ram at startup
+********************************************************************************************************************************************************
+
+DataStart       equ       *
+__ungetbuf:     ds.l      1                    ungetbuffer for stdio functions
+__allocp:       ds.l      1                    start of free memory block list
+__heap:         ds.l      1                    begin of free memory
+
+
+@vsscanf_bufx:
+       dc.l      @vsscanf_buf
+@vsscanf_1:
+       dc.b      10,0
+strtod_nan:
+       dc.b      79,255,0,15,255,255,255,255,255,255,255,255
+strtod_inf:
+       dc.b      79,255,0,0,0,0,0,0,0,0,0,0
+__ctype:
+       dc.b      0,64,64,64,64,64,64,64,64,64,80,80,80,80,80
+       dc.b      64,64,64,64,64,64,64,64,64,64,64,64,64,64,64
+       dc.b      64,64,64,208,160,160,160,160,160,160,160,160
+       dc.b      160,160,160,160,160,160,160,140,140,140,140
+       dc.b      140,140,140,140,140,140,160,160,160,160,160
+       dc.b      160,160,138,138,138,138,138,138,130,130,130
+       dc.b      130,130,130,130,130,130,130,130,130,130,130
+       dc.b      130,130,130,130,130,130,160,160,160,160,160
+       dc.b      160,137,137,137,137,137,137,129,129,129,129
+       dc.b      129,129,129,129,129,129,129,129,129,129,129
+       dc.b      129,129,129,129,129,160,160,160,160,64,0,0,0
+       dc.b      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+       dc.b      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+       dc.b      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+       dc.b      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+       dc.b      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+       dc.b      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+@vsprintf_1:
+       dc.b      46,0
+@itoa_1:
+       dc.b      45,50,49,52,55,52,56,51,54,52,56,0
+       section   bss
+                align
+
+DataEnd         equ       *                    this label will equate to the address of the last byte of global variable in it
+DataLength      equ       DataEnd-DataStart    length of data needed to copy to Ram on bootup
+
+*********************************************************************************************************
+* Section for uninitialised Data which is set to zero, i.e. we should set this space to zero at starup
+*********************************************************************************************************
+BssStart       equ       *
+
+_a:
+       ds.b      40000
+_b:
+       ds.b      40000
+_c:
+       ds.b      40000
+_i:
+       ds.b      4
+_j:
+       ds.b      4
+_k:
+       ds.b      4
+_sum:
+       ds.b      4
+@vsscanf_buf:
+       ds.b      80
+       section   heap
+               align
+
+BssEnd         equ       *
+BssLength      equ       BssEnd-BssStart       length of zeroed data needed to copy to Ram on bootup
+
+*********************************************************************************************************
+* Section for Heap
+*********************************************************************************************************
+
+heap           equ       *
+               align

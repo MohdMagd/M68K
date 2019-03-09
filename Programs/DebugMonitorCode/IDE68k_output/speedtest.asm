@@ -1,0 +1,1138 @@
+; C:\M68K\PROGRAMS\DEBUGMONITORCODE\SPEED TEST\SPEEDTEST.C - Compiled by CC68K  Version 5.00 (c) 1991-2005  Peter J. Fondse
+; #include <stdio.h>
+; // #include <ctype.h>
+; /*********************************************************************************************
+; **  RS232 port addresses
+; *********************************************************************************************/
+; #define RS232_Control     *(volatile unsigned char *)(0x00400040)
+; #define RS232_Status      *(volatile unsigned char *)(0x00400040)
+; #define RS232_TxData      *(volatile unsigned char *)(0x00400042)
+; #define RS232_RxData      *(volatile unsigned char *)(0x00400042)
+; #define RS232_Baud        *(volatile unsigned char *)(0x00400044)
+; /*************************************************************
+; ** SPI Controller registers
+; **************************************************************/
+; // SPI Registers
+; #define SPI_Control         (*(volatile unsigned char *)(0x00408020))
+; #define SPI_Status          (*(volatile unsigned char *)(0x00408022))
+; #define SPI_Data            (*(volatile unsigned char *)(0x00408024))
+; #define SPI_Ext             (*(volatile unsigned char *)(0x00408026))
+; #define SPI_CS              (*(volatile unsigned char *)(0x00408028))
+; // these two macros enable or disable the flash memory chip enable off SSN_O[7..0]
+; // in this case we assume there is only 1 device connected to SSN_O[0] so we can
+; // write hex FE to the SPI_CS to enable it (the enable on the flash chip is active low)
+; // and write FF to disable it
+; #define   Enable_SPI_CS()             SPI_CS = 0xFE
+; #define   Disable_SPI_CS()            SPI_CS = 0xFF
+; /*******************************************************************************************
+; ** Function Prototypes
+; *******************************************************************************************/
+; int _getch( void )
+; {
+       section   code
+       xdef      __getch
+__getch:
+       link      A6,#-4
+; char c ;
+; while((RS232_Status & (char)(0x01)) != (char)(0x01))    // wait for Rx bit in 6850 serial comms chip status register to be '1'
+_getch_1:
+       move.b    4194368,D0
+       and.b     #1,D0
+       cmp.b     #1,D0
+       beq.s     _getch_3
+       bra       _getch_1
+_getch_3:
+; ;
+; return (RS232_RxData & (char)(0x7f));                   // read received character, mask off top bit and return as 7 bit ASCII character
+       move.b    4194370,D0
+       and.l     #255,D0
+       and.l     #127,D0
+       unlk      A6
+       rts
+; }
+; int _putch( int c)
+; {
+       xdef      __putch
+__putch:
+       link      A6,#0
+; while((RS232_Status & (char)(0x02)) != (char)(0x02))    // wait for Tx bit in status register or 6850 serial comms chip to be '1'
+_putch_1:
+       move.b    4194368,D0
+       and.b     #2,D0
+       cmp.b     #2,D0
+       beq.s     _putch_3
+       bra       _putch_1
+_putch_3:
+; ;
+; RS232_TxData = (c & (char)(0x7f));                      // write to the data register to output the character (mask off bit 8 to keep it 7 bit ASCII)
+       move.l    8(A6),D0
+       and.l     #127,D0
+       move.b    D0,4194370
+; return c ;                                              // putchar() expects the character to be returned
+       move.l    8(A6),D0
+       unlk      A6
+       rts
+; }
+; int a[100][100], b[100][100], c[100][100];
+; int i, j, k, sum;
+; void SpeedTest(void){
+       xdef      _SpeedTest
+_SpeedTest:
+       movem.l   A2/A3/A4/A5,-(A7)
+       lea       _i.L,A2
+       lea       _k.L,A3
+       lea       _j.L,A4
+       lea       _sum.L,A5
+; printf("\n\nStart.....");
+       pea       @speedt~1_1.L
+       jsr       _printf
+       addq.w    #4,A7
+; for(i=0; i <50; i ++)  {
+       clr.l     (A2)
+SpeedTest_1:
+       move.l    (A2),D0
+       cmp.l     #50,D0
+       bge       SpeedTest_3
+; printf("%d ", i);
+       move.l    (A2),-(A7)
+       pea       @speedt~1_2.L
+       jsr       _printf
+       addq.w    #8,A7
+; for(j=0; j < 50; j++)  {
+       clr.l     (A4)
+SpeedTest_4:
+       move.l    (A4),D0
+       cmp.l     #50,D0
+       bge       SpeedTest_6
+; sum = 0 ;
+       clr.l     (A5)
+; for(k=0; k <50; k++)   {
+       clr.l     (A3)
+SpeedTest_7:
+       move.l    (A3),D0
+       cmp.l     #50,D0
+       bge       SpeedTest_9
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+; sum = sum + b[i][k] * b[k][j] + a[i][k] * c[i][j];
+       move.l    (A5),D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _b.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A3),D0
+       muls      #400,D0
+       lea       _b.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    (A2),D1
+       muls      #400,D1
+       lea       _a.L,A0
+       add.l     D1,A0
+       move.l    (A3),D1
+       lsl.l     #2,D1
+       move.l    D0,-(A7)
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A1
+       add.l     D0,A1
+       move.l    (A7)+,D0
+       move.l    D0,-(A7)
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    0(A0,D1.L),-(A7)
+       move.l    0(A1,D0.L),-(A7)
+       jsr       LMUL
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    (A7)+,D0
+       add.l     D1,D0
+       move.l    D0,(A5)
+       addq.l    #1,(A3)
+       bra       SpeedTest_7
+SpeedTest_9:
+; }
+; c[i][j] = sum ;
+       move.l    (A2),D0
+       muls      #400,D0
+       lea       _c.L,A0
+       add.l     D0,A0
+       move.l    (A4),D0
+       lsl.l     #2,D0
+       move.l    (A5),0(A0,D0.L)
+       addq.l    #1,(A4)
+       bra       SpeedTest_4
+SpeedTest_6:
+       addq.l    #1,(A2)
+       bra       SpeedTest_1
+SpeedTest_3:
+; }
+; }
+; printf("\n\nDone.....");
+       pea       @speedt~1_3.L
+       jsr       _printf
+       addq.w    #4,A7
+       movem.l   (A7)+,A2/A3/A4/A5
+       rts
+; }
+; /******************************************************************************************************************************
+; * Start of user program
+; ******************************************************************************************************************************/
+; void main()
+; {
+       xdef      _main
+_main:
+; scanflush() ;                       // flush any text that may have been typed ahead
+       jsr       _scanflush
+; printf("\r\nHello CPEN 412 TA\r\nWelcome to Lab3!!!\r\n");
+       pea       @speedt~1_4.L
+       jsr       _printf
+       addq.w    #4,A7
+; SpeedTest();
+       jsr       _SpeedTest
+; while(1);
+main_1:
+       bra       main_1
+; // programs should NOT exit as there is nothing to Exit TO !!!!!!
+; // There is no OS - just press the reset button to end program and call debug
+; }
+       section   const
+@speedt~1_1:
+       dc.b      10,10,83,116,97,114,116,46,46,46,46,46,0
+@speedt~1_2:
+       dc.b      37,100,32,0
+@speedt~1_3:
+       dc.b      10,10,68,111,110,101,46,46,46,46,46,0
+@speedt~1_4:
+       dc.b      13,10,72,101,108,108,111,32,67,80,69,78,32,52
+       dc.b      49,50,32,84,65,13,10,87,101,108,99,111,109,101
+       dc.b      32,116,111,32,76,97,98,51,33,33,33,13,10,0
+       section   bss
+       xdef      _a
+_a:
+       ds.b      40000
+       xdef      _b
+_b:
+       ds.b      40000
+       xdef      _c
+_c:
+       ds.b      40000
+       xdef      _i
+_i:
+       ds.b      4
+       xdef      _j
+_j:
+       ds.b      4
+       xdef      _k
+_k:
+       ds.b      4
+       xdef      _sum
+_sum:
+       ds.b      4
+       xref      LMUL
+       xref      _scanflush
+       xref      _printf
