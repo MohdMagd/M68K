@@ -120,7 +120,7 @@ module M68kCacheController(
 		AddressBusOutToDramController[3:1]  <= 0;						// all reads to Dram have lower 3 address lines set to 0 for a Cache line regardless of 68k address
 		AddressBusOutToDramController[0] 	<= 0;						// to avoid inferring a latch for this bit
 		
-		TagDataOut					<= AddressBusInFrom68k[31:9];
+		TagDataOut				<= AddressBusInFrom68k[31:9];
 		Index						<= AddressBusInFrom68k[8:4];		// cache index is 68ks address bits [8:4]
 		
 		UDS_DramController_L		<= UDS_L;

@@ -266,7 +266,7 @@
 		phase_shift16 => "0 ps",
 		phase_shift17 => "0 ps",
 		phase_shift2 => "0 ps",
-		phase_shift3 => "7099 ps",
+		phase_shift3 => "7716 ps",
 		phase_shift4 => "0 ps",
 		phase_shift5 => "0 ps",
 		phase_shift6 => "0 ps",

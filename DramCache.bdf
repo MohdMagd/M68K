@@ -585,7 +585,7 @@ agreement for further details.
 	)
 )
 (symbol
-	(rect 1264 824 1472 984)
+	(rect 1256 824 1464 984)
 	(text "CacheDataMemory" (rect 5 0 112 14)(font "Arial" (font_size 8)))
 	(text "inst4" (rect 8 144 31 156)(font "Arial" ))
 	(port
@@ -1237,11 +1237,6 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(pt 1264 888)
-	(pt 1144 888)
-	(bus)
-)
-(connector
 	(pt 104 1000)
 	(pt 400 1000)
 	(bus)
@@ -1343,26 +1338,6 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(pt 176 752)
-	(pt 1472 752)
-	(bus)
-)
-(connector
-	(pt 1472 752)
-	(pt 1472 856)
-	(bus)
-)
-(connector
-	(pt 1472 856)
-	(pt 1512 856)
-	(bus)
-)
-(connector
-	(pt 1512 856)
-	(pt 1512 960)
-	(bus)
-)
-(connector
 	(pt 1512 960)
 	(pt 1648 960)
 	(bus)
@@ -1370,14 +1345,6 @@ agreement for further details.
 (connector
 	(pt 1240 904)
 	(pt 1240 1048)
-)
-(connector
-	(pt 1120 904)
-	(pt 1240 904)
-)
-(connector
-	(pt 1240 904)
-	(pt 1264 904)
 )
 (connector
 	(pt 1240 1048)
@@ -1444,46 +1411,6 @@ agreement for further details.
 	(pt 1160 1032)
 )
 (connector
-	(pt 1160 1032)
-	(pt 1160 952)
-)
-(connector
-	(pt 1160 952)
-	(pt 1264 952)
-)
-(connector
-	(pt 1264 920)
-	(pt 1080 920)
-)
-(connector
-	(pt 1080 920)
-	(pt 1080 432)
-)
-(connector
-	(pt 736 432)
-	(pt 1080 432)
-)
-(connector
-	(pt 1080 432)
-	(pt 1440 432)
-)
-(connector
-	(pt 1264 936)
-	(pt 1048 936)
-)
-(connector
-	(pt 1048 448)
-	(pt 1048 936)
-)
-(connector
-	(pt 736 448)
-	(pt 1048 448)
-)
-(connector
-	(pt 1048 448)
-	(pt 1440 448)
-)
-(connector
 	(pt 328 592)
 	(pt 328 744)
 )
@@ -1494,21 +1421,6 @@ agreement for further details.
 (connector
 	(pt 288 624)
 	(pt 288 712)
-	(bus)
-)
-(connector
-	(pt 1144 712)
-	(pt 1144 888)
-	(bus)
-)
-(connector
-	(pt 288 712)
-	(pt 1144 712)
-	(bus)
-)
-(connector
-	(pt 1144 712)
-	(pt 1488 712)
 	(bus)
 )
 (connector
@@ -1550,16 +1462,6 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(pt 1264 872)
-	(pt 1200 872)
-	(bus)
-)
-(connector
-	(pt 1200 1000)
-	(pt 1200 872)
-	(bus)
-)
-(connector
 	(pt 352 528)
 	(pt 176 528)
 )
@@ -1570,26 +1472,6 @@ agreement for further details.
 (connector
 	(pt 176 544)
 	(pt 248 544)
-)
-(connector
-	(pt 1264 856)
-	(pt 1168 856)
-	(bus)
-)
-(connector
-	(pt 1168 608)
-	(pt 1168 856)
-	(bus)
-)
-(connector
-	(pt 736 608)
-	(pt 1168 608)
-	(bus)
-)
-(connector
-	(pt 1168 608)
-	(pt 1440 608)
-	(bus)
 )
 (connector
 	(pt 824 856)
@@ -1604,6 +1486,129 @@ agreement for further details.
 (connector
 	(pt 736 888)
 	(pt 776 888)
+	(bus)
+)
+(connector
+	(pt 1144 888)
+	(pt 1256 888)
+	(bus)
+)
+(connector
+	(pt 1512 960)
+	(pt 1512 856)
+	(bus)
+)
+(connector
+	(pt 1160 1032)
+	(pt 1160 952)
+)
+(connector
+	(pt 1160 952)
+	(pt 1256 952)
+)
+(connector
+	(pt 1080 920)
+	(pt 1256 920)
+)
+(connector
+	(pt 1080 432)
+	(pt 1080 920)
+)
+(connector
+	(pt 1048 936)
+	(pt 1256 936)
+)
+(connector
+	(pt 1048 448)
+	(pt 1048 936)
+)
+(connector
+	(pt 1144 712)
+	(pt 1144 888)
+	(bus)
+)
+(connector
+	(pt 1200 872)
+	(pt 1256 872)
+	(bus)
+)
+(connector
+	(pt 1200 1000)
+	(pt 1200 872)
+	(bus)
+)
+(connector
+	(pt 1168 856)
+	(pt 1256 856)
+	(bus)
+)
+(connector
+	(pt 1168 608)
+	(pt 1168 856)
+	(bus)
+)
+(connector
+	(pt 1120 904)
+	(pt 1240 904)
+)
+(connector
+	(pt 1240 904)
+	(pt 1256 904)
+)
+(connector
+	(pt 736 432)
+	(pt 1080 432)
+)
+(connector
+	(pt 1080 432)
+	(pt 1440 432)
+)
+(connector
+	(pt 736 448)
+	(pt 1048 448)
+)
+(connector
+	(pt 1048 448)
+	(pt 1440 448)
+)
+(connector
+	(pt 288 712)
+	(pt 1144 712)
+	(bus)
+)
+(connector
+	(pt 1144 712)
+	(pt 1488 712)
+	(bus)
+)
+(connector
+	(pt 736 608)
+	(pt 1168 608)
+	(bus)
+)
+(connector
+	(pt 1168 608)
+	(pt 1440 608)
+	(bus)
+)
+(connector
+	(pt 176 752)
+	(pt 1472 752)
+	(bus)
+)
+(connector
+	(pt 1472 856)
+	(pt 1472 752)
+	(bus)
+)
+(connector
+	(pt 1464 856)
+	(pt 1472 856)
+	(bus)
+)
+(connector
+	(pt 1472 856)
+	(pt 1512 856)
 	(bus)
 )
 (junction (pt 280 464))
@@ -1621,3 +1626,4 @@ agreement for further details.
 (junction (pt 1048 448))
 (junction (pt 1144 712))
 (junction (pt 1168 608))
+(junction (pt 1472 856))
