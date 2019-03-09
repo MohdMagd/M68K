@@ -43,10 +43,10 @@ module M68kCacheController(
 		output reg ValidBit_WE_L,												// to store a valid bit
 		
 		output reg unsigned [31:0] AddressBusOutToDramController,  	// address bus from Cache to Dram controller
-		output reg unsigned [22:0] TagDataOut,  							// tag data to store in the tag Cache
+		output reg unsigned [18:0] TagDataOut,  							// tag data to store in the tag Cache
 		output reg unsigned [2:0] WordAddress,								// upto 8 bytes in a Cache line
 		output reg ValidBitOut_H,												// indicates the cache line is valid
-		output reg unsigned [8:4] Index,										// 5 bit index in this example cache
+		output reg unsigned [12:4] Index,										// 5 bit index in this example cache
 
 		output unsigned [4:0] CacheState										// for debugging
 	);
@@ -120,8 +120,8 @@ module M68kCacheController(
 		AddressBusOutToDramController[3:1]  <= 0;						// all reads to Dram have lower 3 address lines set to 0 for a Cache line regardless of 68k address
 		AddressBusOutToDramController[0] 	<= 0;						// to avoid inferring a latch for this bit
 		
-		TagDataOut				<= AddressBusInFrom68k[31:9];
-		Index						<= AddressBusInFrom68k[8:4];		// cache index is 68ks address bits [8:4]
+		TagDataOut				<= AddressBusInFrom68k[31:13];
+		Index						<= AddressBusInFrom68k[12:4];		// cache index is 68ks address bits [8:4]
 		
 		UDS_DramController_L		<= UDS_L;
 		LDS_DramController_L	   <= LDS_L;
@@ -155,11 +155,11 @@ module M68kCacheController(
 			
 			// burst counter should now be 0 when we first enter this state, as it was reset in state above
 			
-			if(BurstCounter == 32) 										// if we have done all cache lines
+			if(BurstCounter == 512) 										// if we have done all cache lines
 				NextState 						<= Idle;
 			else begin
-				NextState						<= InvalidateCache;		// assume we stay here
-				Index	 						<= BurstCounter[4:0];	// 5 bit address for Index for 32 lines of cache
+				NextState					<= InvalidateCache;		// assume we stay here
+				Index	 						<= BurstCounter[8:0];	// 9 bit address for Index for 512 lines of cache
 				
 				// clear the validity bit for each cache line
 				ValidBitOut_H 					<=	0;		
