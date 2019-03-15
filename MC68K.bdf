@@ -3196,8 +3196,8 @@ agreement for further details.
 	)
 )
 (symbol
-	(rect 1496 -256 1784 128)
-	(text "CachedDramController" (rect 5 0 132 14)(font "Arial" (font_size 8)))
+	(rect 1488 -256 1776 128)
+	(text "AssociativeCachedDramController" (rect 5 0 199 14)(font "Arial" (font_size 8)))
 	(text "inst2" (rect 8 368 31 380)(font "Arial" ))
 	(port
 		(pt 0 32)
@@ -3377,30 +3377,37 @@ agreement for further details.
 	(port
 		(pt 288 288)
 		(output)
-		(text "Hit_H" (rect 0 0 29 14)(font "Arial" (font_size 8)))
-		(text "Hit_H" (rect 238 283 267 297)(font "Arial" (font_size 8)))
-		(line (pt 288 288)(pt 272 288))
+		(text "DataCacheWE_L[3..0]" (rect 0 0 123 14)(font "Arial" (font_size 8)))
+		(text "DataCacheWE_L[3..0]" (rect 144 283 267 297)(font "Arial" (font_size 8)))
+		(line (pt 288 288)(pt 272 288)(line_width 3))
 	)
 	(port
 		(pt 288 304)
 		(output)
-		(text "CacheDataWrite_L" (rect 0 0 106 14)(font "Arial" (font_size 8)))
-		(text "CacheDataWrite_L" (rect 161 299 267 313)(font "Arial" (font_size 8)))
-		(line (pt 288 304)(pt 272 304))
+		(text "TagCacheWE_L[3..0]" (rect 0 0 119 14)(font "Arial" (font_size 8)))
+		(text "TagCacheWE_L[3..0]" (rect 148 299 267 313)(font "Arial" (font_size 8)))
+		(line (pt 288 304)(pt 272 304)(line_width 3))
 	)
 	(port
 		(pt 288 320)
 		(output)
-		(text "CacheAddressWrite_L" (rect 0 0 129 14)(font "Arial" (font_size 8)))
-		(text "CacheAddressWrite_L" (rect 138 315 267 329)(font "Arial" (font_size 8)))
-		(line (pt 288 320)(pt 272 320))
+		(text "CacheDataOut[15..0]" (rect 0 0 118 14)(font "Arial" (font_size 8)))
+		(text "CacheDataOut[15..0]" (rect 149 315 267 329)(font "Arial" (font_size 8)))
+		(line (pt 288 320)(pt 272 320)(line_width 3))
 	)
 	(port
 		(pt 288 336)
 		(output)
-		(text "CacheDataOut[15..0]" (rect 0 0 118 14)(font "Arial" (font_size 8)))
-		(text "CacheDataOut[15..0]" (rect 149 331 267 345)(font "Arial" (font_size 8)))
+		(text "Valid_H[3..0]" (rect 0 0 71 14)(font "Arial" (font_size 8)))
+		(text "Valid_H[3..0]" (rect 196 331 267 345)(font "Arial" (font_size 8)))
 		(line (pt 288 336)(pt 272 336)(line_width 3))
+	)
+	(port
+		(pt 288 352)
+		(output)
+		(text "ValidHit_H[3..0]" (rect 0 0 86 14)(font "Arial" (font_size 8)))
+		(text "ValidHit_H[3..0]" (rect 181 347 267 361)(font "Arial" (font_size 8)))
+		(line (pt 288 352)(pt 272 352)(line_width 3))
 	)
 	(port
 		(pt 288 160)
@@ -4792,10 +4799,6 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(pt 1160 -800)
-	(pt 1160 -680)
-)
-(connector
 	(pt 2176 224)
 	(pt 2176 168)
 	(bus)
@@ -5365,32 +5368,96 @@ agreement for further details.
 	(pt -408 448)
 )
 (connector
-	(text "Address[31..0]" (rect 1306 -176 1377 -164)(font "Arial" )(invisible))
+	(pt 632 784)
+	(pt 632 168)
+)
+(connector
+	(pt 688 184)
+	(pt 688 152)
+)
+(connector
+	(pt 688 152)
+	(pt 1904 152)
+)
+(connector
+	(pt 1904 152)
+	(pt 1904 -80)
+)
+(connector
+	(pt 1824 168)
+	(pt 632 168)
+)
+(connector
+	(pt 1824 168)
+	(pt 1824 -16)
+)
+(connector
+	(text "Clock50Mhz" (rect 1416 1688 1475 1700)(font "Arial" ))
+	(pt 1528 1728)
+	(pt 1472 1728)
+)
+(connector
+	(text "Address[31..0]" (rect 1298 -176 1369 -164)(font "Arial" )(invisible))
 	(pt 1280 -160)
-	(pt 1496 -160)
+	(pt 1488 -160)
 	(bus)
 )
 (connector
-	(text "DataBusOut[15..0]" (rect 1402 -160 1494 -148)(font "Arial" ))
+	(text "DataBusOut[15..0]" (rect 1394 -160 1486 -148)(font "Arial" ))
 	(pt 1296 -144)
-	(pt 1496 -144)
+	(pt 1488 -144)
 	(bus)
 )
 (connector
 	(pt 1328 -112)
-	(pt 1496 -112)
+	(pt 1488 -112)
+)
+(connector
+	(pt 1264 -96)
+	(pt 1488 -96)
 )
 (connector
 	(pt 1360 -80)
-	(pt 1496 -80)
+	(pt 1488 -80)
 )
 (connector
-	(pt 1160 640)
-	(pt 1312 640)
+	(text "DataBusIn[15..0]" (rect 2016 103 2028 186)(font "Arial" )(vertical)(invisible))
+	(pt 2032 256)
+	(pt 2032 -32)
+	(bus)
+)
+(connector
+	(pt 1248 -664)
+	(pt 1248 -192)
+)
+(connector
+	(pt 1248 -192)
+	(pt 1488 -192)
 )
 (connector
 	(pt 1312 640)
-	(pt 1424 640)
+	(pt 1312 -176)
+)
+(connector
+	(text "<<__$DEF_ALIAS5258>>" (rect 1312 -192 1435 -180)(font "Arial" )(invisible))
+	(pt 1312 -176)
+	(pt 1488 -176)
+)
+(connector
+	(pt 1344 -128)
+	(pt 1488 -128)
+)
+(connector
+	(pt 1176 -760)
+	(pt 1176 -224)
+)
+(connector
+	(pt 1176 -224)
+	(pt 1488 -224)
+)
+(connector
+	(pt 1160 -208)
+	(pt 1488 -208)
 )
 (connector
 	(pt 1280 -584)
@@ -5422,65 +5489,20 @@ agreement for further details.
 	(pt 1328 312)
 )
 (connector
+	(pt 1264 -536)
+	(pt 1264 -96)
+)
+(connector
+	(pt 1264 -96)
+	(pt 1264 328)
+)
+(connector
 	(pt 1360 -520)
 	(pt 1360 -80)
 )
 (connector
 	(pt 1360 -80)
 	(pt 1360 280)
-)
-(connector
-	(pt 632 784)
-	(pt 632 168)
-)
-(connector
-	(pt 688 184)
-	(pt 688 152)
-)
-(connector
-	(pt 688 152)
-	(pt 1904 152)
-)
-(connector
-	(pt 1784 -208)
-	(pt 2080 -208)
-)
-(connector
-	(pt 1784 -192)
-	(pt 2080 -192)
-)
-(connector
-	(pt 1784 -176)
-	(pt 2080 -176)
-)
-(connector
-	(pt 1784 -160)
-	(pt 2080 -160)
-)
-(connector
-	(pt 1784 -144)
-	(pt 2080 -144)
-)
-(connector
-	(pt 1784 -128)
-	(pt 2080 -128)
-	(bus)
-)
-(connector
-	(pt 1784 -112)
-	(pt 2080 -112)
-	(bus)
-)
-(connector
-	(text "DataBusIn[15..0]" (rect 2016 103 2028 186)(font "Arial" )(vertical)(invisible))
-	(pt 2032 -32)
-	(pt 2032 256)
-	(bus)
-)
-(connector
-	(pt 2032 -32)
-	(pt 1784 -32)
-	(bus)
 )
 (connector
 	(pt 1952 256)
@@ -5493,47 +5515,6 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(pt 2080 -48)
-	(pt 1784 -48)
-)
-(connector
-	(pt 1784 -64)
-	(pt 2080 -64)
-)
-(connector
-	(pt 1904 152)
-	(pt 1904 -80)
-)
-(connector
-	(pt 1824 168)
-	(pt 632 168)
-)
-(connector
-	(pt 1824 168)
-	(pt 1824 -16)
-)
-(connector
-	(pt 1784 -96)
-	(pt 2080 -96)
-	(bus)
-)
-(connector
-	(pt 1496 -96)
-	(pt 1264 -96)
-)
-(connector
-	(pt 1264 -96)
-	(pt 1264 328)
-)
-(connector
-	(pt 1264 -536)
-	(pt 1264 -96)
-)
-(connector
-	(pt 1248 -664)
-	(pt 1248 -192)
-)
-(connector
 	(pt 576 -664)
 	(pt 1248 -664)
 )
@@ -5542,21 +5523,12 @@ agreement for further details.
 	(pt 1456 -664)
 )
 (connector
-	(pt 1248 -192)
-	(pt 1496 -192)
-)
-(connector
-	(pt 1312 -176)
+	(pt 1160 640)
 	(pt 1312 640)
 )
 (connector
-	(text "<<__$DEF_ALIAS5258>>" (rect 1320 -192 1443 -180)(font "Arial" )(invisible))
-	(pt 1312 -176)
-	(pt 1496 -176)
-)
-(connector
-	(pt 1344 -128)
-	(pt 1496 -128)
+	(pt 1312 640)
+	(pt 1424 640)
 )
 (connector
 	(pt 1344 -568)
@@ -5567,45 +5539,80 @@ agreement for further details.
 	(pt 1344 296)
 )
 (connector
-	(pt 1176 -760)
-	(pt 1176 -224)
-)
-(connector
-	(pt 1496 -224)
-	(pt 1176 -224)
-)
-(connector
-	(pt 1496 -208)
-	(pt 1160 -208)
+	(pt 1160 -800)
+	(pt 1160 -680)
 )
 (connector
 	(pt 1160 -680)
 	(pt 1160 -208)
 )
 (connector
-	(pt 1784 -224)
-	(pt 2080 -224)
-)
-(connector
-	(pt 1784 -80)
-	(pt 1904 -80)
-)
-(connector
 	(pt 1904 -80)
 	(pt 2080 -80)
-)
-(connector
-	(pt 1784 -16)
-	(pt 1824 -16)
 )
 (connector
 	(pt 1824 -16)
 	(pt 2080 -16)
 )
 (connector
-	(text "Clock50Mhz" (rect 1416 1688 1475 1700)(font "Arial" ))
-	(pt 1528 1728)
-	(pt 1472 1728)
+	(pt 1776 -224)
+	(pt 2080 -224)
+)
+(connector
+	(pt 1776 -208)
+	(pt 2080 -208)
+)
+(connector
+	(pt 1776 -192)
+	(pt 2080 -192)
+)
+(connector
+	(pt 1776 -176)
+	(pt 2080 -176)
+)
+(connector
+	(pt 1776 -160)
+	(pt 2080 -160)
+)
+(connector
+	(pt 1776 -144)
+	(pt 2080 -144)
+)
+(connector
+	(pt 1776 -128)
+	(pt 2080 -128)
+	(bus)
+)
+(connector
+	(pt 1776 -112)
+	(pt 2080 -112)
+	(bus)
+)
+(connector
+	(pt 1776 -80)
+	(pt 1904 -80)
+)
+(connector
+	(pt 1776 -64)
+	(pt 2080 -64)
+)
+(connector
+	(pt 1776 -48)
+	(pt 2080 -48)
+)
+(connector
+	(pt 1776 -32)
+	(pt 2032 -32)
+	(bus)
+)
+(connector
+	(pt 1776 -16)
+	(pt 1824 -16)
+)
+(connector
+	(pt 1776 -96)
+	(pt 2080 -96)
+	(bus)
 )
 (junction (pt 1280 224))
 (junction (pt 1376 224))
@@ -5721,8 +5728,6 @@ agreement for further details.
 (text "256kByte Ram" (rect 1576 1016 1657 1030)(font "Arial" (font_size 8)))
 (text "Hex 6 and 7 not used on DE1-Soc" (rect 2128 1128 2320 1142)(font "Arial" (font_size 8)))
 (text "Bus Request H" (rect -808 416 -724 430)(font "Arial" (font_size 8)))
-(text "ResetOut only connected when we design the Dram" (rect 1624 120 1922 134)(font "Arial" (font_size 8)))
-(text "Leave unconnected for now" (rect 1632 136 1794 150)(font "Arial" (font_size 8)))
 (text "68k connected to Reset push button when using Sram" (rect -224 120 85 134)(font "Arial" (font_size 8)))
 (text "CPU Clock" (rect -112 -888 -55 -874)(font "Arial" (font_size 8)))
 (text "VGA Clock" (rect -120 -848 -58 -834)(font "Arial" (font_size 8)))

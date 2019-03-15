@@ -1,0 +1,233 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 1991-2015 Altera Corporation. All rights reserved.
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, the Altera Quartus II License Agreement,
+the Altera MegaCore Function License Agreement, or other 
+applicable license agreement, including, without limitation, 
+that your use is for the sole purpose of programming logic 
+devices manufactured by Altera and sold by Altera or its 
+authorized distributors.  Please refer to the applicable 
+agreement for further details.
+*/
+(header "symbol" (version "1.2"))
+(symbol
+	(rect 16 16 416 336)
+	(text "AssociativeDramCache" (rect 5 0 138 14)(font "Arial" (font_size 8)))
+	(text "inst" (rect 8 304 25 316)(font "Arial" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "DtackFromDram_L" (rect 0 0 103 14)(font "Arial" (font_size 8)))
+		(text "DtackFromDram_L" (rect 21 27 124 41)(font "Arial" (font_size 8)))
+		(line (pt 0 32)(pt 16 32))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "Clock" (rect 0 0 30 14)(font "Arial" (font_size 8)))
+		(text "Clock" (rect 21 43 51 57)(font "Arial" (font_size 8)))
+		(line (pt 0 48)(pt 16 48))
+	)
+	(port
+		(pt 0 64)
+		(input)
+		(text "Reset_L" (rect 0 0 47 14)(font "Arial" (font_size 8)))
+		(text "Reset_L" (rect 21 59 68 73)(font "Arial" (font_size 8)))
+		(line (pt 0 64)(pt 16 64))
+	)
+	(port
+		(pt 0 80)
+		(input)
+		(text "DramSelectFrom68k_H" (rect 0 0 128 14)(font "Arial" (font_size 8)))
+		(text "DramSelectFrom68k_H" (rect 21 75 149 89)(font "Arial" (font_size 8)))
+		(line (pt 0 80)(pt 16 80))
+	)
+	(port
+		(pt 0 96)
+		(input)
+		(text "AddressBusInFrom68k[31..0]" (rect 0 0 165 14)(font "Arial" (font_size 8)))
+		(text "AddressBusInFrom68k[31..0]" (rect 21 91 186 105)(font "Arial" (font_size 8)))
+		(line (pt 0 96)(pt 16 96)(line_width 3))
+	)
+	(port
+		(pt 0 112)
+		(input)
+		(text "DataBusInFrom68k[15..0]" (rect 0 0 141 14)(font "Arial" (font_size 8)))
+		(text "DataBusInFrom68k[15..0]" (rect 21 107 162 121)(font "Arial" (font_size 8)))
+		(line (pt 0 112)(pt 16 112)(line_width 3))
+	)
+	(port
+		(pt 0 128)
+		(input)
+		(text "UDS_L" (rect 0 0 38 14)(font "Arial" (font_size 8)))
+		(text "UDS_L" (rect 21 123 59 137)(font "Arial" (font_size 8)))
+		(line (pt 0 128)(pt 16 128))
+	)
+	(port
+		(pt 0 144)
+		(input)
+		(text "LDS_L" (rect 0 0 37 14)(font "Arial" (font_size 8)))
+		(text "LDS_L" (rect 21 139 58 153)(font "Arial" (font_size 8)))
+		(line (pt 0 144)(pt 16 144))
+	)
+	(port
+		(pt 0 160)
+		(input)
+		(text "RW" (rect 0 0 20 14)(font "Arial" (font_size 8)))
+		(text "RW" (rect 21 155 41 169)(font "Arial" (font_size 8)))
+		(line (pt 0 160)(pt 16 160))
+	)
+	(port
+		(pt 0 176)
+		(input)
+		(text "AS_L" (rect 0 0 31 14)(font "Arial" (font_size 8)))
+		(text "AS_L" (rect 21 171 52 185)(font "Arial" (font_size 8)))
+		(line (pt 0 176)(pt 16 176))
+	)
+	(port
+		(pt 0 192)
+		(input)
+		(text "RAS_Dram_L" (rect 0 0 76 14)(font "Arial" (font_size 8)))
+		(text "RAS_Dram_L" (rect 21 187 97 201)(font "Arial" (font_size 8)))
+		(line (pt 0 192)(pt 16 192))
+	)
+	(port
+		(pt 0 208)
+		(input)
+		(text "CAS_Dram_L" (rect 0 0 76 14)(font "Arial" (font_size 8)))
+		(text "CAS_Dram_L" (rect 21 203 97 217)(font "Arial" (font_size 8)))
+		(line (pt 0 208)(pt 16 208))
+	)
+	(port
+		(pt 0 224)
+		(input)
+		(text "DataInFromDram[15..0]" (rect 0 0 128 14)(font "Arial" (font_size 8)))
+		(text "DataInFromDram[15..0]" (rect 21 219 149 233)(font "Arial" (font_size 8)))
+		(line (pt 0 224)(pt 16 224)(line_width 3))
+	)
+	(port
+		(pt 400 32)
+		(output)
+		(text "DataBusOutTo68k[15..0]" (rect 0 0 138 14)(font "Arial" (font_size 8)))
+		(text "DataBusOutTo68k[15..0]" (rect 241 27 379 41)(font "Arial" (font_size 8)))
+		(line (pt 400 32)(pt 384 32)(line_width 3))
+	)
+	(port
+		(pt 400 48)
+		(output)
+		(text "DataOutToDramController[15..0]" (rect 0 0 179 14)(font "Arial" (font_size 8)))
+		(text "DataOutToDramController[15..0]" (rect 200 43 379 57)(font "Arial" (font_size 8)))
+		(line (pt 400 48)(pt 384 48)(line_width 3))
+	)
+	(port
+		(pt 400 64)
+		(output)
+		(text "UDS_DramController_L" (rect 0 0 129 14)(font "Arial" (font_size 8)))
+		(text "UDS_DramController_L" (rect 250 59 379 73)(font "Arial" (font_size 8)))
+		(line (pt 400 64)(pt 384 64))
+	)
+	(port
+		(pt 400 80)
+		(output)
+		(text "LDS_DramController_L" (rect 0 0 128 14)(font "Arial" (font_size 8)))
+		(text "LDS_DramController_L" (rect 251 75 379 89)(font "Arial" (font_size 8)))
+		(line (pt 400 80)(pt 384 80))
+	)
+	(port
+		(pt 400 96)
+		(output)
+		(text "DramSelectFromCache_L" (rect 0 0 143 14)(font "Arial" (font_size 8)))
+		(text "DramSelectFromCache_L" (rect 236 91 379 105)(font "Arial" (font_size 8)))
+		(line (pt 400 96)(pt 384 96))
+	)
+	(port
+		(pt 400 112)
+		(output)
+		(text "WE_DramController_L" (rect 0 0 123 14)(font "Arial" (font_size 8)))
+		(text "WE_DramController_L" (rect 256 107 379 121)(font "Arial" (font_size 8)))
+		(line (pt 400 112)(pt 384 112))
+	)
+	(port
+		(pt 400 128)
+		(output)
+		(text "AS_DramController_L" (rect 0 0 122 14)(font "Arial" (font_size 8)))
+		(text "AS_DramController_L" (rect 257 123 379 137)(font "Arial" (font_size 8)))
+		(line (pt 400 128)(pt 384 128))
+	)
+	(port
+		(pt 400 144)
+		(output)
+		(text "DtackTo68k_L" (rect 0 0 80 14)(font "Arial" (font_size 8)))
+		(text "DtackTo68k_L" (rect 299 139 379 153)(font "Arial" (font_size 8)))
+		(line (pt 400 144)(pt 384 144))
+	)
+	(port
+		(pt 400 160)
+		(output)
+		(text "AddressBusToDram[31..0]" (rect 0 0 151 14)(font "Arial" (font_size 8)))
+		(text "AddressBusToDram[31..0]" (rect 228 155 379 169)(font "Arial" (font_size 8)))
+		(line (pt 400 160)(pt 384 160)(line_width 3))
+	)
+	(port
+		(pt 400 176)
+		(output)
+		(text "WordAddress[2..0]" (rect 0 0 108 14)(font "Arial" (font_size 8)))
+		(text "WordAddress[2..0]" (rect 271 171 379 185)(font "Arial" (font_size 8)))
+		(line (pt 400 176)(pt 384 176)(line_width 3))
+	)
+	(port
+		(pt 400 192)
+		(output)
+		(text "CacheState[4..0]" (rect 0 0 94 14)(font "Arial" (font_size 8)))
+		(text "CacheState[4..0]" (rect 285 187 379 201)(font "Arial" (font_size 8)))
+		(line (pt 400 192)(pt 384 192)(line_width 3))
+	)
+	(port
+		(pt 400 208)
+		(output)
+		(text "DataCacheWE_L[3..0]" (rect 0 0 123 14)(font "Arial" (font_size 8)))
+		(text "DataCacheWE_L[3..0]" (rect 256 203 379 217)(font "Arial" (font_size 8)))
+		(line (pt 400 208)(pt 384 208)(line_width 3))
+	)
+	(port
+		(pt 400 224)
+		(output)
+		(text "TagCacheWE_L[3..0]" (rect 0 0 119 14)(font "Arial" (font_size 8)))
+		(text "TagCacheWE_L[3..0]" (rect 260 219 379 233)(font "Arial" (font_size 8)))
+		(line (pt 400 224)(pt 384 224)(line_width 3))
+	)
+	(port
+		(pt 400 240)
+		(output)
+		(text "CacheDataOut[15..0]" (rect 0 0 118 14)(font "Arial" (font_size 8)))
+		(text "CacheDataOut[15..0]" (rect 261 235 379 249)(font "Arial" (font_size 8)))
+		(line (pt 400 240)(pt 384 240)(line_width 3))
+	)
+	(port
+		(pt 400 256)
+		(output)
+		(text "Valid_H[3..0]" (rect 0 0 71 14)(font "Arial" (font_size 8)))
+		(text "Valid_H[3..0]" (rect 308 251 379 265)(font "Arial" (font_size 8)))
+		(line (pt 400 256)(pt 384 256)(line_width 3))
+	)
+	(port
+		(pt 400 272)
+		(output)
+		(text "ValidHit_H[3..0]" (rect 0 0 86 14)(font "Arial" (font_size 8)))
+		(text "ValidHit_H[3..0]" (rect 293 267 379 281)(font "Arial" (font_size 8)))
+		(line (pt 400 272)(pt 384 272)(line_width 3))
+	)
+	(drawing
+		(rectangle (rect 16 16 384 304))
+	)
+)

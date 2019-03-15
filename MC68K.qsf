@@ -374,6 +374,8 @@ set_location_assignment PIN_AK29 -to LCD_BLON
 
 set_location_assignment PIN_J12 -to CanBusSelect_H
 set_location_assignment PIN_AG26 -to LCD_Contrast_DE1
+set_global_assignment -name VERILOG_FILE M68kAssociativeCacheController_Verilog.v
+set_global_assignment -name BDF_FILE AssociativeDramCache.bdf
 set_global_assignment -name VHDL_FILE AddressComparator.vhd
 set_global_assignment -name VERILOG_FILE M68kCacheController.v
 set_global_assignment -name BSF_FILE Valid_Data.bsf
@@ -460,4 +462,16 @@ set_global_assignment -name QIP_FILE Tag_Data.qip
 set_global_assignment -name QIP_FILE CacheData.qip
 set_global_assignment -name QIP_FILE Valid_Data.qip
 set_global_assignment -name VHDL_FILE CacheEnabledDramController.vhd
+set_global_assignment -name QIP_FILE Valid_Bit_Associative.qip
+set_global_assignment -name BDF_FILE ValidBit_Associative.bdf
+set_global_assignment -name QIP_FILE Tag_Data_Associative.qip
+set_global_assignment -name BDF_FILE TagData_Associative.bdf
+set_global_assignment -name QIP_FILE CachedData_Associative.qip
+set_global_assignment -name BDF_FILE AssociativeCache_Set.bdf
+set_global_assignment -name VHDL_FILE AddressComparator_Associative.vhd
+set_global_assignment -name BDF_FILE CacheData_Associative.bdf
+set_global_assignment -name QIP_FILE PLRU_Bits.qip
+set_global_assignment -name BDF_FILE PseudoLRU_Bits.bdf
+set_global_assignment -name VHDL_FILE CacheDataMux.vhd
+set_global_assignment -name BDF_FILE AssociativeCachedDramController.bdf
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
