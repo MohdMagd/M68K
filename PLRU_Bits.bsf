@@ -21,9 +21,9 @@ agreement for further details.
 */
 (header "symbol" (version "1.2"))
 (symbol
-	(rect 0 0 216 136)
-	(text "PLRU_Bits" (rect 32 0 107 16)(font "Arial" (font_size 10)))
-	(text "inst" (rect 8 120 25 132)(font "Arial" ))
+	(rect 0 0 216 144)
+	(text "PLRU_Bits" (rect 33 0 108 16)(font "Arial" (font_size 10)))
+	(text "inst" (rect 8 128 25 140)(font "Arial" ))
 	(port
 		(pt 0 32)
 		(input)
@@ -41,8 +41,8 @@ agreement for further details.
 	(port
 		(pt 0 64)
 		(input)
-		(text "address[2..0]" (rect 0 0 75 14)(font "Arial" (font_size 8)))
-		(text "address[2..0]" (rect 4 37 142 63)(font "Arial" (font_size 8)))
+		(text "address[6..0]" (rect 0 0 75 14)(font "Arial" (font_size 8)))
+		(text "address[6..0]" (rect 4 37 142 63)(font "Arial" (font_size 8)))
 		(line (pt 0 64)(pt 88 64)(line_width 3))
 	)
 	(port
@@ -61,8 +61,8 @@ agreement for further details.
 	)
 	(drawing
 		(text "3 bits" (rect 97 47 205 193)(font "Arial" )(vertical))
-		(text "8 words" (rect 120 25 240 217)(font "Arial" )(vertical))
-		(text "Block type: AUTO" (rect 48 111 261 245)(font "Arial" ))
+		(text "128 words" (rect 120 25 252 241)(font "Arial" )(vertical))
+		(text "Block type: AUTO" (rect 48 123 261 269)(font "Arial" ))
 		(line (pt 104 24)(pt 136 24))
 		(line (pt 136 24)(pt 136 96))
 		(line (pt 136 96)(pt 104 96))
@@ -94,10 +94,10 @@ agreement for further details.
 		(line (pt 80 68)(pt 88 68))
 		(line (pt 96 64)(pt 104 64)(line_width 3))
 		(line (pt 80 112)(pt 80 36))
-		(line (pt 0 0)(pt 217 0))
-		(line (pt 217 0)(pt 217 139))
-		(line (pt 0 139)(pt 217 139))
-		(line (pt 0 0)(pt 0 139))
+		(line (pt 0 0)(pt 219 0))
+		(line (pt 219 0)(pt 219 151))
+		(line (pt 0 151)(pt 219 151))
+		(line (pt 0 0)(pt 0 151))
 		(line (pt 0 0)(pt 0 0))
 		(line (pt 0 0)(pt 0 0))
 		(line (pt 0 0)(pt 0 0))

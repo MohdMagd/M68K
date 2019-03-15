@@ -62,8 +62,8 @@ agreement for further details.
 	(port
 		(pt 0 112)
 		(input)
-		(text "TagAddressIn[24..0]" (rect 0 0 115 14)(font "Arial" (font_size 8)))
-		(text "TagAddressIn[24..0]" (rect 21 107 136 121)(font "Arial" (font_size 8)))
+		(text "TagAddressIn[20..0]" (rect 0 0 115 14)(font "Arial" (font_size 8)))
+		(text "TagAddressIn[20..0]" (rect 21 107 136 121)(font "Arial" (font_size 8)))
 		(line (pt 0 112)(pt 16 112)(line_width 3))
 	)
 	(port
@@ -90,8 +90,8 @@ agreement for further details.
 	(port
 		(pt 0 176)
 		(input)
-		(text "Index[2..0]" (rect 0 0 59 14)(font "Arial" (font_size 8)))
-		(text "Index[2..0]" (rect 21 171 80 185)(font "Arial" (font_size 8)))
+		(text "Index[6..0]" (rect 0 0 59 14)(font "Arial" (font_size 8)))
+		(text "Index[6..0]" (rect 21 171 80 185)(font "Arial" (font_size 8)))
 		(line (pt 0 176)(pt 16 176)(line_width 3))
 	)
 	(port

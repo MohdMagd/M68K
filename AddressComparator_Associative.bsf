@@ -27,15 +27,15 @@ agreement for further details.
 	(port
 		(pt 0 32)
 		(input)
-		(text "AddressBus[24..0]" (rect 0 0 76 12)(font "Arial" ))
-		(text "AddressBus[24..0]" (rect 21 27 97 39)(font "Arial" ))
+		(text "AddressBus[20..0]" (rect 0 0 75 12)(font "Arial" ))
+		(text "AddressBus[20..0]" (rect 21 27 96 39)(font "Arial" ))
 		(line (pt 0 32)(pt 16 32)(line_width 3))
 	)
 	(port
 		(pt 0 48)
 		(input)
-		(text "TagData[24..0]" (rect 0 0 60 12)(font "Arial" ))
-		(text "TagData[24..0]" (rect 21 43 81 55)(font "Arial" ))
+		(text "TagData[20..0]" (rect 0 0 59 12)(font "Arial" ))
+		(text "TagData[20..0]" (rect 21 43 80 55)(font "Arial" ))
 		(line (pt 0 48)(pt 16 48)(line_width 3))
 	)
 	(port

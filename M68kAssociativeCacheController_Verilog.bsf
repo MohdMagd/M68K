@@ -230,8 +230,8 @@ agreement for further details.
 	(port
 		(pt 384 224)
 		(output)
-		(text "TagDataOut[24..0]" (rect 0 0 74 12)(font "Arial" ))
-		(text "TagDataOut[24..0]" (rect 289 219 363 231)(font "Arial" ))
+		(text "TagDataOut[20..0]" (rect 0 0 73 12)(font "Arial" ))
+		(text "TagDataOut[20..0]" (rect 290 219 363 231)(font "Arial" ))
 		(line (pt 384 224)(pt 368 224)(line_width 3))
 	)
 	(port
@@ -251,8 +251,8 @@ agreement for further details.
 	(port
 		(pt 384 272)
 		(output)
-		(text "Index[2..0]" (rect 0 0 41 12)(font "Arial" ))
-		(text "Index[2..0]" (rect 322 267 363 279)(font "Arial" ))
+		(text "Index[6..0]" (rect 0 0 41 12)(font "Arial" ))
+		(text "Index[6..0]" (rect 322 267 363 279)(font "Arial" ))
 		(line (pt 384 272)(pt 368 272)(line_width 3))
 	)
 	(port
