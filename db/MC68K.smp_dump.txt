@@ -1,4 +1,34 @@
 
+State Machine - |MC68K|IIC_SPI_Interface:inst32|i2c_master_top:inst|i2c_master_byte_ctrl:byte_ctrl|\statemachine:c_state
+Name \statemachine:c_state.st_stop \statemachine:c_state.st_ack \statemachine:c_state.st_write \statemachine:c_state.st_read \statemachine:c_state.st_start \statemachine:c_state.st_idle 
+\statemachine:c_state.st_idle 0 0 0 0 0 0 
+\statemachine:c_state.st_start 0 0 0 0 1 1 
+\statemachine:c_state.st_read 0 0 0 1 0 1 
+\statemachine:c_state.st_write 0 0 1 0 0 1 
+\statemachine:c_state.st_ack 0 1 0 0 0 1 
+\statemachine:c_state.st_stop 1 0 0 0 0 1 
+
+State Machine - |MC68K|IIC_SPI_Interface:inst32|i2c_master_top:inst|i2c_master_byte_ctrl:byte_ctrl|i2c_master_bit_ctrl:bit_ctrl|c_state
+Name c_state.wr_d c_state.wr_c c_state.wr_b c_state.wr_a c_state.rd_d c_state.rd_c c_state.rd_b c_state.rd_a c_state.stop_d c_state.stop_c c_state.stop_b c_state.stop_a c_state.start_e c_state.start_d c_state.start_c c_state.start_b c_state.start_a c_state.idle 
+c_state.idle 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+c_state.start_a 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 
+c_state.start_b 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 
+c_state.start_c 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 
+c_state.start_d 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 
+c_state.start_e 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 
+c_state.stop_a 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 
+c_state.stop_b 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 
+c_state.stop_c 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 
+c_state.stop_d 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 
+c_state.rd_a 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 
+c_state.rd_b 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 
+c_state.rd_c 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 
+c_state.rd_d 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 
+c_state.wr_a 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+c_state.wr_b 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+c_state.wr_c 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+c_state.wr_d 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+
 State Machine - |MC68K|OnChipIO:inst8|LCD_Controller:inst2|Current_state
 Name Current_state.RemoveData Current_state.RemoveRW Current_state.RemoveE Current_state.WaitingForETimer Current_state.AssertE_Data Current_state.Dummy1 Current_state.AssertRW Current_state.Idle 
 Current_state.Idle 0 0 0 0 0 0 0 0 

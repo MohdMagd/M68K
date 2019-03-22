@@ -1165,6 +1165,22 @@ agreement for further details.
 	(annotation_block (location)(rect 2184 2576 2248 2592))
 )
 (pin
+	(output)
+	(rect 2008 2424 2184 2440)
+	(text "OUTPUT" (rect 1 0 39 10)(font "Arial" (font_size 6)))
+	(text "IIC0_IRQ_L" (rect 90 0 149 12)(font "Arial" ))
+	(pt 0 8)
+	(drawing
+		(line (pt 0 8)(pt 52 8))
+		(line (pt 52 4)(pt 78 4))
+		(line (pt 52 12)(pt 78 12))
+		(line (pt 52 12)(pt 52 4))
+		(line (pt 78 4)(pt 82 8))
+		(line (pt 82 8)(pt 78 12))
+		(line (pt 78 12)(pt 82 8))
+	)
+)
+(pin
 	(bidir)
 	(rect 2080 -104 2271 -88)
 	(text "BIDIR" (rect 1 0 25 10)(font "Arial" (font_size 6)))
@@ -3238,9 +3254,9 @@ agreement for further details.
 	)
 )
 (symbol
-	(rect 1552 2384 1768 2576)
+	(rect 1552 2384 1768 2544)
 	(text "IIC_SPI_Interface" (rect 5 0 100 14)(font "Arial" (font_size 8)))
-	(text "inst32" (rect 8 176 37 188)(font "Arial" ))
+	(text "inst32" (rect 8 144 37 156)(font "Arial" ))
 	(port
 		(pt 0 32)
 		(input)
@@ -3291,13 +3307,6 @@ agreement for further details.
 		(line (pt 0 128)(pt 16 128))
 	)
 	(port
-		(pt 0 144)
-		(input)
-		(text "miso_i" (rect 0 0 35 14)(font "Arial" (font_size 8)))
-		(text "miso_i" (rect 21 139 56 153)(font "Arial" (font_size 8)))
-		(line (pt 0 144)(pt 16 144))
-	)
-	(port
 		(pt 216 32)
 		(output)
 		(text "DataOut[7..0]" (rect 0 0 74 14)(font "Arial" (font_size 8)))
@@ -3310,34 +3319,6 @@ agreement for further details.
 		(text "IIC0_IRQ_L" (rect 0 0 61 14)(font "Arial" (font_size 8)))
 		(text "IIC0_IRQ_L" (rect 134 43 195 57)(font "Arial" (font_size 8)))
 		(line (pt 216 48)(pt 200 48))
-	)
-	(port
-		(pt 216 96)
-		(output)
-		(text "SPI_IRQ" (rect 0 0 44 14)(font "Arial" (font_size 8)))
-		(text "SPI_IRQ" (rect 151 91 195 105)(font "Arial" (font_size 8)))
-		(line (pt 216 96)(pt 200 96))
-	)
-	(port
-		(pt 216 112)
-		(output)
-		(text "sck_o" (rect 0 0 34 14)(font "Arial" (font_size 8)))
-		(text "sck_o" (rect 161 107 195 121)(font "Arial" (font_size 8)))
-		(line (pt 216 112)(pt 200 112))
-	)
-	(port
-		(pt 216 128)
-		(output)
-		(text "mosi_o" (rect 0 0 40 14)(font "Arial" (font_size 8)))
-		(text "mosi_o" (rect 155 123 195 137)(font "Arial" (font_size 8)))
-		(line (pt 216 128)(pt 200 128))
-	)
-	(port
-		(pt 216 144)
-		(output)
-		(text "SSN_O[7..0]" (rect 0 0 69 14)(font "Arial" (font_size 8)))
-		(text "SSN_O[7..0]" (rect 126 139 195 153)(font "Arial" (font_size 8)))
-		(line (pt 216 144)(pt 200 144)(line_width 3))
 	)
 	(port
 		(pt 216 64)
@@ -3354,7 +3335,7 @@ agreement for further details.
 		(line (pt 216 80)(pt 200 80))
 	)
 	(drawing
-		(rectangle (rect 16 16 200 176))
+		(rectangle (rect 16 16 200 144))
 	)
 )
 (connector
@@ -4868,11 +4849,6 @@ agreement for further details.
 	(pt 1496 -80)
 )
 (connector
-	(text "SSN_O[0]" (rect 1858 2552 1907 2564)(font "Arial" ))
-	(pt 1848 2568)
-	(pt 2008 2568)
-)
-(connector
 	(pt 1296 328)
 	(pt 1296 896)
 )
@@ -5366,6 +5342,10 @@ agreement for further details.
 	(pt -208 240)
 )
 (connector
+	(pt 1064 656)
+	(pt 1224 656)
+)
+(connector
 	(text "DataBusIn[15..8]" (rect 1866 2400 1949 2412)(font "Arial" ))
 	(pt 1952 2416)
 	(pt 1768 2416)
@@ -5404,26 +5384,12 @@ agreement for further details.
 	(pt 1552 2496)
 )
 (connector
-	(pt 2008 2496)
-	(pt 1768 2496)
-)
-(connector
 	(pt 1432 2512)
 	(pt 1552 2512)
 )
 (connector
 	(pt 1224 2432)
 	(pt 1552 2432)
-)
-(connector
-	(pt 2008 2512)
-	(pt 1768 2512)
-)
-(connector
-	(text "SSN_O[7..0]" (rect 1768 2512 1830 2524)(font "Arial" ))
-	(pt 1848 2528)
-	(pt 1768 2528)
-	(bus)
 )
 (connector
 	(pt 1520 2528)
@@ -5505,18 +5471,8 @@ agreement for further details.
 	(pt 1224 2432)
 )
 (connector
-	(pt 1848 2528)
-	(pt 1848 2568)
-	(bus)
-)
-(connector
-	(pt 1848 2568)
-	(pt 1848 2600)
-	(bus)
-)
-(connector
-	(pt 1064 656)
-	(pt 1224 656)
+	(pt 1768 2432)
+	(pt 2008 2432)
 )
 (junction (pt 1280 224))
 (junction (pt 1376 224))
@@ -5618,7 +5574,6 @@ agreement for further details.
 (junction (pt -256 -880))
 (junction (pt -232 -880))
 (junction (pt 1264 -208))
-(junction (pt 1848 2568))
 (junction (pt 1376 720))
 (text "Push Button 1" (rect -800 280 -721 294)(font "Arial" (font_size 8)))
 (text "Push Button 2" (rect -800 344 -721 358)(font "Arial" (font_size 8)))

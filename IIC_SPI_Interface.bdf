@@ -353,7 +353,7 @@ agreement for further details.
 		(pt 256 32)
 		(output)
 		(text "IIC_SPI_Enable_H" (rect 0 0 92 12)(font "Arial" ))
-		(text "IIC_SPI_Enable_H" (rect 158 27 235 39)(font "Arial" ))
+		(text "IIC_SPI_Enable_H" (rect 158 27 250 39)(font "Arial" ))
 		(line (pt 256 32)(pt 240 32))
 	)
 	(drawing
@@ -491,7 +491,7 @@ agreement for further details.
 	(drawing
 		(rectangle (rect 16 16 200 192))
 	)
-	(annotation_block (parameter)(rect 640 240 808 272))
+	(annotation_block (parameter)(rect 632 224 800 256))
 )
 (symbol
 	(rect 968 328 1016 360)

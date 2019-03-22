@@ -241,7 +241,7 @@ SW[9]                        : AE12      : input  : 3.3-V LVTTL       :         
 DRAM_RAS_N                   : AE13      : output : 3.3-V LVTTL       :         : 3B        : Y              
 DRAM_ADDR[3]                 : AE14      : output : 3.3-V LVTTL       :         : 3B        : Y              
 VCCIO3B                      : AE15      : power  :                   : 3.3V    : 3B        :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : AE16      :        :                   :         : 4A        :                
+IIC0_IRQ_L                   : AE16      : output : 3.3-V LVTTL       :         : 4A        : N              
 DataBusIn[1]                 : AE17      : output : 3.3-V LVTTL       :         : 4A        : Y              
 sck_o                        : AE18      : output : 3.3-V LVTTL       :         : 4A        : Y              
 SSN_O[0]                     : AE19      : output : 3.3-V LVTTL       :         : 4A        : Y              
