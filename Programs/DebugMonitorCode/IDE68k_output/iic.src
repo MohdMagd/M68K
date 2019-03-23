@@ -1,0 +1,2500 @@
+       section   code
+**********************************************************************************************************
+* CSTART.ASM  -  C startup-code
+*
+*          Initialises the system prior to running the users main() program
+*
+*          1) Sets up the user program stack pointer
+*          2) Switches to User mode in the 68000
+*          3) Enables All Interrupts 1-7 on 68000
+*          4) Copies all initialised C program variables from Rom to Ram prior to running main()
+*
+**********************************************************************************************************
+                align
+
+
+**********************************************************************************************************
+* The Following ORG Statement marks the address of the start of the this CStart Program
+*
+* The debug Monitor and Flash Load and Program routines assume your program lives here
+**********************************************************************************************************
+                org       $08000000
+start:          move.w    #$2000,SR             clear interrupts to enable all, move to supervisor mode
+
+******************************************************************************************
+* Set unitialised global variables to 0 at startup
+******************************************************************************************
+mainloop        movea.l   #BssStart,a0          point a0 to the start of the initialised data section held in ROM
+                move.l    #BssLength,d0         figure out how many bytes of C program variables data to copy
+                beq       go_main               if no data to copy go straight to program
+Zeroinit        move.b    #0,(a0)+              copy the C program initialise variables from rom to ram
+                subq.l    #1,d0
+                bne       Zeroinit
+
+*******************************************************************************************
+* last minute initialisation before calling main
+*******************************************************************************************
+
+                move.l    #-1,__ungetbuf         required for use of scanf() etc in C programs
+                clr.l     __allocp               used by malloc() in C
+                move.l    #heap,__heap           pointer to free memory
+go_main         jsr       _main
+                bra       start
+
+; C:\M68K\PROGRAMS\DEBUGMONITORCODE\IIC EEPROM PROGRAM FILES\M68KUSERPROGRAM (DE1).C - Compiled by CC68K  Version 5.00 (c) 1991-2005  Peter J. Fondse
+; #include <stdio.h>
+; /*********************************************************************************************
+; **  RS232 port addresses
+; *********************************************************************************************/
+; #define RS232_Control     *(volatile unsigned char *)(0x00400040)
+; #define RS232_Status      *(volatile unsigned char *)(0x00400040)
+; #define RS232_TxData      *(volatile unsigned char *)(0x00400042)
+; #define RS232_RxData      *(volatile unsigned char *)(0x00400042)
+; #define RS232_Baud        *(volatile unsigned char *)(0x00400044)
+; /*********************************************************************************************
+; **  IIC registers
+; *********************************************************************************************/
+; #define PRERlo *(volatile unsigned char *)(0x00408000) // Clock Prescale register lo-byte
+; #define PRERhi *(volatile unsigned char *)(0x00408002) // Clock Prescale register hi-byte
+; #define CTR *(volatile unsigned char *)(0x00408004) // Control Register
+; #define TXR *(volatile unsigned char *)(0x00408006) // Transmit Register
+; #define RXR *(volatile unsigned char *)(0x00408006) // Receive Register
+; #define CR *(volatile unsigned char *)(0x00408008) // Command Register
+; #define SR *(volatile unsigned char *)(0x00408008) // Status Register
+; #define startWrite  0x90
+; #define startRead   0xA8
+; #define stop        0x41
+; /*********************************************************************************************
+; **  Function protoTypes
+; *********************************************************************************************/
+; void writeByteToChip(char c);
+; char readByteFromChip(void);
+; void waitForTXByte(void);
+; void waitForReceivedByte(void);
+; int checkForACK(void);
+; void IIC_Init(void);
+; int _getch( void )
+; {
+__getch:
+       link      A6,#-4
+; char c ;
+; while((RS232_Status & (char)(0x01)) != (char)(0x01))    // wait for Rx bit in 6850 serial comms chip status register to be '1'
+_getch_1:
+       move.b    4194368,D0
+       and.b     #1,D0
+       cmp.b     #1,D0
+       beq.s     _getch_3
+       bra       _getch_1
+_getch_3:
+; ;
+; return (RS232_RxData & (char)(0x7f));                   // read received character, mask off top bit and return as 7 bit ASCII character
+       move.b    4194370,D0
+       and.l     #255,D0
+       and.l     #127,D0
+       unlk      A6
+       rts
+; }
+; int _putch( int c)
+; {
+__putch:
+       link      A6,#0
+; while((RS232_Status & (char)(0x02)) != (char)(0x02))    // wait for Tx bit in status register or 6850 serial comms chip to be '1'
+_putch_1:
+       move.b    4194368,D0
+       and.b     #2,D0
+       cmp.b     #2,D0
+       beq.s     _putch_3
+       bra       _putch_1
+_putch_3:
+; ;
+; RS232_TxData = (c & (char)(0x7f));                      // write to the data register to output the character (mask off bit 8 to keep it 7 bit ASCII)
+       move.l    8(A6),D0
+       and.l     #127,D0
+       move.b    D0,4194370
+; return c ;                                              // putchar() expects the character to be returned
+       move.l    8(A6),D0
+       unlk      A6
+       rts
+; }
+; /*********************************************************************************************
+; **  Write Byte to EEPROM Chip
+; *********************************************************************************************/
+; void writeByteToChip(char c){
+_writeByteToChip:
+       link      A6,#0
+       movem.l   D2/A2/A3,-(A7)
+       lea       _waitForTXByte.L,A2
+       lea       _checkForACK.L,A3
+; int checkACKFlag = 0;
+       clr.l     D2
+; waitForTXByte();
+       jsr       (A2)
+; while(checkACKFlag != 1){
+writeByteToChip_1:
+       cmp.l     #1,D2
+       beq.s     writeByteToChip_3
+; TXR = 0xA0; // Write Control Byte
+       move.b    #160,4227078
+; CR = startWrite;
+       move.b    #144,4227080
+; waitForTXByte();
+       jsr       (A2)
+; checkACKFlag = checkForACK();
+       jsr       (A3)
+       move.l    D0,D2
+       bra       writeByteToChip_1
+writeByteToChip_3:
+; }
+; checkACKFlag = 0;
+       clr.l     D2
+; while(checkACKFlag != 1){
+writeByteToChip_4:
+       cmp.l     #1,D2
+       beq.s     writeByteToChip_6
+; TXR = 0x00; // Address Byte 1
+       clr.b     4227078
+; waitForTXByte();
+       jsr       (A2)
+; checkACKFlag = checkForACK();
+       jsr       (A3)
+       move.l    D0,D2
+       bra       writeByteToChip_4
+writeByteToChip_6:
+; }
+; checkACKFlag = 0;
+       clr.l     D2
+; while(checkACKFlag != 1){
+writeByteToChip_7:
+       cmp.l     #1,D2
+       beq.s     writeByteToChip_9
+; TXR = 0x00; // Address Byte 2
+       clr.b     4227078
+; waitForTXByte();
+       jsr       (A2)
+; checkACKFlag = checkForACK();
+       jsr       (A3)
+       move.l    D0,D2
+       bra       writeByteToChip_7
+writeByteToChip_9:
+; }
+; checkACKFlag = 0;
+       clr.l     D2
+; while(checkACKFlag != 1){
+writeByteToChip_10:
+       cmp.l     #1,D2
+       beq.s     writeByteToChip_12
+; TXR = c;    // send 1 byte of data
+       move.b    11(A6),4227078
+; waitForTXByte();
+       jsr       (A2)
+; checkACKFlag = checkForACK();
+       jsr       (A3)
+       move.l    D0,D2
+       bra       writeByteToChip_10
+writeByteToChip_12:
+; }
+; CR = stop;
+       move.b    #65,4227080
+       movem.l   (A7)+,D2/A2/A3
+       unlk      A6
+       rts
+; }
+; /*********************************************************************************************
+; **  Read Byte from EEPROM flash
+; *********************************************************************************************/
+; char readByteFromChip(void){
+_readByteFromChip:
+       link      A6,#-4
+       movem.l   D2/A2/A3,-(A7)
+       lea       _checkForACK.L,A2
+       lea       _waitForTXByte.L,A3
+; int checkACKFlag = 0;
+       clr.l     D2
+; char receivedByte;
+; while(checkACKFlag != 1){
+readByteFromChip_1:
+       cmp.l     #1,D2
+       beq.s     readByteFromChip_3
+; TXR = 0xA0; // Write Control Byte
+       move.b    #160,4227078
+; CR = startWrite;
+       move.b    #144,4227080
+; waitForTXByte();
+       jsr       (A3)
+; checkACKFlag = checkForACK();
+       jsr       (A2)
+       move.l    D0,D2
+       bra       readByteFromChip_1
+readByteFromChip_3:
+; }
+; checkACKFlag = 0;
+       clr.l     D2
+; while(checkACKFlag != 1){
+readByteFromChip_4:
+       cmp.l     #1,D2
+       beq.s     readByteFromChip_6
+; TXR = 0x00; // Address Byte 1
+       clr.b     4227078
+; waitForTXByte();
+       jsr       (A3)
+; checkACKFlag = checkForACK();
+       jsr       (A2)
+       move.l    D0,D2
+       bra       readByteFromChip_4
+readByteFromChip_6:
+; }
+; checkACKFlag = 0;
+       clr.l     D2
+; while(checkACKFlag != 1){
+readByteFromChip_7:
+       cmp.l     #1,D2
+       beq.s     readByteFromChip_9
+; TXR = 0x00; // Address Byte 2
+       clr.b     4227078
+; waitForTXByte();
+       jsr       (A3)
+; checkACKFlag = checkForACK();
+       jsr       (A2)
+       move.l    D0,D2
+       bra       readByteFromChip_7
+readByteFromChip_9:
+; }
+; while(checkACKFlag != 1){
+readByteFromChip_10:
+       cmp.l     #1,D2
+       beq.s     readByteFromChip_12
+; TXR = 0xA1; // Read Control Byte
+       move.b    #161,4227078
+; CR = startRead;
+       move.b    #168,4227080
+; waitForTXByte();
+       jsr       (A3)
+; checkACKFlag = checkForACK();
+       jsr       (A2)
+       move.l    D0,D2
+       bra       readByteFromChip_10
+readByteFromChip_12:
+; }
+; waitForReceivedByte();
+       jsr       _waitForReceivedByte
+; receivedByte = RXR;
+       move.b    4227078,-1(A6)
+; CR = stop;
+       move.b    #65,4227080
+; return receivedByte;
+       move.b    -1(A6),D0
+       movem.l   (A7)+,D2/A2/A3
+       unlk      A6
+       rts
+; }
+; /*********************************************************************************************
+; ** Probe SR register to check if TIP bit is clear
+; *********************************************************************************************/
+; void waitForTXByte(void){
+_waitForTXByte:
+; while ((SR & 0x02) >> 1 == 1);
+waitForTXByte_1:
+       move.b    4227080,D0
+       and.b     #2,D0
+       lsr.b     #1,D0
+       cmp.b     #1,D0
+       bne.s     waitForTXByte_3
+       bra       waitForTXByte_1
+waitForTXByte_3:
+       rts
+; }
+; /*********************************************************************************************
+; ** Probe RX register to check if it has received data from slave
+; *********************************************************************************************/
+; void waitForReceivedByte(void){
+_waitForReceivedByte:
+; while ((SR & 0x01) == 0);
+waitForReceivedByte_1:
+       move.b    4227080,D0
+       and.b     #1,D0
+       bne.s     waitForReceivedByte_3
+       bra       waitForReceivedByte_1
+waitForReceivedByte_3:
+       rts
+; }
+; /*********************************************************************************************
+; ** Probe Status Register to check if slave has ACKed
+; *********************************************************************************************/
+; int checkForACK(void){
+_checkForACK:
+; if ((SR & 0x80) >> 7)
+       move.b    4227080,D0
+       and.w     #255,D0
+       and.w     #128,D0
+       asr.w     #7,D0
+       tst.w     D0
+       beq.s     checkForACK_1
+; return 0;
+       clr.l     D0
+       bra.s     checkForACK_3
+checkForACK_1:
+; else return 1;
+       moveq     #1,D0
+checkForACK_3:
+       rts
+; }
+; /*********************************************************************************************
+; ** Initialize IIC Communication
+; *********************************************************************************************/
+; void IIC_Init(void){
+_IIC_Init:
+; // Set Clock Frequency to 100kHz as per page 7 of in IIC controller Document
+; CTR = 0x00; // Clear EN bit to set clock value first
+       clr.b     4227076
+; PRERlo = 0x32;
+       move.b    #50,4227072
+; PRERhi = 0x00;
+       clr.b     4227074
+; // Enable EN bit (core is disable) & Disable IEN bit (interrupts disable)
+; CTR = 0x80;
+       move.b    #128,4227076
+       rts
+; }
+; void main(void)
+; {
+_main:
+       link      A6,#-4
+       movem.l   D2/A2,-(A7)
+       lea       _printf.L,A2
+; char sendByte = 's';
+       moveq     #115,D2
+; char recievedByte;
+; scanflush() ;                       // flush any text that may have been typed ahead
+       jsr       _scanflush
+; printf("\r\nHello CPEN 412 Student\r\nWelcome to Lab3!!!\r\n");
+       pea       @m68kus~1_1.L
+       jsr       (A2)
+       addq.w    #4,A7
+; IIC_Init();
+       jsr       _IIC_Init
+; writeByteToChip(sendByte);
+       ext.w     D2
+       ext.l     D2
+       move.l    D2,-(A7)
+       jsr       _writeByteToChip
+       addq.w    #4,A7
+; recievedByte = readByteFromChip();
+       jsr       _readByteFromChip
+       move.b    D0,-1(A6)
+; printf("This is the sent Byte: %c\r\n", sendByte);
+       ext.w     D2
+       ext.l     D2
+       move.l    D2,-(A7)
+       pea       @m68kus~1_2.L
+       jsr       (A2)
+       addq.w    #8,A7
+; printf("This is the received Byte: %c\r\n", recievedByte);
+       move.b    -1(A6),D1
+       ext.w     D1
+       ext.l     D1
+       move.l    D1,-(A7)
+       pea       @m68kus~1_3.L
+       jsr       (A2)
+       addq.w    #8,A7
+; while(1);
+main_1:
+       bra       main_1
+; // programs should NOT exit as there is nothing to Exit TO !!!!!!
+; // There is no OS - just press the reset button to end program and call debug
+; }
+@doscan_read:
+       link      A6,#-4
+       move.l    A2,-(A7)
+       lea       @doscan_lpbuf.L,A2
+       tst.l     8(A6)
+       beq       @doscan_read_1
+       move.l    8(A6),A0
+       addq.l    #4,8(A6)
+       move.l    (A0),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,-4(A6)
+       clr.b     D1
+       and.l     #255,D1
+       cmp.l     D1,D0
+       beq.s     @doscan_read_3
+       move.l    -4(A6),D0
+       bra.s     @doscan_read_4
+@doscan_read_3:
+       moveq     #-1,D0
+       ext.w     D0
+       ext.l     D0
+@doscan_read_4:
+       bra       @doscan_read_5
+@doscan_read_1:
+       move.l    (A2),A0
+       move.b    (A0),D0
+       bne.s     @doscan_read_6
+       pea       @doscan_buf.L
+       jsr       _gets
+       addq.w    #4,A7
+       move.l    D0,(A2)
+       pea       @doscan_1.L
+       pea       @doscan_buf.L
+       jsr       _strcat
+       addq.w    #8,A7
+@doscan_read_6:
+       move.l    (A2),A0
+       addq.l    #1,(A2)
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+@doscan_read_5:
+       move.l    (A7)+,A2
+       unlk      A6
+       rts
+@doscan_putback:
+       link      A6,#0
+       movem.l   D2/D3,-(A7)
+       move.l    12(A6),D2
+       move.l    8(A6),D3
+       beq.s     @doscan_putback_1
+       cmp.l     #-1,D2
+       beq.s     @doscan_putback_3
+       subq.l    #4,D3
+       move.l    D3,A0
+       move.l    (A0),A0
+       move.b    D2,(A0)
+       bra.s     @doscan_putback_4
+@doscan_putback_3:
+       move.l    D3,A0
+       subq.l    #1,(A0)
+@doscan_putback_4:
+       bra.s     @doscan_putback_6
+@doscan_putback_1:
+       lea       @doscan_buf.L,A0
+       move.l    A0,D0
+       cmp.l     @doscan_lpbuf.L,D0
+       bne.s     @doscan_putback_5
+       clr.b     @doscan_buf.L
+       move.l    D2,-(A7)
+       jsr       _ungetch
+       addq.w    #4,A7
+       bra.s     @doscan_putback_6
+@doscan_putback_5:
+       subq.l    #1,@doscan_lpbuf.L
+       move.l    @doscan_lpbuf.L,A0
+       move.b    D2,(A0)
+@doscan_putback_6:
+       move.l    D2,D0
+       movem.l   (A7)+,D2/D3
+       unlk      A6
+       rts
+@doscan_space:
+       link      A6,#0
+       move.l    D2,-(A7)
+@doscan_space_1:
+       move.l    8(A6),-(A7)
+       jsr       @doscan_read
+       addq.w    #4,A7
+       move.l    D0,D2
+       move.l    12(A6),A0
+       addq.l    #1,(A0)
+       move.l    D2,D0
+       addq.l    #1,D0
+       lea       __ctype.L,A0
+       move.b    0(A0,D0.L),D0
+       and.b     #16,D0
+       bne       @doscan_space_1
+       move.l    D2,D0
+       move.l    (A7)+,D2
+       unlk      A6
+       rts
+@doscan_select:
+       link      A6,#0
+       movem.l   D2/D3/D4/D5/D6/D7/A2,-(A7)
+       move.l    12(A6),D3
+       move.l    24(A6),D6
+       move.l    20(A6),D7
+       move.l    D3,A0
+       move.b    (A0),D0
+       cmp.b     #94,D0
+       bne.s     @doscan_select_1
+       move.w    #1,A2
+       addq.l    #1,D3
+       bra.s     @doscan_select_2
+@doscan_select_1:
+       move.w    #0,A2
+@doscan_select_2:
+       move.l    16(A6),D0
+       subq.l    #1,16(A6)
+       tst.l     D0
+       beq       @doscan_select_5
+       move.l    8(A6),-(A7)
+       jsr       @doscan_read
+       addq.w    #4,A7
+       move.l    D0,D4
+       cmp.l     #-1,D4
+       bne.s     @doscan_select_6
+       bra       @doscan_select_5
+@doscan_select_6:
+       move.l    28(A6),A0
+       addq.l    #1,(A0)
+       clr.l     D5
+       clr.l     D2
+@doscan_select_8:
+       move.l    D3,A0
+       move.b    0(A0,D2.L),D0
+       cmp.b     #93,D0
+       beq       @doscan_select_10
+       tst.l     D2
+       beq.s     @doscan_select_11
+       move.l    D3,A0
+       move.b    0(A0,D2.L),D0
+       cmp.b     #93,D0
+       bne.s     @doscan_select_11
+       bra       @doscan_select_10
+@doscan_select_11:
+       tst.l     D2
+       beq       @doscan_select_15
+       move.l    D3,A0
+       move.b    0(A0,D2.L),D0
+       cmp.b     #45,D0
+       bne       @doscan_select_15
+       move.l    D3,A0
+       move.l    D2,D0
+       subq.l    #1,D0
+       move.l    D3,A1
+       move.l    D2,D1
+       addq.l    #1,D1
+       move.l    D0,-(A7)
+       move.b    0(A0,D0.L),D0
+       cmp.b     0(A1,D1.L),D0
+       bge       @doscan_select_15
+       move.l    (A7)+,D0
+       move.l    D3,A0
+       move.l    D2,D0
+       subq.l    #1,D0
+       move.b    0(A0,D0.L),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     D0,D4
+       blt.s     @doscan_select_17
+       move.l    D3,A0
+       move.l    D2,D0
+       addq.l    #1,D0
+       move.b    0(A0,D0.L),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     D0,D4
+       bgt.s     @doscan_select_17
+       bra.s     @doscan_select_10
+@doscan_select_17:
+       addq.l    #1,D2
+       bra.s     @doscan_select_19
+@doscan_select_15:
+       move.l    D3,A0
+       move.b    0(A0,D2.L),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     D0,D4
+       bne.s     @doscan_select_19
+       bra.s     @doscan_select_10
+@doscan_select_19:
+       addq.l    #1,D2
+       bra       @doscan_select_8
+@doscan_select_10:
+       tst.l     D2
+       beq.s     @doscan_select_23
+       move.l    D3,A0
+       move.b    0(A0,D2.L),D0
+       cmp.b     #93,D0
+       beq.s     @doscan_select_21
+@doscan_select_23:
+       moveq     #1,D5
+@doscan_select_21:
+       move.l    A2,D0
+       beq.s     @doscan_select_24
+       tst.l     D5
+       bne.s     @doscan_select_26
+       tst.l     D7
+       bne.s     @doscan_select_28
+       move.l    D6,A0
+       addq.l    #1,D6
+       move.b    D4,(A0)
+@doscan_select_28:
+       bra.s     @doscan_select_4
+@doscan_select_26:
+       bra.s     @doscan_select_5
+@doscan_select_24:
+       tst.l     D5
+       beq.s     @doscan_select_30
+       tst.l     D7
+       bne.s     @doscan_select_32
+       move.l    D6,A0
+       addq.l    #1,D6
+       move.b    D4,(A0)
+@doscan_select_32:
+       bra.s     @doscan_select_4
+@doscan_select_30:
+       bra.s     @doscan_select_5
+@doscan_select_4:
+       bra       @doscan_select_2
+@doscan_select_5:
+       cmp.l     #-1,D4
+       beq.s     @doscan_select_34
+       move.l    D4,-(A7)
+       move.l    8(A6),-(A7)
+       jsr       @doscan_putback
+       addq.w    #8,A7
+       move.l    28(A6),A0
+       subq.l    #1,(A0)
+@doscan_select_34:
+       tst.l     D7
+       bne.s     @doscan_select_36
+       move.l    D6,A0
+       clr.b     (A0)
+@doscan_select_36:
+       addq.l    #1,D3
+       move.l    D3,A0
+       move.b    (A0),D0
+       cmp.b     #93,D0
+       beq.s     @doscan_select_40
+       bra       @doscan_select_36
+@doscan_select_40:
+       addq.l    #1,D3
+       move.l    D3,D0
+       movem.l   (A7)+,D2/D3/D4/D5/D6/D7/A2
+       unlk      A6
+       rts
+_scanflush:
+       lea       @doscan_buf.L,A0
+       move.l    A0,@doscan_lpbuf.L
+       clr.b     @doscan_buf.L
+       pea       -1
+       jsr       _ungetch
+       addq.w    #4,A7
+       rts
+_doscan:
+       link      A6,#-120
+       movem.l   D2/D3/D4/D5/D6/D7/A2/A3/A4/A5,-(A7)
+       lea       @doscan_read.L,A3
+       tst.l     8(A6)
+       beq.s     doscan_1
+       lea       8(A6),A0
+       bra.s     doscan_2
+doscan_1:
+       clr.b     D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,A0
+doscan_2:
+       move.l    A0,D5
+       clr.l     -28(A6)
+       clr.l     D4
+doscan_3:
+       move.l    12(A6),A0
+       addq.l    #1,12(A6)
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,D3
+       clr.b     D1
+       and.l     #255,D1
+       cmp.l     D1,D0
+       beq       doscan_5
+       clr.l     D6
+       move.w    #0,A4
+       cmp.l     #32,D3
+       beq.s     doscan_8
+       cmp.l     #9,D3
+       beq.s     doscan_8
+       cmp.l     #10,D3
+       bne       doscan_6
+doscan_8:
+       move.l    D5,-(A7)
+       jsr       (A3)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-28(A6)
+       cmp.l     #-1,D2
+       bne.s     doscan_11
+       tst.l     D4
+       beq.s     doscan_13
+       move.l    D4,D0
+       bra.s     doscan_14
+doscan_13:
+       moveq     #-1,D0
+       ext.w     D0
+       ext.l     D0
+doscan_14:
+       bra       doscan_15
+doscan_11:
+       move.l    D2,D0
+       addq.l    #1,D0
+       lea       __ctype.L,A0
+       move.b    0(A0,D0.L),D0
+       and.b     #16,D0
+       bne       doscan_8
+       subq.l    #1,-28(A6)
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       @doscan_putback
+       addq.w    #8,A7
+       bra       doscan_141
+doscan_6:
+       cmp.l     #37,D3
+       bne       doscan_129
+       move.l    12(A6),A0
+       addq.l    #1,12(A6)
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,D3
+       clr.l     -20(A6)
+       clr.l     D6
+       clr.l     -24(A6)
+       move.w    #32767,A2
+       cmp.l     #42,D3
+       bne.s     doscan_18
+       moveq     #1,D6
+       move.l    12(A6),A0
+       addq.l    #1,12(A6)
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,D3
+doscan_18:
+       move.l    D3,D0
+       addq.l    #1,D0
+       lea       __ctype.L,A0
+       move.b    0(A0,D0.L),D0
+       and.b     #4,D0
+       beq       doscan_24
+       move.l    D3,D0
+       sub.l     #48,D0
+       move.l    D0,A2
+doscan_22:
+       move.l    12(A6),A0
+       addq.l    #1,12(A6)
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,D3
+       addq.l    #1,D0
+       lea       __ctype.L,A0
+       move.b    0(A0,D0.L),D0
+       and.b     #4,D0
+       beq.s     doscan_24
+       move.l    A2,-(A7)
+       pea       10
+       jsr       LMUL
+       move.l    (A7),D0
+       addq.w    #8,A7
+       move.l    D3,D1
+       sub.l     #48,D1
+       add.l     D1,D0
+       move.l    D0,A2
+       bra       doscan_22
+doscan_24:
+       cmp.l     #108,D3
+       beq.s     doscan_27
+       cmp.l     #76,D3
+       bne.s     doscan_25
+doscan_27:
+       move.l    #1,-24(A6)
+       move.l    12(A6),A0
+       addq.l    #1,12(A6)
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,D3
+       bra.s     doscan_28
+doscan_25:
+       cmp.l     #104,D3
+       bne.s     doscan_28
+       move.l    #1,-20(A6)
+       move.l    12(A6),A0
+       addq.l    #1,12(A6)
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    D0,D3
+doscan_28:
+       cmp.l     #91,D3
+       bne       doscan_30
+       tst.l     D6
+       bne.s     doscan_32
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),D7
+doscan_32:
+       pea       -28(A6)
+       move.l    D7,-(A7)
+       move.l    D6,-(A7)
+       move.l    A2,-(A7)
+       move.l    12(A6),-(A7)
+       move.l    D5,-(A7)
+       jsr       @doscan_select
+       add.w     #24,A7
+       move.l    D0,12(A6)
+       tst.l     D6
+       bne.s     doscan_34
+       addq.l    #1,D4
+doscan_34:
+       bra       doscan_141
+doscan_30:
+       cmp.l     #110,D3
+       bne.s     doscan_36
+       tst.l     D6
+       bne.s     doscan_38
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),D7
+       move.l    D7,A0
+       move.l    -28(A6),(A0)
+       addq.l    #1,D4
+doscan_38:
+       bra       doscan_141
+doscan_36:
+       cmp.l     #115,D3
+       bne       doscan_40
+       pea       -28(A6)
+       move.l    D5,-(A7)
+       jsr       @doscan_space
+       addq.w    #8,A7
+       move.l    D0,D2
+       tst.l     D6
+       bne.s     doscan_42
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),D7
+doscan_42:
+       addq.l    #1,-28(A6)
+doscan_44:
+       move.l    A2,D0
+       subq.w    #1,A2
+       tst.l     D0
+       beq       doscan_46
+       move.l    D2,D0
+       addq.l    #1,D0
+       lea       __ctype.L,A0
+       move.b    0(A0,D0.L),D0
+       and.b     #16,D0
+       bne.s     doscan_47
+       moveq     #1,D0
+       bra.s     doscan_48
+doscan_47:
+       clr.l     D0
+doscan_48:
+       and.l     #255,D0
+       beq.s     doscan_46
+       cmp.l     #-1,D2
+       beq.s     doscan_46
+       move.w    #1,A4
+       tst.l     D6
+       bne.s     doscan_49
+       move.l    D7,A0
+       addq.l    #1,D7
+       move.b    D2,(A0)
+doscan_49:
+       move.l    D5,-(A7)
+       jsr       (A3)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-28(A6)
+       bra       doscan_44
+doscan_46:
+       tst.l     D6
+       bne.s     doscan_53
+       move.l    D7,A0
+       clr.b     (A0)
+       move.l    A4,D0
+       beq.s     doscan_53
+       addq.l    #1,D4
+doscan_53:
+       cmp.l     #-1,D2
+       beq.s     doscan_57
+       tst.l     D6
+       bne.s     doscan_55
+       move.l    A4,D0
+       bne.s     doscan_55
+doscan_57:
+       tst.l     D4
+       beq.s     doscan_58
+       move.l    D4,D0
+       bra.s     doscan_61
+doscan_58:
+       cmp.l     #-1,D2
+       bne.s     doscan_60
+       moveq     #-1,D0
+       ext.w     D0
+       ext.l     D0
+       bra.s     doscan_61
+doscan_60:
+       move.l    D4,D0
+doscan_61:
+       bra       doscan_15
+doscan_55:
+       subq.l    #1,-28(A6)
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       @doscan_putback
+       addq.w    #8,A7
+       bra       doscan_141
+doscan_40:
+       cmp.l     #99,D3
+       bne       doscan_62
+       tst.l     D6
+       bne.s     doscan_64
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),D7
+doscan_64:
+       move.l    D5,-(A7)
+       jsr       (A3)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-28(A6)
+       move.l    A2,D0
+       cmp.l     #32767,D0
+       bne.s     doscan_66
+       move.w    #1,A2
+doscan_66:
+       cmp.l     #-1,D2
+       bne.s     doscan_68
+       tst.l     D6
+       bne.s     doscan_68
+       subq.l    #1,D4
+doscan_68:
+       move.l    A2,D0
+       subq.w    #1,A2
+       tst.l     D0
+       beq.s     doscan_72
+       cmp.l     #-1,D2
+       beq.s     doscan_72
+       tst.l     D6
+       bne.s     doscan_73
+       move.l    D7,A0
+       addq.l    #1,D7
+       move.b    D2,(A0)
+doscan_73:
+       move.l    D5,-(A7)
+       jsr       (A3)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-28(A6)
+       bra       doscan_68
+doscan_72:
+       cmp.l     #-1,D2
+       bne.s     doscan_75
+       tst.l     D4
+       beq.s     doscan_77
+       move.l    D4,D0
+       bra.s     doscan_78
+doscan_77:
+       moveq     #-1,D0
+       ext.w     D0
+       ext.l     D0
+doscan_78:
+       bra       doscan_15
+doscan_75:
+       tst.l     D6
+       bne.s     doscan_79
+       addq.l    #1,D4
+doscan_79:
+       subq.l    #1,-28(A6)
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       @doscan_putback
+       addq.w    #8,A7
+       bra       doscan_141
+doscan_62:
+       cmp.l     #105,D3
+       bne       doscan_84
+       pea       -28(A6)
+       move.l    D5,-(A7)
+       jsr       @doscan_space
+       addq.w    #8,A7
+       move.l    D0,D2
+       cmp.l     #48,D2
+       bne       doscan_83
+       move.w    #1,A4
+       move.l    D5,-(A7)
+       jsr       (A3)
+       addq.w    #4,A7
+       move.l    D0,D2
+       move.l    D2,-(A7)
+       jsr       _tolower
+       addq.w    #4,A7
+       cmp.l     #120,D0
+       bne.s     doscan_85
+       moveq     #120,D3
+       bra.s     doscan_86
+doscan_85:
+       subq.l    #1,-28(A6)
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       @doscan_putback
+       addq.w    #8,A7
+       moveq     #111,D3
+doscan_86:
+       addq.l    #1,-28(A6)
+       bra.s     doscan_84
+doscan_83:
+       subq.l    #1,-28(A6)
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       @doscan_putback
+       addq.w    #8,A7
+       moveq     #100,D3
+doscan_84:
+       cmp.l     #100,D3
+       beq.s     doscan_89
+       cmp.l     #117,D3
+       beq.s     doscan_89
+       cmp.l     #120,D3
+       beq.s     doscan_89
+       cmp.l     #111,D3
+       bne       doscan_87
+doscan_89:
+       pea       -28(A6)
+       move.l    D5,-(A7)
+       jsr       @doscan_space
+       addq.w    #8,A7
+       move.l    D0,D2
+       move.l    #10,-4(A6)
+       cmp.l     #120,D3
+       bne.s     doscan_90
+       move.l    #16,-4(A6)
+doscan_90:
+       cmp.l     #111,D3
+       bne.s     doscan_92
+       move.l    #8,-4(A6)
+doscan_92:
+       tst.l     D6
+       bne.s     doscan_94
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),D7
+doscan_94:
+       clr.l     -32(A6)
+       addq.l    #1,-28(A6)
+       cmp.l     #117,D3
+       beq.s     doscan_96
+       cmp.l     #45,D2
+       bne.s     doscan_96
+       move.l    D5,-(A7)
+       jsr       (A3)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-28(A6)
+       move.l    #1,-32(A6)
+       move.w    #1,A4
+doscan_96:
+       move.w    #0,A5
+       cmp.l     #-1,D2
+       bne.s     doscan_98
+       tst.l     D4
+       beq.s     doscan_100
+       move.l    D4,D0
+       bra.s     doscan_101
+doscan_100:
+       moveq     #-1,D0
+       ext.w     D0
+       ext.l     D0
+doscan_101:
+       bra       doscan_15
+doscan_98:
+       move.l    A2,D0
+       subq.w    #1,A2
+       tst.l     D0
+       beq       doscan_104
+       cmp.l     #120,D3
+       bne.s     doscan_106
+       move.l    D2,-(A7)
+       jsr       _toupper
+       addq.w    #4,A7
+       cmp.l     #65,D0
+       blt.s     doscan_106
+       move.l    D2,-(A7)
+       jsr       _toupper
+       addq.w    #4,A7
+       cmp.l     #70,D0
+       ble.s     doscan_105
+doscan_106:
+       move.l    D2,D0
+       addq.l    #1,D0
+       lea       __ctype.L,A0
+       move.b    0(A0,D0.L),D0
+       and.b     #4,D0
+       and.l     #255,D0
+       beq       doscan_104
+doscan_105:
+       move.l    D2,D0
+       addq.l    #1,D0
+       lea       __ctype.L,A0
+       move.b    0(A0,D0.L),D0
+       and.b     #4,D0
+       bne.s     doscan_107
+       move.l    D2,-(A7)
+       jsr       _toupper
+       addq.w    #4,A7
+       sub.l     #65,D0
+       add.l     #10,D0
+       add.l     #48,D0
+       move.l    D0,D2
+doscan_107:
+       move.l    A5,-(A7)
+       move.l    -4(A6),-(A7)
+       jsr       LMUL
+       move.l    (A7),D0
+       addq.w    #8,A7
+       add.l     D2,D0
+       sub.l     #48,D0
+       move.l    D0,A5
+       move.l    D5,-(A7)
+       jsr       (A3)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-28(A6)
+       move.w    #1,A4
+       bra       doscan_98
+doscan_104:
+       cmp.l     #-1,D2
+       beq.s     doscan_109
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       @doscan_putback
+       addq.w    #8,A7
+       subq.l    #1,-28(A6)
+       move.l    A4,D0
+       bne.s     doscan_111
+       move.l    D4,D0
+       bra       doscan_15
+doscan_111:
+       bra.s     doscan_113
+doscan_109:
+       move.l    A4,D0
+       bne.s     doscan_113
+       tst.l     D4
+       beq.s     doscan_115
+       move.l    D4,D0
+       bra.s     doscan_116
+doscan_115:
+       moveq     #-1,D0
+       ext.w     D0
+       ext.l     D0
+doscan_116:
+       bra       doscan_15
+doscan_113:
+       tst.l     -32(A6)
+       beq.s     doscan_117
+       move.l    A5,D0
+       neg.l     D0
+       move.l    D0,A5
+doscan_117:
+       tst.l     D6
+       bne.s     doscan_119
+       tst.l     -24(A6)
+       beq.s     doscan_121
+       move.l    D7,A0
+       move.l    A5,(A0)
+       bra.s     doscan_124
+doscan_121:
+       tst.l     -20(A6)
+       beq.s     doscan_123
+       move.l    D7,A0
+       move.w    A5,(A0)
+       bra.s     doscan_124
+doscan_123:
+       move.l    D7,A0
+       move.l    A5,(A0)
+doscan_124:
+       addq.l    #1,D4
+doscan_119:
+       cmp.l     #-1,D2
+       bne.s     doscan_125
+       tst.l     D4
+       beq.s     doscan_127
+       move.l    D4,D0
+       bra.s     doscan_128
+doscan_127:
+       moveq     #-1,D0
+       ext.w     D0
+       ext.l     D0
+doscan_128:
+       bra       doscan_15
+doscan_125:
+       bra       doscan_141
+doscan_87:
+       cmp.l     #37,D3
+       bne       doscan_129
+       move.l    D5,-(A7)
+       jsr       (A3)
+       addq.w    #4,A7
+       move.l    D0,D2
+       cmp.l     #-1,D2
+       bne.s     doscan_131
+       tst.l     D4
+       beq.s     doscan_133
+       move.l    D4,D0
+       bra.s     doscan_134
+doscan_133:
+       moveq     #-1,D0
+       ext.w     D0
+       ext.l     D0
+doscan_134:
+       bra       doscan_15
+doscan_131:
+       addq.l    #1,-28(A6)
+       cmp.l     D3,D2
+       beq.s     doscan_135
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       @doscan_putback
+       addq.w    #8,A7
+       subq.l    #1,-28(A6)
+       move.l    D4,D0
+       bra       doscan_15
+doscan_135:
+       bra       doscan_141
+doscan_129:
+       move.l    D5,-(A7)
+       jsr       (A3)
+       addq.w    #4,A7
+       move.l    D0,D2
+       addq.l    #1,-28(A6)
+       cmp.l     #-1,D2
+       bne.s     doscan_137
+       tst.l     D4
+       beq.s     doscan_139
+       move.l    D4,D0
+       bra.s     doscan_140
+doscan_139:
+       moveq     #-1,D0
+       ext.w     D0
+       ext.l     D0
+doscan_140:
+       bra.s     doscan_15
+doscan_137:
+       cmp.l     D3,D2
+       beq.s     doscan_141
+       move.l    D2,-(A7)
+       move.l    D5,-(A7)
+       jsr       @doscan_putback
+       addq.w    #8,A7
+       subq.l    #1,-28(A6)
+       move.l    D4,D0
+       bra.s     doscan_15
+doscan_141:
+       bra       doscan_3
+doscan_5:
+       move.l    D4,D0
+doscan_15:
+       movem.l   (A7)+,D2/D3/D4/D5/D6/D7/A2/A3/A4/A5
+       unlk      A6
+       rts
+_printf:
+       link      A6,#-4
+       move.l    D2,-(A7)
+       lea       8(A6),A0
+       addq.w    #4,A0
+       move.l    A0,D2
+       move.l    D2,-(A7)
+       move.l    8(A6),-(A7)
+       clr.l     -(A7)
+       jsr       _doprint
+       add.w     #12,A7
+       move.l    D0,-4(A6)
+       clr.l     D2
+       move.l    -4(A6),D0
+       move.l    (A7)+,D2
+       unlk      A6
+       rts
+ULMUL:
+       link    A6,#0
+       movem.l D0/D1,-(A7)
+       move.l  8(A6),D1
+       move.l  12(A6),D0
+       bra.s   lmul_3
+LMUL:
+       link    A6,#0
+       movem.l D0/D1,-(A7)
+       move.l  8(A6),D1
+       move.l  12(A6),D0
+       tst.l   D0
+       bpl.s   lmul_1
+       neg.l   D0
+       tst.l   D1
+       bpl.s   lmul_2
+       neg.l   D1
+       bra.s   lmul_3
+lmul_1:
+       tst.l   D1
+       bpl.s   lmul_3
+       neg.l   D1
+lmul_2:
+       bsr.s   domul
+       neg.l   D1
+       negx.l  D0
+       bra.s   lmul_4
+lmul_3:
+       bsr.s   domul
+lmul_4:
+       move.l  D1,8(A6)
+       movem.l (A7)+,D0/D1
+       unlk    A6
+       rts
+domul:
+       cmpi.l  #$FFFF,D1
+       bhi.s   domul_1
+       cmpi.l  #$FFFF,D0
+       bhi.s   domul_2
+       mulu    D0,D1
+       rts
+domul_1:
+       cmpi.l  #$FFFF,D0
+       bhi.s   domul_4
+       bra.s   domul_3
+domul_2
+       exg     D0,D1
+domul_3:
+       move.l  D2,-(A7)
+       move.l  D1,D2
+       swap    D2
+       mulu    D0,D1
+       mulu    D0,D2
+       swap    D2
+       clr.w   D2
+       add.l   D2,D1
+       move.l  (A7)+,D2
+       rts
+domul_4:
+       movem.l D2/D3,-(A7)
+       move.l  D1,D2
+       move.l  D1,D3
+       mulu    D0,D1
+       swap    D2
+       mulu    D0,D2
+       swap    D0
+       mulu    D0,D3
+       add.l   D3,D2
+       swap    D2
+       clr.w   D2
+       add.l   D2,D1
+       movem.l (A7)+,D2/D3
+       rts
+_gets:
+       link      A6,#0
+       movem.l   D2/D3/D4/A2,-(A7)
+       lea       _putch.L,A2
+       move.l    8(A6),D4
+       move.l    D4,D2
+gets_1:
+       jsr       _getch
+       move.l    D0,D3
+       cmp.l     #10,D0
+       beq       gets_3
+       cmp.l     #8,D3
+       beq.s     gets_4
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.b    D3,(A0)
+       ext.w     D3
+       ext.l     D3
+       move.l    D3,-(A7)
+       jsr       (A2)
+       addq.w    #4,A7
+       bra.s     gets_6
+gets_4:
+       cmp.l     D4,D2
+       bls.s     gets_6
+       pea       8
+       jsr       (A2)
+       addq.w    #4,A7
+       pea       32
+       jsr       (A2)
+       addq.w    #4,A7
+       pea       8
+       jsr       (A2)
+       addq.w    #4,A7
+       subq.l    #1,D2
+gets_6:
+       bra       gets_1
+gets_3:
+       pea       10
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    D2,A0
+       clr.b     (A0)
+       move.l    D4,D0
+       movem.l   (A7)+,D2/D3/D4/A2
+       unlk      A6
+       rts
+_tolower:
+       move.l    4(A7),D0
+       cmp.l     #'A',D0
+       blt.s     tolower_1
+       cmp.l     #'Z',D0
+       bgt.s     tolower_1
+       add.l     #$20,D0
+tolower_1:
+       rts
+_strcat:
+       move.l    (4,A7),A0
+       move.l    (8,A7),A1
+       move.l    A0,D0
+strcat_1:
+       tst.b     (A0)+
+       bne.s     strcat_1
+       subq.l    #1,A0
+strcat_2:
+       move.b    (A1)+,(A0)+
+       bne.s     strcat_2
+       rts
+_toupper:
+       move.l    4(A7),D0
+       cmp.l     #'a',D0
+       blt.s     toupper_1
+       cmp.l     #'z',D0
+       bgt.s     toupper_1
+       sub.l     #$20,D0
+toupper_1:
+       rts
+_ungetch:
+       link      A6,#0
+       move.l    8(A6),__ungetbuf.L
+       move.l    8(A6),D0
+       unlk      A6
+       rts
+@doprint_copy:
+       link      A6,#0
+       move.l    8(A6),A0
+       tst.l     (A0)
+       beq.s     @doprint_copy_1
+       move.l    12(A6),D0
+       move.l    8(A6),A0
+       move.l    (A0),A1
+       addq.l    #1,(A0)
+       move.b    D0,(A1)
+       bra.s     @doprint_copy_2
+@doprint_copy_1:
+       move.l    12(A6),-(A7)
+       jsr       _putch
+       addq.w    #4,A7
+@doprint_copy_2:
+       unlk      A6
+       rts
+@doprint_getval:
+       link      A6,#0
+       movem.l   D2/D3,-(A7)
+       move.l    8(A6),D3
+       clr.l     D2
+       move.l    D3,A0
+       move.l    (A0),A0
+       move.b    (A0),D0
+       cmp.b     #42,D0
+       bne.s     @doprint_getval_1
+       move.l    12(A6),A0
+       move.l    (A0),A1
+       addq.l    #4,(A0)
+       move.l    (A1),D2
+       move.l    D3,A0
+       addq.l    #1,(A0)
+       bra       @doprint_getval_5
+@doprint_getval_1:
+       moveq     #1,D0
+       move.l    D3,A0
+       move.l    (A0),A0
+       move.b    (A0),D1
+       ext.w     D1
+       ext.l     D1
+       add.l     D1,D0
+       lea       __ctype.L,A0
+       move.b    0(A0,D0.L),D0
+       and.b     #4,D0
+       beq.s     @doprint_getval_5
+       move.l    D2,-(A7)
+       pea       10
+       jsr       LMUL
+       move.l    (A7),D0
+       addq.w    #8,A7
+       move.l    D3,A0
+       move.l    (A0),A1
+       addq.l    #1,(A0)
+       move.b    (A1),D1
+       ext.w     D1
+       ext.l     D1
+       add.l     D1,D0
+       sub.l     #48,D0
+       move.l    D0,D2
+       bra       @doprint_getval_1
+@doprint_getval_5:
+       move.l    D2,D0
+       movem.l   (A7)+,D2/D3
+       unlk      A6
+       rts
+_doprint:
+       link      A6,#-52
+       movem.l   D2/D3/D4/D5/D6/D7/A2/A3/A4/A5,-(A7)
+       lea       8(A6),A2
+       lea       @doprint_copy.L,A3
+       lea       _ultoa.L,A4
+       clr.l     D6
+doprint_1:
+       move.l    12(A6),A0
+       tst.b     (A0)
+       beq       doprint_3
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       cmp.b     #37,D0
+       beq.s     doprint_4
+       move.l    12(A6),A0
+       addq.l    #1,12(A6)
+       move.b    (A0),D1
+       ext.w     D1
+       ext.l     D1
+       move.l    D1,-(A7)
+       move.l    A2,-(A7)
+       jsr       (A3)
+       addq.w    #8,A7
+       addq.l    #1,D6
+       bra       doprint_2
+doprint_4:
+       addq.l    #1,12(A6)
+       clr.b     -45(A6)
+       clr.b     -46(A6)
+       clr.b     -48(A6)
+       clr.b     -49(A6)
+       clr.b     -50(A6)
+       clr.b     -51(A6)
+       clr.l     -4(A6)
+       moveq     #-1,D5
+       lea       -36(A6),A0
+       move.l    A0,D3
+       move.l    A0,D2
+doprint_6:
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #43,D0
+       beq.s     doprint_12
+       bgt.s     doprint_15
+       cmp.l     #35,D0
+       beq       doprint_14
+       bgt       doprint_9
+       cmp.l     #32,D0
+       beq.s     doprint_13
+       bra.s     doprint_9
+doprint_15:
+       cmp.l     #45,D0
+       beq.s     doprint_11
+       bra.s     doprint_9
+doprint_11:
+       move.b    #1,-51(A6)
+       addq.l    #1,12(A6)
+       bra.s     doprint_7
+doprint_12:
+       move.b    #1,-50(A6)
+       addq.l    #1,12(A6)
+       bra.s     doprint_7
+doprint_13:
+       move.b    #1,-49(A6)
+       addq.l    #1,12(A6)
+       bra.s     doprint_7
+doprint_14:
+       move.b    #1,-48(A6)
+       addq.l    #1,12(A6)
+       bra.s     doprint_7
+doprint_9:
+       bra.s     doprint_8
+doprint_7:
+       bra       doprint_6
+doprint_8:
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       cmp.b     #48,D0
+       bne.s     doprint_16
+       addq.l    #1,12(A6)
+       move.b    #1,-46(A6)
+doprint_16:
+       pea       16(A6)
+       pea       12(A6)
+       jsr       @doprint_getval
+       addq.w    #8,A7
+       move.l    D0,A5
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       cmp.b     #46,D0
+       bne.s     doprint_18
+       addq.l    #1,12(A6)
+       pea       16(A6)
+       pea       12(A6)
+       jsr       @doprint_getval
+       addq.w    #8,A7
+       move.l    D0,D5
+doprint_18:
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       cmp.b     #108,D0
+       bne.s     doprint_20
+       addq.l    #1,12(A6)
+       move.b    #1,-45(A6)
+doprint_20:
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #111,D0
+       beq       doprint_27
+       bgt.s     doprint_33
+       cmp.l     #100,D0
+       beq       doprint_24
+       bgt.s     doprint_34
+       cmp.l     #99,D0
+       beq       doprint_30
+       bgt       doprint_22
+       cmp.l     #88,D0
+       beq       doprint_28
+       bra       doprint_22
+doprint_34:
+       cmp.l     #105,D0
+       beq.s     doprint_24
+       bra       doprint_22
+doprint_33:
+       cmp.l     #117,D0
+       beq       doprint_26
+       bgt.s     doprint_35
+       cmp.l     #115,D0
+       beq       doprint_31
+       bra       doprint_22
+doprint_35:
+       cmp.l     #120,D0
+       beq       doprint_28
+       bra       doprint_22
+doprint_24:
+       tst.b     -45(A6)
+       beq.s     doprint_36
+       pea       10
+       move.l    D3,-(A7)
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),-(A7)
+       jsr       _ltoa
+       add.w     #12,A7
+       bra.s     doprint_37
+doprint_36:
+       pea       10
+       move.l    D3,-(A7)
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),-(A7)
+       jsr       _ltoa
+       add.w     #12,A7
+doprint_37:
+       bra       doprint_23
+doprint_26:
+       tst.b     -45(A6)
+       beq.s     doprint_38
+       pea       10
+       move.l    D3,-(A7)
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),-(A7)
+       jsr       (A4)
+       add.w     #12,A7
+       bra.s     doprint_39
+doprint_38:
+       pea       10
+       move.l    D3,-(A7)
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),-(A7)
+       jsr       (A4)
+       add.w     #12,A7
+doprint_39:
+       bra       doprint_23
+doprint_27:
+       tst.b     -45(A6)
+       beq.s     doprint_40
+       pea       8
+       move.l    D3,-(A7)
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),-(A7)
+       jsr       (A4)
+       add.w     #12,A7
+       bra.s     doprint_41
+doprint_40:
+       pea       8
+       move.l    D3,-(A7)
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),-(A7)
+       jsr       (A4)
+       add.w     #12,A7
+doprint_41:
+       bra       doprint_23
+doprint_28:
+       tst.b     -45(A6)
+       beq.s     doprint_42
+       pea       16
+       move.l    D3,-(A7)
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),-(A7)
+       jsr       (A4)
+       add.w     #12,A7
+       bra.s     doprint_43
+doprint_42:
+       pea       16
+       move.l    D3,-(A7)
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),-(A7)
+       jsr       (A4)
+       add.w     #12,A7
+doprint_43:
+       bra       doprint_23
+doprint_30:
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),D0
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.b    D0,(A0)
+       move.l    D2,A0
+       clr.b     (A0)
+       move.l    A5,D0
+       beq.s     doprint_44
+       move.l    A5,D0
+       bra.s     doprint_45
+doprint_44:
+       moveq     #1,D0
+       ext.w     D0
+       ext.l     D0
+doprint_45:
+       move.l    D0,D5
+       bra       doprint_23
+doprint_31:
+       move.l    16(A6),A0
+       addq.l    #4,16(A6)
+       move.l    (A0),D3
+       cmp.l     #-1,D5
+       bne.s     doprint_46
+       move.l    D3,-(A7)
+       jsr       _strlen
+       addq.w    #4,A7
+       move.l    D0,D5
+doprint_46:
+       bra.s     doprint_23
+doprint_22:
+       move.l    12(A6),A0
+       move.l    D2,A1
+       addq.l    #1,D2
+       move.b    (A0),(A1)
+       move.l    D2,A0
+       clr.b     (A0)
+doprint_23:
+       move.l    D3,-(A7)
+       jsr       _strlen
+       addq.w    #4,A7
+       move.b    D0,D4
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       cmp.b     #115,D0
+       bne.s     doprint_48
+       cmp.l     #0,D5
+       blt.s     doprint_48
+       ext.w     D4
+       ext.l     D4
+       cmp.l     D5,D4
+       ble.s     doprint_50
+       move.l    D5,D0
+       bra.s     doprint_51
+doprint_50:
+       move.b    D4,D0
+       ext.w     D0
+       ext.l     D0
+doprint_51:
+       move.b    D0,D4
+doprint_48:
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       cmp.b     #88,D0
+       bne       doprint_56
+       lea       -36(A6),A0
+       move.l    A0,D2
+doprint_54:
+       move.l    D2,A0
+       tst.b     (A0)
+       beq.s     doprint_56
+       move.l    D2,A0
+       move.b    (A0),D1
+       ext.w     D1
+       ext.l     D1
+       move.l    D1,-(A7)
+       jsr       _toupper
+       addq.w    #4,A7
+       move.l    D2,A0
+       move.b    D0,(A0)
+       addq.l    #1,D2
+       bra       doprint_54
+doprint_56:
+       moveq     #0,D7
+       lea       -44(A6),A0
+       move.l    A0,D2
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       cmp.b     #100,D0
+       beq.s     doprint_59
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       cmp.b     #105,D0
+       bne       doprint_65
+doprint_59:
+       move.b    -50(A6),D0
+       ext.w     D0
+       ext.l     D0
+       tst.l     D0
+       bne.s     doprint_62
+       move.l    D3,A0
+       move.b    (A0),D0
+       cmp.b     #45,D0
+       bne       doprint_60
+doprint_62:
+       move.l    D3,A0
+       move.b    (A0),D0
+       cmp.b     #45,D0
+       bne.s     doprint_63
+       move.l    D3,A0
+       addq.l    #1,D3
+       move.l    D2,A1
+       addq.l    #1,D2
+       move.b    (A0),(A1)
+       subq.b    #1,D4
+       bra.s     doprint_64
+doprint_63:
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.b    #43,(A0)
+doprint_64:
+       addq.l    #1,D7
+       bra       doprint_65
+doprint_60:
+       tst.b     -49(A6)
+       beq.s     doprint_65
+       move.l    D3,A0
+       move.b    (A0),D0
+       cmp.b     #45,D0
+       bne.s     doprint_67
+       move.l    D3,A0
+       addq.l    #1,D3
+       move.l    D2,A1
+       addq.l    #1,D2
+       move.b    (A0),(A1)
+       subq.b    #1,D4
+       bra.s     doprint_68
+doprint_67:
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.b    #32,(A0)
+doprint_68:
+       addq.l    #1,D7
+doprint_65:
+       tst.b     -48(A6)
+       beq       doprint_77
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #111,D0
+       beq.s     doprint_73
+       bgt.s     doprint_76
+       cmp.l     #88,D0
+       beq.s     doprint_73
+       bra       doprint_77
+doprint_76:
+       cmp.l     #120,D0
+       beq.s     doprint_73
+       bra       doprint_77
+doprint_73:
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.b    #48,(A0)
+       addq.l    #1,D7
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       cmp.b     #120,D0
+       beq.s     doprint_79
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       cmp.b     #88,D0
+       bne.s     doprint_77
+doprint_79:
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.b    #120,(A0)
+       addq.l    #1,D7
+doprint_77:
+       move.l    D2,A0
+       clr.b     (A0)
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #105,D0
+       beq       doprint_82
+       bgt.s     doprint_93
+       cmp.l     #99,D0
+       beq       doprint_96
+       bgt.s     doprint_94
+       cmp.l     #88,D0
+       beq       doprint_82
+       bgt       doprint_80
+       cmp.l     #69,D0
+       beq       doprint_82
+       bra       doprint_80
+doprint_94:
+       cmp.l     #101,D0
+       beq       doprint_82
+       bgt       doprint_80
+       cmp.l     #100,D0
+       beq.s     doprint_82
+       bra       doprint_80
+doprint_93:
+       cmp.l     #117,D0
+       beq.s     doprint_82
+       bgt.s     doprint_95
+       cmp.l     #115,D0
+       beq       doprint_96
+       bgt       doprint_80
+       cmp.l     #111,D0
+       beq.s     doprint_82
+       bra       doprint_80
+doprint_95:
+       cmp.l     #120,D0
+       beq.s     doprint_82
+       bra       doprint_80
+doprint_82:
+       tst.b     -46(A6)
+       beq.s     doprint_96
+       tst.b     -51(A6)
+       bne.s     doprint_96
+       move.l    A5,D0
+       sub.l     D7,D0
+       ext.w     D4
+       ext.l     D4
+       sub.l     D4,D0
+       move.l    D0,-4(A6)
+doprint_96:
+       move.l    -4(A6),D0
+       cmp.l     #0,D0
+       bge.s     doprint_98
+       clr.l     -4(A6)
+doprint_98:
+       tst.b     -51(A6)
+       bne       doprint_104
+       move.b    D4,D0
+       ext.w     D0
+       ext.l     D0
+       add.l     -4(A6),D0
+       add.l     D7,D0
+       move.b    D0,-47(A6)
+doprint_102:
+       move.b    -47(A6),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    A5,D1
+       subq.w    #1,A5
+       cmp.l     D1,D0
+       bge.s     doprint_104
+       pea       32
+       move.l    A2,-(A7)
+       jsr       (A3)
+       addq.w    #8,A7
+       addq.l    #1,D6
+       bra       doprint_102
+doprint_104:
+       lea       -44(A6),A0
+       move.l    A0,D2
+doprint_105:
+       move.l    D2,A0
+       tst.b     (A0)
+       beq.s     doprint_107
+       move.l    D2,A0
+       addq.l    #1,D2
+       move.b    (A0),D1
+       ext.w     D1
+       ext.l     D1
+       move.l    D1,-(A7)
+       move.l    A2,-(A7)
+       jsr       (A3)
+       addq.w    #8,A7
+       addq.l    #1,D6
+       bra       doprint_105
+doprint_107:
+       move.l    -4(A6),D0
+       move.b    D0,-47(A6)
+doprint_108:
+       move.b    -47(A6),D0
+       subq.b    #1,-47(A6)
+       tst.b     D0
+       beq.s     doprint_110
+       pea       48
+       move.l    A2,-(A7)
+       jsr       (A3)
+       addq.w    #8,A7
+       addq.l    #1,D6
+       bra       doprint_108
+doprint_110:
+       move.l    D3,A0
+       tst.b     (A0)
+       beq       doprint_113
+       move.l    12(A6),A0
+       move.b    (A0),D0
+       ext.w     D0
+       ext.l     D0
+       cmp.l     #115,D0
+       beq.s     doprint_116
+       bgt.s     doprint_119
+       cmp.l     #99,D0
+       beq.s     doprint_116
+       bra.s     doprint_119
+doprint_116:
+       move.l    D5,D0
+       subq.l    #1,D5
+       cmp.l     #0,D0
+       bgt.s     doprint_119
+       bra.s     doprint_115
+doprint_119:
+       move.l    D3,A0
+       addq.l    #1,D3
+       move.b    (A0),D1
+       ext.w     D1
+       ext.l     D1
+       move.l    D1,-(A7)
+       move.l    A2,-(A7)
+       jsr       (A3)
+       addq.w    #8,A7
+       addq.l    #1,D6
+       bra.s     doprint_112
+doprint_115:
+       bra.s     doprint_113
+doprint_112:
+       bra       doprint_110
+doprint_113:
+       tst.b     -51(A6)
+       beq       doprint_125
+       move.b    D4,D0
+       ext.w     D0
+       ext.l     D0
+       add.l     -4(A6),D0
+       add.l     D7,D0
+       move.b    D0,-47(A6)
+doprint_123:
+       move.b    -47(A6),D0
+       ext.w     D0
+       ext.l     D0
+       move.l    A5,D1
+       subq.w    #1,A5
+       cmp.l     D1,D0
+       bge.s     doprint_125
+       pea       32
+       move.l    A2,-(A7)
+       jsr       (A3)
+       addq.w    #8,A7
+       subq.l    #1,D6
+       bra       doprint_123
+doprint_125:
+       bra.s     doprint_81
+doprint_80:
+       move.l    12(A6),A0
+       move.b    (A0),D1
+       ext.w     D1
+       ext.l     D1
+       move.l    D1,-(A7)
+       move.l    A2,-(A7)
+       jsr       (A3)
+       addq.w    #8,A7
+       addq.l    #1,D6
+doprint_81:
+       addq.l    #1,12(A6)
+doprint_2:
+       bra       doprint_1
+doprint_3:
+       tst.l     (A2)
+       beq.s     doprint_126
+       clr.b     D1
+       and.l     #255,D1
+       move.l    D1,-(A7)
+       move.l    A2,-(A7)
+       jsr       (A3)
+       addq.w    #8,A7
+doprint_126:
+       move.l    D6,D0
+       movem.l   (A7)+,D2/D3/D4/D5/D6/D7/A2/A3/A4/A5
+       unlk      A6
+       rts
+_putch:
+       link      A6,#0
+       move.l    D2,-(A7)
+       move.l    8(A6),D2
+       cmp.l     #10,D2
+       bne.s     putch_1
+       pea       13
+       jsr       __putch
+       addq.w    #4,A7
+putch_1:
+       move.l    D2,-(A7)
+       jsr       __putch
+       addq.w    #4,A7
+       move.l    D2,D0
+       move.l    (A7)+,D2
+       unlk      A6
+       rts
+_getch:
+       move.l    D2,-(A7)
+       move.l    __ungetbuf.L,D2
+       move.l    __ungetbuf.L,D0
+       cmp.l     #-1,D0
+       beq.s     getch_1
+       move.l    #-1,__ungetbuf.L
+       bra.s     getch_3
+getch_1:
+       jsr       __getch
+       move.l    D0,D2
+       cmp.l     #13,D0
+       bne.s     getch_3
+       moveq     #10,D2
+getch_3:
+       move.l    D2,D0
+       move.l    (A7)+,D2
+       rts
+@itoa_convert:
+       link      A6,#0
+       movem.l   D2/D3/D4/D5,-(A7)
+       move.l    8(A6),D2
+       move.l    16(A6),D3
+       move.l    12(A6),D5
+       move.l    D5,-(A7)
+       move.l    D3,-(A7)
+       jsr       ULDIV
+       move.l    4(A7),D0
+       addq.w    #8,A7
+       move.l    D0,D4
+       cmp.l     D3,D5
+       blo.s     @itoa_convert_1
+       move.l    D3,-(A7)
+       move.l    D5,-(A7)
+       move.l    D3,-(A7)
+       jsr       ULDIV
+       move.l    (A7),D1
+       addq.w    #8,A7
+       move.l    D1,-(A7)
+       move.l    D2,-(A7)
+       jsr       @itoa_convert
+       add.w     #12,A7
+       move.l    D0,D2
+@itoa_convert_1:
+       cmp.l     #9,D4
+       bgt.s     @itoa_convert_3
+       move.l    D4,D0
+       moveq     #48,D1
+       and.l     #255,D1
+       add.l     D1,D0
+       bra.s     @itoa_convert_4
+@itoa_convert_3:
+       move.l    D4,D0
+       moveq     #97,D1
+       and.l     #255,D1
+       add.l     D1,D0
+       sub.l     #10,D0
+@itoa_convert_4:
+       move.l    D2,A0
+       move.b    D0,(A0)
+       move.l    D2,D0
+       addq.l    #1,D0
+       movem.l   (A7)+,D2/D3/D4/D5
+       unlk      A6
+       rts
+_ltoa:
+       link      A6,#0
+       movem.l   D2/D3/D4/D5,-(A7)
+       move.l    8(A6),D2
+       move.l    12(A6),D3
+       move.l    16(A6),D5
+       move.l    D3,D4
+       cmp.l     #2,D5
+       blt.s     ltoa_3
+       cmp.l     #36,D5
+       ble.s     ltoa_1
+ltoa_3:
+       move.l    D3,D0
+       bra       ltoa_4
+ltoa_1:
+       cmp.l     #10,D5
+       bne       ltoa_5
+       cmp.l     #0,D2
+       bge.s     ltoa_5
+       move.l    D2,D0
+       neg.l     D0
+       move.l    D0,D2
+       cmp.l     #0,D2
+       bge.s     ltoa_7
+       pea       @itoa_1.L
+       move.l    D3,-(A7)
+       jsr       _strcpy
+       addq.w    #8,A7
+       move.l    D3,D0
+       bra.s     ltoa_4
+ltoa_7:
+       move.l    D4,A0
+       addq.l    #1,D4
+       move.b    #45,(A0)
+ltoa_5:
+       move.l    D5,-(A7)
+       move.l    D2,-(A7)
+       move.l    D4,-(A7)
+       jsr       @itoa_convert
+       add.w     #12,A7
+       move.l    D0,D4
+       move.l    D4,A0
+       clr.b     (A0)
+       move.l    D3,D0
+ltoa_4:
+       movem.l   (A7)+,D2/D3/D4/D5
+       unlk      A6
+       rts
+_ultoa:
+       link      A6,#0
+       movem.l   D2/D3/D4,-(A7)
+       move.l    16(A6),D3
+       move.l    12(A6),D4
+       move.l    D4,D2
+       cmp.l     #2,D3
+       blt.s     ultoa_3
+       cmp.l     #36,D3
+       ble.s     ultoa_1
+ultoa_3:
+       move.l    D4,D0
+       bra.s     ultoa_4
+ultoa_1:
+       move.l    D3,-(A7)
+       move.l    8(A6),-(A7)
+       move.l    D2,-(A7)
+       jsr       @itoa_convert
+       add.w     #12,A7
+       move.l    D0,D2
+       move.l    D2,A0
+       clr.b     (A0)
+       move.l    D4,D0
+ultoa_4:
+       movem.l   (A7)+,D2/D3/D4
+       unlk      A6
+       rts
+_itoa:
+       link      A6,#0
+       move.l    16(A6),-(A7)
+       move.l    12(A6),-(A7)
+       move.l    8(A6),-(A7)
+       jsr       _ltoa
+       add.w     #12,A7
+       unlk      A6
+       rts
+_strlen:
+       move.l    (4,A7),A0
+       move.l    A0,A1
+strlen_1:
+       tst.b     (A1)+
+       bne       strlen_1
+       move.l    A1,D0
+       sub.l     A0,D0
+       subq.l    #1,D0
+       rts
+_strcpy:
+       move.l    (4,A7),A0
+       move.l    (8,A7),A1
+       move.l    A0,D0
+strcpy_1:
+       move.b    (A1)+,(A0)+
+       bne.s     strcpy_1
+       rts
+ULDIV:
+       link    A6,#0
+       movem.l D0/D1,-(A7)
+       move.l  8(A6),D1
+       move.l  12(A6),D0
+       bra.s   ldiv_3
+LDIV:
+       link    A6,#0
+       movem.l D0/D1,-(A7)
+       move.l  8(A6),D1
+       move.l  12(A6),D0
+       tst.l   D0
+       bpl.s   ldiv_1
+       neg.l   D0
+       tst.l   D1
+       bpl.s   ldiv_2
+       neg.l   D1
+       bsr.s   dodiv
+       neg.l   D1
+       bra.s   ldiv_4
+ldiv_1:
+       tst.l   D1
+       bpl.s   ldiv_3
+       neg.l   D1
+       bsr.s   dodiv
+       neg.l   D0
+       bra.s   ldiv_4
+ldiv_2:
+       bsr.s   dodiv
+       neg.l   D0
+       neg.l   D1
+       bra.s   ldiv_4
+ldiv_3:
+       bsr.s   dodiv
+ldiv_4:
+       move.l  D0,8(A6)
+       move.l  D1,12(A6)
+       movem.l (A7)+,D0/D1
+       unlk    A6
+       rts
+dodiv:
+       cmpi.l  #$FFFF,D1
+       bhi.s   dodiv_2
+       cmpi.l  #$FFFF,D0
+       bhi.s   dodiv_1
+       divu    D1,D0
+       move.l  D0,D1
+       clr.w   D1
+       swap    D1
+       andi.l  #$FFFF,D0
+       rts
+dodiv_1:
+       movem.w D0/D2,-(A7)
+       clr.w   D0
+       swap    D0
+       divu    D1,D0
+       move.w  D0,D2
+       move.w  (A7)+,D0
+       divu    D1,D0
+       swap    D0
+       clr.l   D1
+       move.w  D0,D1
+       move.w  D2,D0
+       swap    D0
+       move.w  (A7)+,D2
+       rts
+dodiv_2:
+       movem.l D2/D3/D4,-(A7)
+       move.l  D1,D2
+       clr.w   D2
+       swap    D2
+       addq.l  #1,D2
+       move.l  D0,D3
+       move.l  D1,D4
+       move.l  D2,D1
+       bsr.s   dodiv_1
+       move.l  D4,D1
+       divu    D2,D1
+       divu    D1,D0
+       andi.l  #$FFFF,D0
+dodiv_3:
+       move.l  D4,D1
+       move.l  D4,D2
+       swap    D2
+       mulu    D0,D1
+       mulu    D0,D2
+       swap    D2
+       add.l   D2,D1
+       sub.l   D3,D1
+       bhi.s   dodiv_4
+       neg.l   D1
+       cmp.l   D1,D4
+       bhi.s   dodiv_5
+       addq.l  #1,D0
+       bra.s   dodiv_3
+dodiv_4:
+       subq.l  #1,D0
+       bra.s   dodiv_3
+dodiv_5:
+       movem.l (A7)+,D2/D3/D4
+       rts
+       section   const
+                align
+
+
+@m68kus~1_1:
+       dc.b      13,10,72,101,108,108,111,32,67,80,69,78,32,52
+       dc.b      49,50,32,83,116,117,100,101,110,116,13,10,87
+       dc.b      101,108,99,111,109,101,32,116,111,32,76,97,98
+       dc.b      51,33,33,33,13,10,0
+@m68kus~1_2:
+       dc.b      84,104,105,115,32,105,115,32,116,104,101,32
+       dc.b      115,101,110,116,32,66,121,116,101,58,32,37,99
+       dc.b      13,10,0
+@m68kus~1_3:
+       dc.b      84,104,105,115,32,105,115,32,116,104,101,32
+       dc.b      114,101,99,101,105,118,101,100,32,66,121,116
+       dc.b      101,58,32,37,99,13,10,0
+@doscan_1:
+       dc.b      10,0
+__ctype:
+       dc.b      0,64,64,64,64,64,64,64,64,64,80,80,80,80,80
+       dc.b      64,64,64,64,64,64,64,64,64,64,64,64,64,64,64
+       dc.b      64,64,64,208,160,160,160,160,160,160,160,160
+       dc.b      160,160,160,160,160,160,160,140,140,140,140
+       dc.b      140,140,140,140,140,140,160,160,160,160,160
+       dc.b      160,160,138,138,138,138,138,138,130,130,130
+       dc.b      130,130,130,130,130,130,130,130,130,130,130
+       dc.b      130,130,130,130,130,130,160,160,160,160,160
+       dc.b      160,137,137,137,137,137,137,129,129,129,129
+       dc.b      129,129,129,129,129,129,129,129,129,129,129
+       dc.b      129,129,129,129,129,160,160,160,160,64,0,0,0
+       dc.b      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+       dc.b      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+       dc.b      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+       dc.b      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+       dc.b      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+       dc.b      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+@itoa_1:
+       dc.b      45,50,49,52,55,52,56,51,54,52,56,0
+       section   data
+                align
+
+*********************************************************************************************************************************************************
+* Section for Initialised Data (in theory should be copied to Ram at startup) but is part of program code as we copy whole program to ram at startup
+********************************************************************************************************************************************************
+
+DataStart       equ       *
+__ungetbuf:     ds.l      1                    ungetbuffer for stdio functions
+__allocp:       ds.l      1                    start of free memory block list
+__heap:         ds.l      1                    begin of free memory
+
+
+@doscan_lpbuf:
+       dc.l      @doscan_buf
+       section   bss
+                align
+
+DataEnd         equ       *                    this label will equate to the address of the last byte of global variable in it
+DataLength      equ       DataEnd-DataStart    length of data needed to copy to Ram on bootup
+
+*********************************************************************************************************
+* Section for uninitialised Data which is set to zero, i.e. we should set this space to zero at starup
+*********************************************************************************************************
+BssStart       equ       *
+
+@doscan_buf:
+       ds.b      80
+       section   heap
+               align
+
+BssEnd         equ       *
+BssLength      equ       BssEnd-BssStart       length of zeroed data needed to copy to Ram on bootup
+
+*********************************************************************************************************
+* Section for Heap
+*********************************************************************************************************
+
+heap           equ       *
+               align
