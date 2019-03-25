@@ -28,6 +28,7 @@
 ; #define read            0x20    // set RD bit               --> (0010 0000)
 ; #define NACK            0x08    // Set ACK bit              --> (0000 1000)
 ; #define ReadNACK        0x28    // Set RD, ACK bits         --> (0010 1000)
+; #define ReadNACKIACK    0x29    // Set RD, ACK, IACK bits   --> (0010 1001)
 ; #define stopWrite       0x50    // set STO, WR bit          --> (0101 0000)
 ; // Read Command Register Commands
 ; #define startRead       0xA8    // set STA, RD, ACK bit     --> (1010 1000)
@@ -95,115 +96,78 @@ _putch_3:
        xdef      _WriteByteToChip
 _WriteByteToChip:
        link      A6,#0
-       movem.l   D2/A2/A3/A4,-(A7)
-       lea       _printf.L,A2
-       lea       _WaitForTXByte.L,A3
-       lea       _CheckForACK.L,A4
-; char tempByte;
+       movem.l   A2/A3/A4,-(A7)
+       lea       _WaitForTXByte.L,A2
+       lea       _CheckForACK.L,A3
+       lea       _printf.L,A4
 ; // Ensure TX is ready before sending control byte
 ; WaitForTXByte();
-       jsr       (A3)
+       jsr       (A2)
 ; TXR = 0xA0;         // Write Control Byte (1010 0000)
        move.b    #160,4227078
 ; CR = startWrite;    // Set STA bit, set WR bit
        move.b    #144,4227080
 ; WaitForTXByte();
-       jsr       (A3)
+       jsr       (A2)
 ; printf("ACK = %d\r\n", CheckForACK());
        move.l    D0,-(A7)
-       jsr       (A4)
+       jsr       (A3)
        move.l    D0,D1
        move.l    (A7)+,D0
        move.l    D1,-(A7)
        pea       @m68kus~1_1.L
-       jsr       (A2)
-       addq.w    #8,A7
-; tempByte = RXR;
-       move.b    4227078,D2
-; printf("tempByte = %d\r\n", tempByte);
-       ext.w     D2
-       ext.l     D2
-       move.l    D2,-(A7)
-       pea       @m68kus~1_2.L
-       jsr       (A2)
+       jsr       (A4)
        addq.w    #8,A7
 ; TXR = 0x20;         // Address Byte 1
        move.b    #32,4227078
 ; CR = Write;         // Set WR bit
        move.b    #16,4227080
 ; WaitForTXByte();
-       jsr       (A3)
+       jsr       (A2)
 ; printf("ACK = %d\r\n", CheckForACK());
        move.l    D0,-(A7)
-       jsr       (A4)
+       jsr       (A3)
        move.l    D0,D1
        move.l    (A7)+,D0
        move.l    D1,-(A7)
        pea       @m68kus~1_1.L
-       jsr       (A2)
-       addq.w    #8,A7
-; tempByte = RXR;
-       move.b    4227078,D2
-; printf("tempByte = %d\r\n", tempByte);
-       ext.w     D2
-       ext.l     D2
-       move.l    D2,-(A7)
-       pea       @m68kus~1_2.L
-       jsr       (A2)
+       jsr       (A4)
        addq.w    #8,A7
 ; TXR = 0x00;         // Address Byte 2
        clr.b     4227078
 ; CR = Write;         // Set WR bit
        move.b    #16,4227080
 ; WaitForTXByte();
-       jsr       (A3)
+       jsr       (A2)
 ; printf("ACK = %d\r\n", CheckForACK());
        move.l    D0,-(A7)
-       jsr       (A4)
+       jsr       (A3)
        move.l    D0,D1
        move.l    (A7)+,D0
        move.l    D1,-(A7)
        pea       @m68kus~1_1.L
-       jsr       (A2)
-       addq.w    #8,A7
-; tempByte = RXR;
-       move.b    4227078,D2
-; printf("tempByte = %d\r\n", tempByte);
-       ext.w     D2
-       ext.l     D2
-       move.l    D2,-(A7)
-       pea       @m68kus~1_2.L
-       jsr       (A2)
+       jsr       (A4)
        addq.w    #8,A7
 ; TXR = c;            // send 1 byte of data
        move.b    11(A6),4227078
 ; CR = Write;
        move.b    #16,4227080
 ; WaitForTXByte();
-       jsr       (A3)
+       jsr       (A2)
 ; printf("ACK = %d\r\n", CheckForACK());
        move.l    D0,-(A7)
-       jsr       (A4)
+       jsr       (A3)
        move.l    D0,D1
        move.l    (A7)+,D0
        move.l    D1,-(A7)
        pea       @m68kus~1_1.L
-       jsr       (A2)
-       addq.w    #8,A7
-; tempByte = RXR;
-       move.b    4227078,D2
-; printf("tempByte = %d\r\n", tempByte);
-       ext.w     D2
-       ext.l     D2
-       move.l    D2,-(A7)
-       pea       @m68kus~1_2.L
-       jsr       (A2)
+       jsr       (A4)
        addq.w    #8,A7
 ; CR = stop;
        move.b    #64,4227080
 ; WaitForWriteCycle();
        jsr       _WaitForWriteCycle
-       movem.l   (A7)+,D2/A2/A3/A4
+       movem.l   (A7)+,A2/A3/A4
        unlk      A6
        rts
 ; }
@@ -220,24 +184,18 @@ WaitForWriteCycle_1:
        move.b    #160,4227078
 ; CR = start;
        move.b    #128,4227080
-; printf("WaitForWriteCycle SR = %d\r\n", SR);
-       move.b    4227080,D1
-       and.l     #255,D1
-       move.l    D1,-(A7)
-       pea       @m68kus~1_3.L
+; printf("Waiting for Internal Byte Write!\r\n");
+       pea       @m68kus~1_2.L
        jsr       _printf
-       addq.w    #8,A7
+       addq.w    #4,A7
        lea       _CheckForACK.L,A0
        move.l    A0,D0
        beq       WaitForWriteCycle_1
 ; } while (!CheckForACK);
-; printf("WaitForWriteCycle 1 SR = %d\r\n", SR);
-       move.b    4227080,D1
-       and.l     #255,D1
-       move.l    D1,-(A7)
-       pea       @m68kus~1_4.L
+; printf("Internal Byte Write Complete!\r\n");
+       pea       @m68kus~1_3.L
        jsr       _printf
-       addq.w    #8,A7
+       addq.w    #4,A7
 ; return;
        rts
 ; }
@@ -248,110 +206,85 @@ WaitForWriteCycle_1:
        xdef      _ReadByteFromChip
 _ReadByteFromChip:
        link      A6,#-4
-       movem.l   D2/A2/A3/A4,-(A7)
-       lea       _printf.L,A2
-       lea       _WaitForTXByte.L,A3
-       lea       _CheckForACK.L,A4
-; char x;
+       movem.l   A2/A3/A4,-(A7)
+       lea       _WaitForTXByte.L,A2
+       lea       _CheckForACK.L,A3
+       lea       _printf.L,A4
 ; char receivedByte;
 ; // Ensure TX is ready before sending control byte
 ; WaitForTXByte();
-       jsr       (A3)
+       jsr       (A2)
 ; TXR = 0xA0;         // Write Control Byte (1010 0000)
        move.b    #160,4227078
 ; CR = startWrite;    // set STA bit
        move.b    #144,4227080
 ; WaitForTXByte();
-       jsr       (A3)
+       jsr       (A2)
 ; printf("ACK = %d\r\n", CheckForACK());
        move.l    D0,-(A7)
-       jsr       (A4)
+       jsr       (A3)
        move.l    D0,D1
        move.l    (A7)+,D0
        move.l    D1,-(A7)
        pea       @m68kus~1_1.L
-       jsr       (A2)
+       jsr       (A4)
        addq.w    #8,A7
-; // x = RXR;
-; // printf("*x = %d\r\n", x);
 ; TXR = 0x20;         // Address Byte 1
        move.b    #32,4227078
 ; CR = Write;         // set WR bit
        move.b    #16,4227080
 ; WaitForTXByte();
-       jsr       (A3)
+       jsr       (A2)
 ; printf("ACK = %d\r\n", CheckForACK());
        move.l    D0,-(A7)
-       jsr       (A4)
+       jsr       (A3)
        move.l    D0,D1
        move.l    (A7)+,D0
        move.l    D1,-(A7)
        pea       @m68kus~1_1.L
-       jsr       (A2)
+       jsr       (A4)
        addq.w    #8,A7
-; // x = RXR;
-; // printf("*x = %d\r\n", x);
 ; TXR = 0x00;         // Address Byte 2
        clr.b     4227078
 ; CR = Write;         // set WR bit
        move.b    #16,4227080
 ; WaitForTXByte();
-       jsr       (A3)
+       jsr       (A2)
 ; printf("ACK = %d\r\n", CheckForACK());
        move.l    D0,-(A7)
-       jsr       (A4)
+       jsr       (A3)
        move.l    D0,D1
        move.l    (A7)+,D0
        move.l    D1,-(A7)
        pea       @m68kus~1_1.L
-       jsr       (A2)
+       jsr       (A4)
        addq.w    #8,A7
-; // x = RXR;
-; // printf("*x = %d\r\n", x);
 ; TXR = 0xA1;         // Read Control Byte (1010 0001)
        move.b    #161,4227078
-; CR = startWrite;    // Set STA bit
+; CR = startWrite;    // Set STA bit, WR bit
        move.b    #144,4227080
 ; WaitForTXByte();
-       jsr       (A3)
+       jsr       (A2)
 ; printf("ACK = %d\r\n", CheckForACK());
        move.l    D0,-(A7)
-       jsr       (A4)
+       jsr       (A3)
        move.l    D0,D1
        move.l    (A7)+,D0
        move.l    D1,-(A7)
        pea       @m68kus~1_1.L
-       jsr       (A2)
+       jsr       (A4)
        addq.w    #8,A7
-; // x = RXR;
-; // printf("*x = %d\r\n", x);
-; CR = ReadNACK;
-       move.b    #40,4227080
+; CR = ReadNACKIACK;
+       move.b    #41,4227080
 ; WaitForReceivedByte();
        jsr       _WaitForReceivedByte
-; x = RXR;
-       move.b    4227078,D2
-; printf("*x = %d\r\n", x);
-       ext.w     D2
-       ext.l     D2
-       move.l    D2,-(A7)
-       pea       @m68kus~1_5.L
-       jsr       (A2)
-       addq.w    #8,A7
-; x = RXR;
-       move.b    4227078,D2
-; printf("*x = %d\r\n", x);
-       ext.w     D2
-       ext.l     D2
-       move.l    D2,-(A7)
-       pea       @m68kus~1_5.L
-       jsr       (A2)
-       addq.w    #8,A7
+; receivedByte = RXR;
+       move.b    4227078,-1(A6)
 ; CR = stop;
        move.b    #64,4227080
-; return x;
-       move.b    D2,D0
-       movem.l   (A7)+,D2/A2/A3/A4
+; return receivedByte;
+       move.b    -1(A6),D0
+       movem.l   (A7)+,A2/A3/A4
        unlk      A6
        rts
 ; }
@@ -433,29 +366,33 @@ _IIC_Init:
        xdef      _main
 _main:
        link      A6,#-4
-       move.l    A2,-(A7)
+       movem.l   D2/A2,-(A7)
        lea       _printf.L,A2
-; char sendByte = 64;
-       move.b    #64,-2(A6)
+; char sendByte = 72;
+       moveq     #72,D2
 ; char recievedByte;
 ; scanflush() ;                       // flush any text that may have been typed ahead
        jsr       _scanflush
 ; printf("\r\nHello IIC Lab\r\n");
-       pea       @m68kus~1_6.L
+       pea       @m68kus~1_4.L
        jsr       (A2)
        addq.w    #4,A7
 ; IIC_Init();
        jsr       _IIC_Init
-; // WriteByteToChip(sendByte);
+; WriteByteToChip(sendByte);
+       ext.w     D2
+       ext.l     D2
+       move.l    D2,-(A7)
+       jsr       _WriteByteToChip
+       addq.w    #4,A7
 ; recievedByte = ReadByteFromChip();
        jsr       _ReadByteFromChip
        move.b    D0,-1(A6)
 ; printf("This is the sent Byte: %u\r\n", sendByte);
-       move.b    -2(A6),D1
-       ext.w     D1
-       ext.l     D1
-       move.l    D1,-(A7)
-       pea       @m68kus~1_7.L
+       ext.w     D2
+       ext.l     D2
+       move.l    D2,-(A7)
+       pea       @m68kus~1_5.L
        jsr       (A2)
        addq.w    #8,A7
 ; printf("This is the received Byte: %u\r\n", recievedByte);
@@ -463,7 +400,7 @@ _main:
        ext.w     D1
        ext.l     D1
        move.l    D1,-(A7)
-       pea       @m68kus~1_8.L
+       pea       @m68kus~1_6.L
        jsr       (A2)
        addq.w    #8,A7
 ; while(1);
@@ -476,26 +413,21 @@ main_1:
 @m68kus~1_1:
        dc.b      65,67,75,32,61,32,37,100,13,10,0
 @m68kus~1_2:
-       dc.b      116,101,109,112,66,121,116,101,32,61,32,37,100
-       dc.b      13,10,0
+       dc.b      87,97,105,116,105,110,103,32,102,111,114,32
+       dc.b      73,110,116,101,114,110,97,108,32,66,121,116
+       dc.b      101,32,87,114,105,116,101,33,13,10,0
 @m68kus~1_3:
-       dc.b      87,97,105,116,70,111,114,87,114,105,116,101
-       dc.b      67,121,99,108,101,32,83,82,32,61,32,37,100,13
-       dc.b      10,0
+       dc.b      73,110,116,101,114,110,97,108,32,66,121,116
+       dc.b      101,32,87,114,105,116,101,32,67,111,109,112
+       dc.b      108,101,116,101,33,13,10,0
 @m68kus~1_4:
-       dc.b      87,97,105,116,70,111,114,87,114,105,116,101
-       dc.b      67,121,99,108,101,32,49,32,83,82,32,61,32,37
-       dc.b      100,13,10,0
-@m68kus~1_5:
-       dc.b      42,120,32,61,32,37,100,13,10,0
-@m68kus~1_6:
        dc.b      13,10,72,101,108,108,111,32,73,73,67,32,76,97
        dc.b      98,13,10,0
-@m68kus~1_7:
+@m68kus~1_5:
        dc.b      84,104,105,115,32,105,115,32,116,104,101,32
        dc.b      115,101,110,116,32,66,121,116,101,58,32,37,117
        dc.b      13,10,0
-@m68kus~1_8:
+@m68kus~1_6:
        dc.b      84,104,105,115,32,105,115,32,116,104,101,32
        dc.b      114,101,99,101,105,118,101,100,32,66,121,116
        dc.b      101,58,32,37,117,13,10,0

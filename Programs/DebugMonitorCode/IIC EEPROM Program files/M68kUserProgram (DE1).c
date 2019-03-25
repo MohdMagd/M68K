@@ -30,6 +30,7 @@
 #define read            0x20    // set RD bit               --> (0010 0000)
 #define NACK            0x08    // Set ACK bit              --> (0000 1000)
 #define ReadNACK        0x28    // Set RD, ACK bits         --> (0010 1000)
+#define ReadNACKIACK    0x29    // Set RD, ACK, IACK bits   --> (0010 1001)
 #define stopWrite       0x50    // set STO, WR bit          --> (0101 0000)
 // Read Command Register Commands
 #define startRead       0xA8    // set STA, RD, ACK bit     --> (1010 1000)
@@ -70,8 +71,6 @@ int _putch( int c)
 *********************************************************************************************/
 void WriteByteToChip(char c){
 
-    char tempByte;
-
     // Ensure TX is ready before sending control byte
     WaitForTXByte();
 
@@ -79,31 +78,21 @@ void WriteByteToChip(char c){
     CR = startWrite;    // Set STA bit, set WR bit
     WaitForTXByte();
     printf("ACK = %d\r\n", CheckForACK());
-    tempByte = RXR;
-    printf("tempByte = %d\r\n", tempByte);
 
     TXR = 0x20;         // Address Byte 1
     CR = Write;         // Set WR bit
     WaitForTXByte();
     printf("ACK = %d\r\n", CheckForACK());
-    tempByte = RXR;
-    printf("tempByte = %d\r\n", tempByte);
-
 
     TXR = 0x00;         // Address Byte 2
     CR = Write;         // Set WR bit
     WaitForTXByte();
     printf("ACK = %d\r\n", CheckForACK());
-    tempByte = RXR;
-    printf("tempByte = %d\r\n", tempByte);
-
 
     TXR = c;            // send 1 byte of data
     CR = Write;
     WaitForTXByte();
     printf("ACK = %d\r\n", CheckForACK());
-    tempByte = RXR;
-    printf("tempByte = %d\r\n", tempByte);
 
     CR = stop;
     WaitForWriteCycle();
@@ -117,9 +106,9 @@ void WaitForWriteCycle(void){
     {
         TXR = 0xA0; // Write Control Byte (1010 0000)
         CR = start;
-        printf("WaitForWriteCycle SR = %d\r\n", SR);
+        printf("Waiting for Internal Byte Write!\r\n");
     } while (!CheckForACK);
-    printf("WaitForWriteCycle 1 SR = %d\r\n", SR);
+    printf("Internal Byte Write Complete!\r\n");
     return;
 }
 
@@ -128,7 +117,6 @@ void WaitForWriteCycle(void){
 *********************************************************************************************/
 char ReadByteFromChip(void){
 
-    char x;
     char receivedByte;
 
     // Ensure TX is ready before sending control byte
@@ -138,41 +126,30 @@ char ReadByteFromChip(void){
     CR = startWrite;    // set STA bit
     WaitForTXByte();
     printf("ACK = %d\r\n", CheckForACK());
-    // x = RXR;
-    // printf("*x = %d\r\n", x);
 
     TXR = 0x20;         // Address Byte 1
     CR = Write;         // set WR bit
     WaitForTXByte();
     printf("ACK = %d\r\n", CheckForACK());
-    // x = RXR;
-    // printf("*x = %d\r\n", x);
     
     TXR = 0x00;         // Address Byte 2
     CR = Write;         // set WR bit
     WaitForTXByte();
     printf("ACK = %d\r\n", CheckForACK());
-    // x = RXR;
-    // printf("*x = %d\r\n", x);
 
     TXR = 0xA1;         // Read Control Byte (1010 0001)
-    CR = startWrite;    // Set STA bit
+    CR = startWrite;    // Set STA bit, WR bit
     WaitForTXByte();
     printf("ACK = %d\r\n", CheckForACK());
-    // x = RXR;
-    // printf("*x = %d\r\n", x);
 
-    CR = ReadNACK;
+    CR = ReadNACKIACK;
  
     WaitForReceivedByte();
-    x = RXR;
-    printf("*x = %d\r\n", x);
-    x = RXR;
-    printf("*x = %d\r\n", x);
+    receivedByte = RXR;
 
     CR = stop;
 
-    return x;
+    return receivedByte;
 }
 
 
@@ -220,14 +197,14 @@ void IIC_Init(void){
 
 void main(void)
 {
-    char sendByte = 64;
+    char sendByte = 72;
     char recievedByte;
 
     scanflush() ;                       // flush any text that may have been typed ahead
     printf("\r\nHello IIC Lab\r\n");
 
     IIC_Init();
-    // WriteByteToChip(sendByte);
+    WriteByteToChip(sendByte);
     recievedByte = ReadByteFromChip();
 
     printf("This is the sent Byte: %u\r\n", sendByte);
