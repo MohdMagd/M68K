@@ -25,9 +25,7 @@
 ; // Write Command Register Commands
 ; #define startWrite      0x90    // set STA, WR bit          --> (1001 0000)
 ; #define Write           0x10    // set WR bit               --> (0001 0000)
-; #define read            0x20    // set RD bit               --> (0010 0000)
-; #define NACK            0x08    // Set ACK bit              --> (0000 1000)
-; #define ReadNACK        0x28    // Set RD, ACK bits         --> (0010 1000)
+; #define ReadIACK        0x21    // Set RD, IACK bits        --> (0010 0001)
 ; #define ReadNACKIACK    0x29    // Set RD, ACK, IACK bits   --> (0010 1001)
 ; #define stopWrite       0x50    // set STO, WR bit          --> (0101 0000)
 ; // Read Command Register Commands
@@ -36,13 +34,15 @@
 ; /*********************************************************************************************
 ; **  Function protoTypes
 ; *********************************************************************************************/
+; void WritePageToChip(char c);
 ; void WriteByteToChip(char c);
+; void WaitForWriteCycle(void);
+; void ReadPageFromChip(char expectedByte);
 ; char ReadByteFromChip(void);
 ; void WaitForTXByte(void);
 ; void WaitForReceivedByte(void);
 ; int CheckForACK(void);
 ; void IIC_Init(void);
-; void WaitForWriteCycle(void);
 ; int _getch( void )
 ; {
        section   code
@@ -90,16 +90,22 @@ _putch_3:
        rts
 ; }
 ; /*********************************************************************************************
-; **  Write Byte to EEPROM Chip
+; **  Write Page to EEPROM Chip
 ; *********************************************************************************************/
-; void WriteByteToChip(char c){
-       xdef      _WriteByteToChip
-_WriteByteToChip:
+; void WritePageToChip(char c){
+       xdef      _WritePageToChip
+_WritePageToChip:
        link      A6,#0
-       movem.l   A2/A3/A4,-(A7)
+       movem.l   D2/A2/A3/A4,-(A7)
        lea       _WaitForTXByte.L,A2
-       lea       _CheckForACK.L,A3
-       lea       _printf.L,A4
+       lea       _printf.L,A3
+       lea       _CheckForACK.L,A4
+; int i = 0;
+       clr.l     D2
+; printf("Writing Page to EEPROM\r\n");
+       pea       @m68kus~1_1.L
+       jsr       (A3)
+       addq.w    #4,A7
 ; // Ensure TX is ready before sending control byte
 ; WaitForTXByte();
        jsr       (A2)
@@ -111,12 +117,12 @@ _WriteByteToChip:
        jsr       (A2)
 ; printf("ACK = %d\r\n", CheckForACK());
        move.l    D0,-(A7)
-       jsr       (A3)
+       jsr       (A4)
        move.l    D0,D1
        move.l    (A7)+,D0
        move.l    D1,-(A7)
-       pea       @m68kus~1_1.L
-       jsr       (A4)
+       pea       @m68kus~1_2.L
+       jsr       (A3)
        addq.w    #8,A7
 ; TXR = 0x20;         // Address Byte 1
        move.b    #32,4227078
@@ -126,12 +132,12 @@ _WriteByteToChip:
        jsr       (A2)
 ; printf("ACK = %d\r\n", CheckForACK());
        move.l    D0,-(A7)
-       jsr       (A3)
+       jsr       (A4)
        move.l    D0,D1
        move.l    (A7)+,D0
        move.l    D1,-(A7)
-       pea       @m68kus~1_1.L
-       jsr       (A4)
+       pea       @m68kus~1_2.L
+       jsr       (A3)
        addq.w    #8,A7
 ; TXR = 0x00;         // Address Byte 2
        clr.b     4227078
@@ -141,12 +147,108 @@ _WriteByteToChip:
        jsr       (A2)
 ; printf("ACK = %d\r\n", CheckForACK());
        move.l    D0,-(A7)
-       jsr       (A3)
+       jsr       (A4)
        move.l    D0,D1
        move.l    (A7)+,D0
        move.l    D1,-(A7)
-       pea       @m68kus~1_1.L
+       pea       @m68kus~1_2.L
+       jsr       (A3)
+       addq.w    #8,A7
+; for(i=0; i<128; i++){
+       clr.l     D2
+WritePageToChip_1:
+       cmp.l     #128,D2
+       bge.s     WritePageToChip_3
+; TXR = c;            // send 1 byte of data
+       move.b    11(A6),4227078
+; CR = Write;
+       move.b    #16,4227080
+; WaitForTXByte();
+       jsr       (A2)
+; if(!CheckForACK())
        jsr       (A4)
+       tst.l     D0
+       bne.s     WritePageToChip_4
+; printf("No ACK returned for byte #%d", i);
+       move.l    D2,-(A7)
+       pea       @m68kus~1_3.L
+       jsr       (A3)
+       addq.w    #8,A7
+WritePageToChip_4:
+       addq.l    #1,D2
+       bra       WritePageToChip_1
+WritePageToChip_3:
+; }
+; CR = stop;
+       move.b    #64,4227080
+; WaitForWriteCycle();
+       jsr       _WaitForWriteCycle
+       movem.l   (A7)+,D2/A2/A3/A4
+       unlk      A6
+       rts
+; }
+; /*********************************************************************************************
+; **  Write Byte to EEPROM Chip
+; *********************************************************************************************/
+; void WriteByteToChip(char c){
+       xdef      _WriteByteToChip
+_WriteByteToChip:
+       link      A6,#0
+       movem.l   A2/A3/A4,-(A7)
+       lea       _WaitForTXByte.L,A2
+       lea       _printf.L,A3
+       lea       _CheckForACK.L,A4
+; printf("Writing Byte to EEPROM\r\n");
+       pea       @m68kus~1_4.L
+       jsr       (A3)
+       addq.w    #4,A7
+; // Ensure TX is ready before sending control byte
+; WaitForTXByte();
+       jsr       (A2)
+; TXR = 0xA0;         // Write Control Byte (1010 0000)
+       move.b    #160,4227078
+; CR = startWrite;    // Set STA bit, set WR bit
+       move.b    #144,4227080
+; WaitForTXByte();
+       jsr       (A2)
+; printf("ACK = %d\r\n", CheckForACK());
+       move.l    D0,-(A7)
+       jsr       (A4)
+       move.l    D0,D1
+       move.l    (A7)+,D0
+       move.l    D1,-(A7)
+       pea       @m68kus~1_2.L
+       jsr       (A3)
+       addq.w    #8,A7
+; TXR = 0x20;         // Address Byte 1
+       move.b    #32,4227078
+; CR = Write;         // Set WR bit
+       move.b    #16,4227080
+; WaitForTXByte();
+       jsr       (A2)
+; printf("ACK = %d\r\n", CheckForACK());
+       move.l    D0,-(A7)
+       jsr       (A4)
+       move.l    D0,D1
+       move.l    (A7)+,D0
+       move.l    D1,-(A7)
+       pea       @m68kus~1_2.L
+       jsr       (A3)
+       addq.w    #8,A7
+; TXR = 0x00;         // Address Byte 2
+       clr.b     4227078
+; CR = Write;         // Set WR bit
+       move.b    #16,4227080
+; WaitForTXByte();
+       jsr       (A2)
+; printf("ACK = %d\r\n", CheckForACK());
+       move.l    D0,-(A7)
+       jsr       (A4)
+       move.l    D0,D1
+       move.l    (A7)+,D0
+       move.l    D1,-(A7)
+       pea       @m68kus~1_2.L
+       jsr       (A3)
        addq.w    #8,A7
 ; TXR = c;            // send 1 byte of data
        move.b    11(A6),4227078
@@ -156,12 +258,12 @@ _WriteByteToChip:
        jsr       (A2)
 ; printf("ACK = %d\r\n", CheckForACK());
        move.l    D0,-(A7)
-       jsr       (A3)
+       jsr       (A4)
        move.l    D0,D1
        move.l    (A7)+,D0
        move.l    D1,-(A7)
-       pea       @m68kus~1_1.L
-       jsr       (A4)
+       pea       @m68kus~1_2.L
+       jsr       (A3)
        addq.w    #8,A7
 ; CR = stop;
        move.b    #64,4227080
@@ -184,19 +286,161 @@ WaitForWriteCycle_1:
        move.b    #160,4227078
 ; CR = start;
        move.b    #128,4227080
-; printf("Waiting for Internal Byte Write!\r\n");
-       pea       @m68kus~1_2.L
+; printf("Waiting for Internal Write!\r\n");
+       pea       @m68kus~1_5.L
        jsr       _printf
        addq.w    #4,A7
        lea       _CheckForACK.L,A0
        move.l    A0,D0
        beq       WaitForWriteCycle_1
 ; } while (!CheckForACK);
-; printf("Internal Byte Write Complete!\r\n");
-       pea       @m68kus~1_3.L
+; printf("Internal Write Complete!\r\n");
+       pea       @m68kus~1_6.L
        jsr       _printf
        addq.w    #4,A7
 ; return;
+       rts
+; }
+; /*********************************************************************************************
+; **  Read Byte from EEPROM flash
+; *********************************************************************************************/
+; void ReadPageFromChip(char expectedByte){
+       xdef      _ReadPageFromChip
+_ReadPageFromChip:
+       link      A6,#-4
+       movem.l   D2/A2/A3/A4,-(A7)
+       lea       _printf.L,A2
+       lea       _CheckForACK.L,A3
+       lea       _WaitForTXByte.L,A4
+; int i = 0;
+       clr.l     D2
+; char receivedByte;
+; printf("Reading Page from EEPROM \r\n");
+       pea       @m68kus~1_7.L
+       jsr       (A2)
+       addq.w    #4,A7
+; // Ensure TX is ready before sending control byte
+; WaitForTXByte();
+       jsr       (A4)
+; TXR = 0xA0;         // Write Control Byte (1010 0000)
+       move.b    #160,4227078
+; CR = startWrite;    // set STA bit
+       move.b    #144,4227080
+; WaitForTXByte();
+       jsr       (A4)
+; printf("ACK = %d\r\n", CheckForACK());
+       move.l    D0,-(A7)
+       jsr       (A3)
+       move.l    D0,D1
+       move.l    (A7)+,D0
+       move.l    D1,-(A7)
+       pea       @m68kus~1_2.L
+       jsr       (A2)
+       addq.w    #8,A7
+; TXR = 0x20;         // Address Byte 1
+       move.b    #32,4227078
+; CR = Write;         // set WR bit
+       move.b    #16,4227080
+; WaitForTXByte();
+       jsr       (A4)
+; printf("ACK = %d\r\n", CheckForACK());
+       move.l    D0,-(A7)
+       jsr       (A3)
+       move.l    D0,D1
+       move.l    (A7)+,D0
+       move.l    D1,-(A7)
+       pea       @m68kus~1_2.L
+       jsr       (A2)
+       addq.w    #8,A7
+; TXR = 0x00;         // Address Byte 2
+       clr.b     4227078
+; CR = Write;         // set WR bit
+       move.b    #16,4227080
+; WaitForTXByte();
+       jsr       (A4)
+; printf("ACK = %d\r\n", CheckForACK());
+       move.l    D0,-(A7)
+       jsr       (A3)
+       move.l    D0,D1
+       move.l    (A7)+,D0
+       move.l    D1,-(A7)
+       pea       @m68kus~1_2.L
+       jsr       (A2)
+       addq.w    #8,A7
+; TXR = 0xA1;         // Read Control Byte (1010 0001)
+       move.b    #161,4227078
+; CR = startWrite;    // Set STA bit, WR bit
+       move.b    #144,4227080
+; WaitForTXByte();
+       jsr       (A4)
+; printf("ACK = %d\r\n", CheckForACK());
+       move.l    D0,-(A7)
+       jsr       (A3)
+       move.l    D0,D1
+       move.l    (A7)+,D0
+       move.l    D1,-(A7)
+       pea       @m68kus~1_2.L
+       jsr       (A2)
+       addq.w    #8,A7
+; for (i=0; i<128; i++){
+       clr.l     D2
+ReadPageFromChip_1:
+       cmp.l     #128,D2
+       bge       ReadPageFromChip_3
+; if (i != 127)
+       cmp.l     #127,D2
+       beq.s     ReadPageFromChip_4
+; CR = ReadIACK;
+       move.b    #33,4227080
+       bra.s     ReadPageFromChip_5
+ReadPageFromChip_4:
+; else  CR = ReadNACKIACK;
+       move.b    #41,4227080
+ReadPageFromChip_5:
+; WaitForReceivedByte();
+       jsr       _WaitForReceivedByte
+; receivedByte = RXR;
+       move.b    4227078,-1(A6)
+; if (i != 127 && !CheckForACK())
+       cmp.l     #127,D2
+       beq.s     ReadPageFromChip_6
+       jsr       (A3)
+       tst.l     D0
+       bne.s     ReadPageFromChip_6
+; printf("No ACK returned for byte #%d", i);
+       move.l    D2,-(A7)
+       pea       @m68kus~1_3.L
+       jsr       (A2)
+       addq.w    #8,A7
+ReadPageFromChip_6:
+; if (receivedByte != expectedByte){
+       move.b    -1(A6),D0
+       cmp.b     11(A6),D0
+       beq.s     ReadPageFromChip_8
+; printf("Page Read Failed at Byte #%d\r\n", i);
+       move.l    D2,-(A7)
+       pea       @m68kus~1_8.L
+       jsr       (A2)
+       addq.w    #8,A7
+; CR = stop;
+       move.b    #64,4227080
+; return;
+       bra.s     ReadPageFromChip_10
+ReadPageFromChip_8:
+       addq.l    #1,D2
+       bra       ReadPageFromChip_1
+ReadPageFromChip_3:
+; }
+; }
+; CR = stop;
+       move.b    #64,4227080
+; printf("Page Read Successful\r\n");
+       pea       @m68kus~1_9.L
+       jsr       (A2)
+       addq.w    #4,A7
+ReadPageFromChip_10:
+       movem.l   (A7)+,D2/A2/A3/A4
+       unlk      A6
        rts
 ; }
 ; /*********************************************************************************************
@@ -208,9 +452,13 @@ _ReadByteFromChip:
        link      A6,#-4
        movem.l   A2/A3/A4,-(A7)
        lea       _WaitForTXByte.L,A2
-       lea       _CheckForACK.L,A3
-       lea       _printf.L,A4
+       lea       _printf.L,A3
+       lea       _CheckForACK.L,A4
 ; char receivedByte;
+; printf("Reading Byte from EEPROM \r\n");
+       pea       @m68kus~1_10.L
+       jsr       (A3)
+       addq.w    #4,A7
 ; // Ensure TX is ready before sending control byte
 ; WaitForTXByte();
        jsr       (A2)
@@ -222,12 +470,12 @@ _ReadByteFromChip:
        jsr       (A2)
 ; printf("ACK = %d\r\n", CheckForACK());
        move.l    D0,-(A7)
-       jsr       (A3)
+       jsr       (A4)
        move.l    D0,D1
        move.l    (A7)+,D0
        move.l    D1,-(A7)
-       pea       @m68kus~1_1.L
-       jsr       (A4)
+       pea       @m68kus~1_2.L
+       jsr       (A3)
        addq.w    #8,A7
 ; TXR = 0x20;         // Address Byte 1
        move.b    #32,4227078
@@ -237,12 +485,12 @@ _ReadByteFromChip:
        jsr       (A2)
 ; printf("ACK = %d\r\n", CheckForACK());
        move.l    D0,-(A7)
-       jsr       (A3)
+       jsr       (A4)
        move.l    D0,D1
        move.l    (A7)+,D0
        move.l    D1,-(A7)
-       pea       @m68kus~1_1.L
-       jsr       (A4)
+       pea       @m68kus~1_2.L
+       jsr       (A3)
        addq.w    #8,A7
 ; TXR = 0x00;         // Address Byte 2
        clr.b     4227078
@@ -252,12 +500,12 @@ _ReadByteFromChip:
        jsr       (A2)
 ; printf("ACK = %d\r\n", CheckForACK());
        move.l    D0,-(A7)
-       jsr       (A3)
+       jsr       (A4)
        move.l    D0,D1
        move.l    (A7)+,D0
        move.l    D1,-(A7)
-       pea       @m68kus~1_1.L
-       jsr       (A4)
+       pea       @m68kus~1_2.L
+       jsr       (A3)
        addq.w    #8,A7
 ; TXR = 0xA1;         // Read Control Byte (1010 0001)
        move.b    #161,4227078
@@ -267,12 +515,12 @@ _ReadByteFromChip:
        jsr       (A2)
 ; printf("ACK = %d\r\n", CheckForACK());
        move.l    D0,-(A7)
-       jsr       (A3)
+       jsr       (A4)
        move.l    D0,D1
        move.l    (A7)+,D0
        move.l    D1,-(A7)
-       pea       @m68kus~1_1.L
-       jsr       (A4)
+       pea       @m68kus~1_2.L
+       jsr       (A3)
        addq.w    #8,A7
 ; CR = ReadNACKIACK;
        move.b    #41,4227080
@@ -368,13 +616,13 @@ _main:
        link      A6,#-4
        movem.l   D2/A2,-(A7)
        lea       _printf.L,A2
-; char sendByte = 72;
-       moveq     #72,D2
+; char sendByte = 75;
+       moveq     #75,D2
 ; char recievedByte;
 ; scanflush() ;                       // flush any text that may have been typed ahead
        jsr       _scanflush
 ; printf("\r\nHello IIC Lab\r\n");
-       pea       @m68kus~1_4.L
+       pea       @m68kus~1_11.L
        jsr       (A2)
        addq.w    #4,A7
 ; IIC_Init();
@@ -392,7 +640,7 @@ _main:
        ext.w     D2
        ext.l     D2
        move.l    D2,-(A7)
-       pea       @m68kus~1_5.L
+       pea       @m68kus~1_12.L
        jsr       (A2)
        addq.w    #8,A7
 ; printf("This is the received Byte: %u\r\n", recievedByte);
@@ -400,9 +648,21 @@ _main:
        ext.w     D1
        ext.l     D1
        move.l    D1,-(A7)
-       pea       @m68kus~1_6.L
+       pea       @m68kus~1_13.L
        jsr       (A2)
        addq.w    #8,A7
+; WritePageToChip(sendByte);
+       ext.w     D2
+       ext.l     D2
+       move.l    D2,-(A7)
+       jsr       _WritePageToChip
+       addq.w    #4,A7
+; ReadPageFromChip(sendByte);
+       ext.w     D2
+       ext.l     D2
+       move.l    D2,-(A7)
+       jsr       _ReadPageFromChip
+       addq.w    #4,A7
 ; while(1);
 main_1:
        bra       main_1
@@ -411,23 +671,48 @@ main_1:
 ; }
        section   const
 @m68kus~1_1:
-       dc.b      65,67,75,32,61,32,37,100,13,10,0
+       dc.b      87,114,105,116,105,110,103,32,80,97,103,101
+       dc.b      32,116,111,32,69,69,80,82,79,77,13,10,0
 @m68kus~1_2:
-       dc.b      87,97,105,116,105,110,103,32,102,111,114,32
-       dc.b      73,110,116,101,114,110,97,108,32,66,121,116
-       dc.b      101,32,87,114,105,116,101,33,13,10,0
+       dc.b      65,67,75,32,61,32,37,100,13,10,0
 @m68kus~1_3:
-       dc.b      73,110,116,101,114,110,97,108,32,66,121,116
-       dc.b      101,32,87,114,105,116,101,32,67,111,109,112
-       dc.b      108,101,116,101,33,13,10,0
+       dc.b      78,111,32,65,67,75,32,114,101,116,117,114,110
+       dc.b      101,100,32,102,111,114,32,98,121,116,101,32
+       dc.b      35,37,100,0
 @m68kus~1_4:
+       dc.b      87,114,105,116,105,110,103,32,66,121,116,101
+       dc.b      32,116,111,32,69,69,80,82,79,77,13,10,0
+@m68kus~1_5:
+       dc.b      87,97,105,116,105,110,103,32,102,111,114,32
+       dc.b      73,110,116,101,114,110,97,108,32,87,114,105
+       dc.b      116,101,33,13,10,0
+@m68kus~1_6:
+       dc.b      73,110,116,101,114,110,97,108,32,87,114,105
+       dc.b      116,101,32,67,111,109,112,108,101,116,101,33
+       dc.b      13,10,0
+@m68kus~1_7:
+       dc.b      82,101,97,100,105,110,103,32,80,97,103,101,32
+       dc.b      102,114,111,109,32,69,69,80,82,79,77,32,13,10
+       dc.b      0
+@m68kus~1_8:
+       dc.b      80,97,103,101,32,82,101,97,100,32,70,97,105
+       dc.b      108,101,100,32,97,116,32,66,121,116,101,32,35
+       dc.b      37,100,13,10,0
+@m68kus~1_9:
+       dc.b      80,97,103,101,32,82,101,97,100,32,83,117,99
+       dc.b      99,101,115,115,102,117,108,13,10,0
+@m68kus~1_10:
+       dc.b      82,101,97,100,105,110,103,32,66,121,116,101
+       dc.b      32,102,114,111,109,32,69,69,80,82,79,77,32,13
+       dc.b      10,0
+@m68kus~1_11:
        dc.b      13,10,72,101,108,108,111,32,73,73,67,32,76,97
        dc.b      98,13,10,0
-@m68kus~1_5:
+@m68kus~1_12:
        dc.b      84,104,105,115,32,105,115,32,116,104,101,32
        dc.b      115,101,110,116,32,66,121,116,101,58,32,37,117
        dc.b      13,10,0
-@m68kus~1_6:
+@m68kus~1_13:
        dc.b      84,104,105,115,32,105,115,32,116,104,101,32
        dc.b      114,101,99,101,105,118,101,100,32,66,121,116
        dc.b      101,58,32,37,117,13,10,0

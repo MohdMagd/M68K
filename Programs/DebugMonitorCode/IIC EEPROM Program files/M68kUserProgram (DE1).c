@@ -27,9 +27,7 @@
 // Write Command Register Commands
 #define startWrite      0x90    // set STA, WR bit          --> (1001 0000)
 #define Write           0x10    // set WR bit               --> (0001 0000)
-#define read            0x20    // set RD bit               --> (0010 0000)
-#define NACK            0x08    // Set ACK bit              --> (0000 1000)
-#define ReadNACK        0x28    // Set RD, ACK bits         --> (0010 1000)
+#define ReadIACK        0x21    // Set RD, IACK bits        --> (0010 0001)
 #define ReadNACKIACK    0x29    // Set RD, ACK, IACK bits   --> (0010 1001)
 #define stopWrite       0x50    // set STO, WR bit          --> (0101 0000)
 // Read Command Register Commands
@@ -40,13 +38,15 @@
 /*********************************************************************************************
 **  Function protoTypes
 *********************************************************************************************/
+void WritePageToChip(char c);
 void WriteByteToChip(char c);
+void WaitForWriteCycle(void);
+void ReadPageFromChip(char expectedByte);
 char ReadByteFromChip(void);
 void WaitForTXByte(void);
 void WaitForReceivedByte(void);
 int CheckForACK(void);
 void IIC_Init(void);
-void WaitForWriteCycle(void);
 
 int _getch( void )
 {
@@ -67,10 +67,49 @@ int _putch( int c)
 }
 
 /*********************************************************************************************
+**  Write Page to EEPROM Chip
+*********************************************************************************************/
+void WritePageToChip(char c){
+
+    int i = 0;
+
+    printf("Writing Page to EEPROM\r\n");
+    // Ensure TX is ready before sending control byte
+    WaitForTXByte();
+
+    TXR = 0xA0;         // Write Control Byte (1010 0000)
+    CR = startWrite;    // Set STA bit, set WR bit
+    WaitForTXByte();
+    printf("ACK = %d\r\n", CheckForACK());
+
+    TXR = 0x20;         // Address Byte 1
+    CR = Write;         // Set WR bit
+    WaitForTXByte();
+    printf("ACK = %d\r\n", CheckForACK());
+
+    TXR = 0x00;         // Address Byte 2
+    CR = Write;         // Set WR bit
+    WaitForTXByte();
+    printf("ACK = %d\r\n", CheckForACK());
+
+    for(i=0; i<128; i++){
+        TXR = c;            // send 1 byte of data
+        CR = Write;
+        WaitForTXByte();
+        if(!CheckForACK())
+            printf("No ACK returned for byte #%d", i);
+    }
+
+    CR = stop;
+    WaitForWriteCycle();
+}
+
+/*********************************************************************************************
 **  Write Byte to EEPROM Chip
 *********************************************************************************************/
 void WriteByteToChip(char c){
 
+    printf("Writing Byte to EEPROM\r\n");
     // Ensure TX is ready before sending control byte
     WaitForTXByte();
 
@@ -106,10 +145,64 @@ void WaitForWriteCycle(void){
     {
         TXR = 0xA0; // Write Control Byte (1010 0000)
         CR = start;
-        printf("Waiting for Internal Byte Write!\r\n");
+        printf("Waiting for Internal Write!\r\n");
     } while (!CheckForACK);
-    printf("Internal Byte Write Complete!\r\n");
+    printf("Internal Write Complete!\r\n");
     return;
+}
+
+/*********************************************************************************************
+**  Read Byte from EEPROM flash
+*********************************************************************************************/
+void ReadPageFromChip(char expectedByte){
+
+    int i = 0;
+    char receivedByte;
+
+    printf("Reading Page from EEPROM \r\n");
+
+    // Ensure TX is ready before sending control byte
+    WaitForTXByte();
+
+    TXR = 0xA0;         // Write Control Byte (1010 0000)
+    CR = startWrite;    // set STA bit
+    WaitForTXByte();
+    printf("ACK = %d\r\n", CheckForACK());
+
+    TXR = 0x20;         // Address Byte 1
+    CR = Write;         // set WR bit
+    WaitForTXByte();
+    printf("ACK = %d\r\n", CheckForACK());
+    
+    TXR = 0x00;         // Address Byte 2
+    CR = Write;         // set WR bit
+    WaitForTXByte();
+    printf("ACK = %d\r\n", CheckForACK());
+
+    TXR = 0xA1;         // Read Control Byte (1010 0001)
+    CR = startWrite;    // Set STA bit, WR bit
+    WaitForTXByte();
+    printf("ACK = %d\r\n", CheckForACK());
+
+    for (i=0; i<128; i++){
+        if (i != 127)
+            CR = ReadIACK;
+        else  CR = ReadNACKIACK;
+
+        WaitForReceivedByte();
+        receivedByte = RXR;
+
+        if (i != 127 && !CheckForACK())
+            printf("No ACK returned for byte #%d", i);
+
+        if (receivedByte != expectedByte){
+                printf("Page Read Failed at Byte #%d\r\n", i);
+                CR = stop;
+                return;
+        }
+    }
+    CR = stop;
+    printf("Page Read Successful\r\n");
 }
 
 /*********************************************************************************************
@@ -118,6 +211,8 @@ void WaitForWriteCycle(void){
 char ReadByteFromChip(void){
 
     char receivedByte;
+
+    printf("Reading Byte from EEPROM \r\n");
 
     // Ensure TX is ready before sending control byte
     WaitForTXByte();
@@ -197,7 +292,7 @@ void IIC_Init(void){
 
 void main(void)
 {
-    char sendByte = 72;
+    char sendByte = 75;
     char recievedByte;
 
     scanflush() ;                       // flush any text that may have been typed ahead
@@ -209,6 +304,9 @@ void main(void)
 
     printf("This is the sent Byte: %u\r\n", sendByte);
     printf("This is the received Byte: %u\r\n", recievedByte);
+
+    WritePageToChip(sendByte);
+    ReadPageFromChip(sendByte);
 
     while(1);
    // programs should NOT exit as there is nothing to Exit TO !!!!!!
