@@ -38,11 +38,16 @@
 /*********************************************************************************************
 **  Function protoTypes
 *********************************************************************************************/
-void WritePageToChip(char c);
+void SequentialBlockWrite(int address, int sizeOfBlock, char payloadByte);
+void WritePageToChip(void);
 void WriteByteToChip(char c);
+void initiateWriteSequence(int address);
 void WaitForWriteCycle(void);
-void ReadPageFromChip(char expectedByte);
+void SequentialBlockRead(int address, int sizeOfBlock, char expectedByte);
+void ReadPageFromChip(void);
 char ReadByteFromChip(void);
+void initiateReadSequence(int address);
+void BlockDecode(char * writeControlByte, char * readControlByte, int address);
 void WaitForTXByte(void);
 void WaitForReceivedByte(void);
 int CheckForACK(void);
@@ -67,33 +72,54 @@ int _putch( int c)
 }
 
 /*********************************************************************************************
+**  Write Sequential Block to EEPROM Chip
+*********************************************************************************************/
+void SequentialBlockWrite(int address, int sizeOfBlock, char payloadByte){
+    int i = 0;
+    int endAddress = address + sizeOfBlock;
+
+    // Parameter checks
+    if (endAddress > 0x1FFFF){
+        printf("Not Enough Memory locations!\r\n");
+        return;
+    }
+
+    printf("Writing Sequential Block of Data to EEPROM\r\n");
+
+    while (address <= endAddress){
+
+        initiateWriteSequence(address);
+
+        // Fill up a 128 byte block
+        for(i= address%128; i<128; i++){
+
+            TXR = payloadByte;        
+            CR = Write;
+            WaitForTXByte();
+
+            if(!CheckForACK())
+                printf("No ACK returned for byte #%d", i);
+            
+            address ++;
+        }
+
+        CR = stop;
+        WaitForWriteCycle();
+    }
+}
+
+/*********************************************************************************************
 **  Write Page to EEPROM Chip
 *********************************************************************************************/
-void WritePageToChip(char c){
+void WritePageToChip(void){
 
     int i = 0;
 
     printf("Writing Page to EEPROM\r\n");
-    // Ensure TX is ready before sending control byte
-    WaitForTXByte();
-
-    TXR = 0xA0;         // Write Control Byte (1010 0000)
-    CR = startWrite;    // Set STA bit, set WR bit
-    WaitForTXByte();
-    printf("ACK = %d\r\n", CheckForACK());
-
-    TXR = 0x20;         // Address Byte 1
-    CR = Write;         // Set WR bit
-    WaitForTXByte();
-    printf("ACK = %d\r\n", CheckForACK());
-
-    TXR = 0x00;         // Address Byte 2
-    CR = Write;         // Set WR bit
-    WaitForTXByte();
-    printf("ACK = %d\r\n", CheckForACK());
+    initiateWriteSequence(0x00000);
 
     for(i=0; i<128; i++){
-        TXR = c;            // send 1 byte of data
+        TXR = i;            // send 1 byte of data
         CR = Write;
         WaitForTXByte();
         if(!CheckForACK())
@@ -116,25 +142,61 @@ void WriteByteToChip(char c){
     TXR = 0xA0;         // Write Control Byte (1010 0000)
     CR = startWrite;    // Set STA bit, set WR bit
     WaitForTXByte();
-    printf("ACK = %d\r\n", CheckForACK());
+    if(!CheckForACK())
+        printf("No ACK returned");
 
     TXR = 0x20;         // Address Byte 1
     CR = Write;         // Set WR bit
     WaitForTXByte();
-    printf("ACK = %d\r\n", CheckForACK());
+    if(!CheckForACK())
+        printf("No ACK returned");
 
     TXR = 0x00;         // Address Byte 2
     CR = Write;         // Set WR bit
     WaitForTXByte();
-    printf("ACK = %d\r\n", CheckForACK());
+    if(!CheckForACK())
+        printf("No ACK returned");
 
     TXR = c;            // send 1 byte of data
     CR = Write;
     WaitForTXByte();
-    printf("ACK = %d\r\n", CheckForACK());
+    if(!CheckForACK())
+        printf("No ACK returned");
 
     CR = stop;
     WaitForWriteCycle();
+}
+
+/*********************************************************************************************
+**  Write Page to EEPROM Chip
+*********************************************************************************************/
+void initiateWriteSequence(int address){
+    char writeControlByte = 0, unusedControlByte = 0;
+
+    BlockDecode(&writeControlByte, &unusedControlByte, address);
+
+    // Ensure TX is ready before sending control byte
+    WaitForTXByte();
+
+    TXR = writeControlByte;     // Write Control Byte (1010 0000)
+    CR = startWrite;            // Set STA bit, set WR bit
+    WaitForTXByte();
+    if(!CheckForACK())
+        printf("No ACK returned");
+
+    TXR = (address >> 8) & 0xFF;    // Address Byte 1
+    CR = Write;                 // Set WR bit
+    WaitForTXByte();
+    if(!CheckForACK())
+        printf("No ACK returned");
+
+    TXR = address & 0xFF;       // Address Byte 2
+    CR = Write;                 // Set WR bit
+    WaitForTXByte();
+    if(!CheckForACK())
+        printf("No ACK returned");
+
+    return;
 }
 
 /*********************************************************************************************
@@ -152,9 +214,53 @@ void WaitForWriteCycle(void){
 }
 
 /*********************************************************************************************
-**  Read Byte from EEPROM flash
+**  Read Block from EEPROM flash
 *********************************************************************************************/
-void ReadPageFromChip(char expectedByte){
+void SequentialBlockRead(int address, int sizeOfBlock, char expectedByte){
+
+    char receivedByte;
+    int endAddress = address + sizeOfBlock;
+
+    // Parameter checks
+    if (endAddress > 0x1FFFF){
+        printf("Not Enough Memory locations!\r\n");
+        return;
+    }
+
+    initiateReadSequence(address);
+
+    while (address < endAddress){
+        if (address == endAddress - 1 || address == 0xFFFF)
+            CR = ReadNACKIACK;
+        else CR = ReadIACK;
+
+        WaitForReceivedByte();
+        receivedByte = RXR;
+
+        if (address != (endAddress - 1) && !CheckForACK())
+            printf("No ACK returned for read at address: 0x%X", address);
+
+        if (receivedByte != expectedByte){
+                printf("Sequential Read Error at address: 0x%X\r\n", address);
+                CR = stop;
+                return;
+        }
+
+        if (address == 0x0FFFF){ // Stop and Start Read from 2nd bank
+            CR = stop;
+            initiateReadSequence(address);
+        }
+        address ++;        
+    }
+
+    CR = stop;
+    printf("Sequential Block Read Successful\r\n");
+}
+
+/*********************************************************************************************
+**  Read Page from EEPROM flash
+*********************************************************************************************/
+void ReadPageFromChip(void){
 
     int i = 0;
     char receivedByte;
@@ -167,22 +273,26 @@ void ReadPageFromChip(char expectedByte){
     TXR = 0xA0;         // Write Control Byte (1010 0000)
     CR = startWrite;    // set STA bit
     WaitForTXByte();
-    printf("ACK = %d\r\n", CheckForACK());
+    if(!CheckForACK())
+        printf("No ACK returned");
 
-    TXR = 0x20;         // Address Byte 1
+    TXR = 0x00;         // Address Byte 1
     CR = Write;         // set WR bit
     WaitForTXByte();
-    printf("ACK = %d\r\n", CheckForACK());
+    if(!CheckForACK())
+        printf("No ACK returned");
     
     TXR = 0x00;         // Address Byte 2
     CR = Write;         // set WR bit
     WaitForTXByte();
-    printf("ACK = %d\r\n", CheckForACK());
+    if(!CheckForACK())
+        printf("No ACK returned");
 
     TXR = 0xA1;         // Read Control Byte (1010 0001)
     CR = startWrite;    // Set STA bit, WR bit
     WaitForTXByte();
-    printf("ACK = %d\r\n", CheckForACK());
+    if(!CheckForACK())
+        printf("No ACK returned");
 
     for (i=0; i<128; i++){
         if (i != 127)
@@ -195,7 +305,7 @@ void ReadPageFromChip(char expectedByte){
         if (i != 127 && !CheckForACK())
             printf("No ACK returned for byte #%d", i);
 
-        if (receivedByte != expectedByte){
+        if (receivedByte != i){
                 printf("Page Read Failed at Byte #%d\r\n", i);
                 CR = stop;
                 return;
@@ -220,22 +330,26 @@ char ReadByteFromChip(void){
     TXR = 0xA0;         // Write Control Byte (1010 0000)
     CR = startWrite;    // set STA bit
     WaitForTXByte();
-    printf("ACK = %d\r\n", CheckForACK());
+    if(!CheckForACK())
+        printf("No ACK returned");
 
     TXR = 0x20;         // Address Byte 1
     CR = Write;         // set WR bit
     WaitForTXByte();
-    printf("ACK = %d\r\n", CheckForACK());
+    if(!CheckForACK())
+        printf("No ACK returned");
     
     TXR = 0x00;         // Address Byte 2
     CR = Write;         // set WR bit
     WaitForTXByte();
-    printf("ACK = %d\r\n", CheckForACK());
+    if(!CheckForACK())
+        printf("No ACK returned");
 
     TXR = 0xA1;         // Read Control Byte (1010 0001)
     CR = startWrite;    // Set STA bit, WR bit
     WaitForTXByte();
-    printf("ACK = %d\r\n", CheckForACK());
+    if(!CheckForACK())
+        printf("No ACK returned");
 
     CR = ReadNACKIACK;
  
@@ -245,6 +359,63 @@ char ReadByteFromChip(void){
     CR = stop;
 
     return receivedByte;
+}
+
+/*********************************************************************************************
+**  Initiate Read Command to EEPROM
+*********************************************************************************************/
+void initiateReadSequence(int address){
+
+    char writeControlByte = 0, readControlByte = 0;
+   
+    // Decode Address to determine bank
+    BlockDecode(&writeControlByte, &readControlByte, address);
+    
+    // Ensure TX is ready before transmission
+    WaitForTXByte();
+
+    TXR = writeControlByte;          // Write Control Byte (1010 0000)
+    CR = startWrite;                // set STA bit
+    WaitForTXByte();
+    if(!CheckForACK())
+        printf("No ACK returned");
+
+    TXR = (address >> 8) & 0xFF;    // Address Byte 1
+    CR = Write;                     // set WR bit
+    WaitForTXByte();
+    if(!CheckForACK())
+        printf("No ACK returned");
+    
+    TXR = address & 0xFF;           // Address Byte 2
+    CR = Write;                     // set WR bit
+    WaitForTXByte();
+    if(!CheckForACK())
+        printf("No ACK returned");
+
+    TXR = readControlByte;          // Read Control Byte (1010 0001)
+    CR = startWrite;                // Set STA bit, WR bit
+    WaitForTXByte();
+    if(!CheckForACK())
+        printf("No ACK returned");
+}
+
+/*********************************************************************************************
+**  Decode Bank from address
+*********************************************************************************************/
+void BlockDecode(char * writeControlByte, char * readControlByte, int address){
+    
+    char bank;
+
+    // Block Decoder
+    bank = (address >> 16) & 0xF;
+    if (bank == 0){
+        *writeControlByte = 0xA0;
+        *readControlByte = 0xA1;
+    }
+    else if (bank == 1){
+        *writeControlByte = 0xA8;
+        *readControlByte = 0xA9;
+    }
 }
 
 
@@ -292,21 +463,23 @@ void IIC_Init(void){
 
 void main(void)
 {
-    char sendByte = 75;
+    char sendByte = 0x55;
     char recievedByte;
 
-    scanflush() ;                       // flush any text that may have been typed ahead
-    printf("\r\nHello IIC Lab\r\n");
+    scanflush();     // flush any text that may have been typed ahead
+    printf("\r\nHello IIC Lab\r\n\r\n");
 
     IIC_Init();
     WriteByteToChip(sendByte);
     recievedByte = ReadByteFromChip();
 
-    printf("This is the sent Byte: %u\r\n", sendByte);
-    printf("This is the received Byte: %u\r\n", recievedByte);
+    printf("Sent Byte: 0x%X & Recieved Byte: 0x%X\r\n\r\n", sendByte, recievedByte);
 
-    WritePageToChip(sendByte);
-    ReadPageFromChip(sendByte);
+    WritePageToChip();
+    ReadPageFromChip();
+
+    SequentialBlockWrite(0x00000, 16384, sendByte);
+    SequentialBlockRead(0x00000, 16384, sendByte);
 
     while(1);
    // programs should NOT exit as there is nothing to Exit TO !!!!!!
