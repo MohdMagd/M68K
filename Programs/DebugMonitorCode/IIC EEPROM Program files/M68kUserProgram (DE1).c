@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <time.h>
+#include <stdlib.h>
 
 /*********************************************************************************************
 **  RS232 port addresses
@@ -54,6 +54,8 @@ void WaitForTXByte(void);
 void WaitForReceivedByte(void);
 int CheckForACK(void);
 void IIC_Init(void);
+void GenerateADCOutput(void);
+void DValueOfAInput(void);
 
 int _getch( void )
 {
@@ -456,6 +458,76 @@ void IIC_Init(void){
     CTR = 0x80;
 }
 
+/*********************************************************************************************
+** Generate ADC Output
+*********************************************************************************************/
+void GenerateADCOutput(void){
+
+    char i=0;
+    printf("Writing continuous data to ADC\r\n");
+    // Ensure TX is ready before sending control byte
+    WaitForTXByte();
+
+    TXR = 0x9E;         //AddresByte
+    CR = startWrite;    // Set STA bit, set WR bit
+    WaitForTXByte();
+    if(!CheckForACK())
+        printf("no ACK returned");
+
+    TXR = 0x60;         // ControlByte
+    CR = Write;         // Set WR bit
+    WaitForTXByte();
+    if(!CheckForACK())
+        printf("no ACK returned");
+    while(1)
+    {
+            if(i==0)
+            {            
+                TXR = i;         // Send 0V
+                CR = Write;         // Set WR bit
+                WaitForTXByte();
+                    if(!CheckForACK())
+                         printf("no ACK returned");
+                i=255;          //set i high 
+            }
+            else
+            {
+                TXR = i;         // Send 5V
+                CR = Write;         // Set WR bit
+                WaitForTXByte();
+                    if(!CheckForACK())
+                        printf("no ACK returned");
+                i=0;            //set i low
+            }
+
+    }
+}
+
+/*********************************************************************************************
+** Digital Value of input channel
+*********************************************************************************************/
+void DValueOfAInput(void){
+
+    int DecimalRx;
+
+    printf("Generating digital value for analong input on pin AIN0 \r\n");
+    // Ensure TX is ready before sending control byte
+    WaitForTXByte();
+    TXR = 0x9F;         //AddresByte
+    CR = startWrite;    // Set STA bit, set WR bit
+    WaitForTXByte();
+    if(!CheckForACK())
+        printf("no ACK returned");
+         // ControlByte
+    CR = ReadIACK;
+    WaitForReceivedByte();
+    DecimalRx = (int) RXR;
+    if(DecimalRx<100)
+    printf("The digital value on pin Ain0 is: 0 V \r\n");
+    else    
+    printf("The digital value on pin Ain0 is: %d V \r\n",(RXR/46));
+    CR = stop;
+}
 
 void main(void)
 {
@@ -467,20 +539,23 @@ void main(void)
 
     IIC_Init();
 
-    SequentialBlockWrite(0x00000, 0x1FFFF, sendByte);
-    SequentialBlockRead(0x00000, 0x1FFFF, sendByte);
+    SequentialBlockWrite(0x1FFF0, 0x1FFFF, sendByte);
+    SequentialBlockRead(0x1FFF0, 0x1FFFF, sendByte);
 
     printf("\r\n");
 
-    // WritePageToChip();
-    // ReadPageFromChip();
+    WritePageToChip();
+    ReadPageFromChip();
 
     printf("\r\n");
 
-    // WriteByteToChip(sendByte);
-    // recievedByte = ReadByteFromChip();
+    WriteByteToChip(sendByte);
+    recievedByte = ReadByteFromChip();
 
-    // printf("Sent Byte: 0x%X & Recieved Byte: 0x%X\r\n\r\n", sendByte, recievedByte);
+    printf("Sent Byte: 0x%X & Recieved Byte: 0x%X\r\n\r\n", sendByte, recievedByte);
+
+    // GenerateADCOutput();
+    // DValueOfAInput();
 
     while(1);
    // programs should NOT exit as there is nothing to Exit TO !!!!!!
