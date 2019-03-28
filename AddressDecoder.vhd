@@ -49,5 +49,9 @@ Begin
 			DramSelect_H <= '1' ;													-- DO NOT CHANGE - debugger expects SDram at this address
 		end if ;
 		
+		if(Address(31 downto 16) = B"0000_0000_0101_0000") then 			-- address hex 0050 0000 - 0050 FFFF Partial decoding - 64KBytes
+			CanBusSelect_H <= '1' ;													-- DO NOT CHANGE - debugger expects SDram at this address
+		end if ;		
+		
 	end process ;
 END ;

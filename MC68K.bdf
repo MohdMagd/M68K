@@ -2137,77 +2137,6 @@ agreement for further details.
 	)
 )
 (symbol
-	(rect 816 576 1064 752)
-	(text "AddressDecoder" (rect 5 0 86 12)(font "Arial" ))
-	(text "inst3" (rect 8 160 31 172)(font "Arial" ))
-	(port
-		(pt 0 32)
-		(input)
-		(text "Address[31..0]" (rect 0 0 71 12)(font "Arial" ))
-		(text "Address[31..0]" (rect 21 27 92 39)(font "Arial" ))
-		(line (pt 0 32)(pt 16 32)(line_width 3))
-	)
-	(port
-		(pt 248 32)
-		(output)
-		(text "OnChipRomSelect_H" (rect 0 0 105 12)(font "Arial" ))
-		(text "OnChipRomSelect_H" (rect 139 27 244 39)(font "Arial" ))
-		(line (pt 248 32)(pt 232 32))
-	)
-	(port
-		(pt 248 48)
-		(output)
-		(text "OnChipRamSelect_H" (rect 0 0 105 12)(font "Arial" ))
-		(text "OnChipRamSelect_H" (rect 139 43 244 55)(font "Arial" ))
-		(line (pt 248 48)(pt 232 48))
-	)
-	(port
-		(pt 248 64)
-		(output)
-		(text "DramSelect_H" (rect 0 0 71 12)(font "Arial" ))
-		(text "DramSelect_H" (rect 167 59 238 71)(font "Arial" ))
-		(line (pt 248 64)(pt 232 64))
-	)
-	(port
-		(pt 248 80)
-		(output)
-		(text "IOSelect_H" (rect 0 0 56 12)(font "Arial" ))
-		(text "IOSelect_H" (rect 180 75 236 87)(font "Arial" ))
-		(line (pt 248 80)(pt 232 80))
-	)
-	(port
-		(pt 248 96)
-		(output)
-		(text "DMASelect_L" (rect 0 0 66 12)(font "Arial" ))
-		(text "DMASelect_L" (rect 172 91 238 103)(font "Arial" ))
-		(line (pt 248 96)(pt 232 96))
-	)
-	(port
-		(pt 248 112)
-		(output)
-		(text "GraphicsCS_L" (rect 0 0 70 12)(font "Arial" ))
-		(text "GraphicsCS_L" (rect 168 107 238 119)(font "Arial" ))
-		(line (pt 248 112)(pt 232 112))
-	)
-	(port
-		(pt 248 128)
-		(output)
-		(text "OffBoardMemory_H" (rect 0 0 100 12)(font "Arial" ))
-		(text "OffBoardMemory_H" (rect 143 123 243 135)(font "Arial" ))
-		(line (pt 248 128)(pt 232 128))
-	)
-	(port
-		(pt 248 144)
-		(output)
-		(text "CanBusSelect_H" (rect 0 0 83 12)(font "Arial" ))
-		(text "CanBusSelect_H" (rect 157 139 240 151)(font "Arial" ))
-		(line (pt 248 144)(pt 232 144))
-	)
-	(drawing
-		(rectangle (rect 16 16 232 160))
-	)
-)
-(symbol
 	(rect 1520 1096 1776 1576)
 	(text "OnChipIO" (rect 5 0 58 14)(font "Arial" (font_size 8)))
 	(text "inst8" (rect 8 464 31 476)(font "Arial" ))
@@ -2652,133 +2581,6 @@ agreement for further details.
 	)
 	(drawing
 		(rectangle (rect 16 16 216 208))
-	)
-)
-(symbol
-	(rect 1552 2752 1808 2944)
-	(text "CanBus" (rect 5 0 49 14)(font "Arial" (font_size 8)))
-	(text "inst5" (rect 8 176 31 188)(font "Arial" ))
-	(port
-		(pt 0 32)
-		(input)
-		(text "Address[31..0]" (rect 0 0 84 14)(font "Arial" (font_size 8)))
-		(text "Address[31..0]" (rect 21 27 105 41)(font "Arial" (font_size 8)))
-		(line (pt 0 32)(pt 16 32)(line_width 3))
-	)
-	(port
-		(pt 0 48)
-		(input)
-		(text "CanBusSelect_H" (rect 0 0 95 14)(font "Arial" (font_size 8)))
-		(text "CanBusSelect_H" (rect 21 43 116 57)(font "Arial" (font_size 8)))
-		(line (pt 0 48)(pt 16 48))
-	)
-	(port
-		(pt 0 64)
-		(input)
-		(text "Clk" (rect 0 0 16 14)(font "Arial" (font_size 8)))
-		(text "Clk" (rect 21 59 37 73)(font "Arial" (font_size 8)))
-		(line (pt 0 64)(pt 16 64))
-	)
-	(port
-		(pt 0 80)
-		(input)
-		(text "Reset_L" (rect 0 0 47 14)(font "Arial" (font_size 8)))
-		(text "Reset_L" (rect 21 75 68 89)(font "Arial" (font_size 8)))
-		(line (pt 0 80)(pt 16 80))
-	)
-	(port
-		(pt 0 96)
-		(input)
-		(text "DataIn[7..0]" (rect 0 0 63 14)(font "Arial" (font_size 8)))
-		(text "DataIn[7..0]" (rect 21 91 84 105)(font "Arial" (font_size 8)))
-		(line (pt 0 96)(pt 16 96)(line_width 3))
-	)
-	(port
-		(pt 0 112)
-		(input)
-		(text "WE_L" (rect 0 0 33 14)(font "Arial" (font_size 8)))
-		(text "WE_L" (rect 21 107 54 121)(font "Arial" (font_size 8)))
-		(line (pt 0 112)(pt 16 112))
-	)
-	(port
-		(pt 0 128)
-		(input)
-		(text "AS_L" (rect 0 0 31 14)(font "Arial" (font_size 8)))
-		(text "AS_L" (rect 21 123 52 137)(font "Arial" (font_size 8)))
-		(line (pt 0 128)(pt 16 128))
-	)
-	(port
-		(pt 0 144)
-		(input)
-		(text "Can0_RX" (rect 0 0 53 14)(font "Arial" (font_size 8)))
-		(text "Can0_RX" (rect 21 139 74 153)(font "Arial" (font_size 8)))
-		(line (pt 0 144)(pt 16 144))
-	)
-	(port
-		(pt 0 160)
-		(input)
-		(text "Can1_RX" (rect 0 0 53 14)(font "Arial" (font_size 8)))
-		(text "Can1_RX" (rect 21 155 74 169)(font "Arial" (font_size 8)))
-		(line (pt 0 160)(pt 16 160))
-	)
-	(port
-		(pt 256 32)
-		(output)
-		(text "CanBusDtack_L" (rect 0 0 90 14)(font "Arial" (font_size 8)))
-		(text "CanBusDtack_L" (rect 145 27 235 41)(font "Arial" (font_size 8)))
-		(line (pt 256 32)(pt 240 32))
-	)
-	(port
-		(pt 256 48)
-		(output)
-		(text "DataOut[7..0]" (rect 0 0 74 14)(font "Arial" (font_size 8)))
-		(text "DataOut[7..0]" (rect 161 43 235 57)(font "Arial" (font_size 8)))
-		(line (pt 256 48)(pt 240 48)(line_width 3))
-	)
-	(port
-		(pt 256 64)
-		(output)
-		(text "Can0_TX" (rect 0 0 51 14)(font "Arial" (font_size 8)))
-		(text "Can0_TX" (rect 184 59 235 73)(font "Arial" (font_size 8)))
-		(line (pt 256 64)(pt 240 64))
-	)
-	(port
-		(pt 256 80)
-		(output)
-		(text "Can0_bus_off_on" (rect 0 0 102 14)(font "Arial" (font_size 8)))
-		(text "Can0_bus_off_on" (rect 133 75 235 89)(font "Arial" (font_size 8)))
-		(line (pt 256 80)(pt 240 80))
-	)
-	(port
-		(pt 256 96)
-		(output)
-		(text "Can0_IRQ" (rect 0 0 56 14)(font "Arial" (font_size 8)))
-		(text "Can0_IRQ" (rect 179 91 235 105)(font "Arial" (font_size 8)))
-		(line (pt 256 96)(pt 240 96))
-	)
-	(port
-		(pt 256 112)
-		(output)
-		(text "Can1_TX" (rect 0 0 51 14)(font "Arial" (font_size 8)))
-		(text "Can1_TX" (rect 184 107 235 121)(font "Arial" (font_size 8)))
-		(line (pt 256 112)(pt 240 112))
-	)
-	(port
-		(pt 256 128)
-		(output)
-		(text "Can1_bus_off_on2" (rect 0 0 109 14)(font "Arial" (font_size 8)))
-		(text "Can1_bus_off_on2" (rect 126 123 235 137)(font "Arial" (font_size 8)))
-		(line (pt 256 128)(pt 240 128))
-	)
-	(port
-		(pt 256 144)
-		(output)
-		(text "Can1_IRQ3" (rect 0 0 63 14)(font "Arial" (font_size 8)))
-		(text "Can1_IRQ3" (rect 172 139 235 153)(font "Arial" (font_size 8)))
-		(line (pt 256 144)(pt 240 144))
-	)
-	(drawing
-		(rectangle (rect 16 16 240 176))
 	)
 )
 (symbol
@@ -3357,6 +3159,204 @@ agreement for further details.
 		(rectangle (rect 16 16 200 176))
 	)
 )
+(symbol
+	(rect 1552 2752 1800 2944)
+	(text "CanBus" (rect 5 0 49 14)(font "Arial" (font_size 8)))
+	(text "inst5" (rect 8 176 31 188)(font "Arial" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "Address[31..0]" (rect 0 0 84 14)(font "Arial" (font_size 8)))
+		(text "Address[31..0]" (rect 21 27 105 41)(font "Arial" (font_size 8)))
+		(line (pt 0 32)(pt 16 32)(line_width 3))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "CanBusSelect_H" (rect 0 0 95 14)(font "Arial" (font_size 8)))
+		(text "CanBusSelect_H" (rect 21 43 116 57)(font "Arial" (font_size 8)))
+		(line (pt 0 48)(pt 16 48))
+	)
+	(port
+		(pt 0 64)
+		(input)
+		(text "Clk" (rect 0 0 16 14)(font "Arial" (font_size 8)))
+		(text "Clk" (rect 21 59 37 73)(font "Arial" (font_size 8)))
+		(line (pt 0 64)(pt 16 64))
+	)
+	(port
+		(pt 0 80)
+		(input)
+		(text "Reset_L" (rect 0 0 47 14)(font "Arial" (font_size 8)))
+		(text "Reset_L" (rect 21 75 68 89)(font "Arial" (font_size 8)))
+		(line (pt 0 80)(pt 16 80))
+	)
+	(port
+		(pt 0 96)
+		(input)
+		(text "DataIn[7..0]" (rect 0 0 63 14)(font "Arial" (font_size 8)))
+		(text "DataIn[7..0]" (rect 21 91 84 105)(font "Arial" (font_size 8)))
+		(line (pt 0 96)(pt 16 96)(line_width 3))
+	)
+	(port
+		(pt 0 112)
+		(input)
+		(text "WE_L" (rect 0 0 33 14)(font "Arial" (font_size 8)))
+		(text "WE_L" (rect 21 107 54 121)(font "Arial" (font_size 8)))
+		(line (pt 0 112)(pt 16 112))
+	)
+	(port
+		(pt 0 128)
+		(input)
+		(text "AS_L" (rect 0 0 31 14)(font "Arial" (font_size 8)))
+		(text "AS_L" (rect 21 123 52 137)(font "Arial" (font_size 8)))
+		(line (pt 0 128)(pt 16 128))
+	)
+	(port
+		(pt 0 144)
+		(input)
+		(text "Can0_RX" (rect 0 0 53 14)(font "Arial" (font_size 8)))
+		(text "Can0_RX" (rect 21 139 74 153)(font "Arial" (font_size 8)))
+		(line (pt 0 144)(pt 16 144))
+	)
+	(port
+		(pt 0 160)
+		(input)
+		(text "Can1_RX" (rect 0 0 53 14)(font "Arial" (font_size 8)))
+		(text "Can1_RX" (rect 21 155 74 169)(font "Arial" (font_size 8)))
+		(line (pt 0 160)(pt 16 160))
+	)
+	(port
+		(pt 248 32)
+		(output)
+		(text "CanBusDtack_L" (rect 0 0 90 14)(font "Arial" (font_size 8)))
+		(text "CanBusDtack_L" (rect 137 27 227 41)(font "Arial" (font_size 8)))
+		(line (pt 248 32)(pt 232 32))
+	)
+	(port
+		(pt 248 48)
+		(output)
+		(text "DataOut[7..0]" (rect 0 0 74 14)(font "Arial" (font_size 8)))
+		(text "DataOut[7..0]" (rect 153 43 227 57)(font "Arial" (font_size 8)))
+		(line (pt 248 48)(pt 232 48)(line_width 3))
+	)
+	(port
+		(pt 248 64)
+		(output)
+		(text "Can0_TX" (rect 0 0 51 14)(font "Arial" (font_size 8)))
+		(text "Can0_TX" (rect 176 59 227 73)(font "Arial" (font_size 8)))
+		(line (pt 248 64)(pt 232 64))
+	)
+	(port
+		(pt 248 80)
+		(output)
+		(text "Can0_bus_off_on" (rect 0 0 102 14)(font "Arial" (font_size 8)))
+		(text "Can0_bus_off_on" (rect 125 75 227 89)(font "Arial" (font_size 8)))
+		(line (pt 248 80)(pt 232 80))
+	)
+	(port
+		(pt 248 96)
+		(output)
+		(text "Can0_IRQ" (rect 0 0 56 14)(font "Arial" (font_size 8)))
+		(text "Can0_IRQ" (rect 171 91 227 105)(font "Arial" (font_size 8)))
+		(line (pt 248 96)(pt 232 96))
+	)
+	(port
+		(pt 248 112)
+		(output)
+		(text "Can1_TX" (rect 0 0 51 14)(font "Arial" (font_size 8)))
+		(text "Can1_TX" (rect 176 107 227 121)(font "Arial" (font_size 8)))
+		(line (pt 248 112)(pt 232 112))
+	)
+	(port
+		(pt 248 128)
+		(output)
+		(text "Can1_bus_off_on" (rect 0 0 102 14)(font "Arial" (font_size 8)))
+		(text "Can1_bus_off_on" (rect 125 123 227 137)(font "Arial" (font_size 8)))
+		(line (pt 248 128)(pt 232 128))
+	)
+	(port
+		(pt 248 144)
+		(output)
+		(text "Can1_IRQ" (rect 0 0 56 14)(font "Arial" (font_size 8)))
+		(text "Can1_IRQ" (rect 171 139 227 153)(font "Arial" (font_size 8)))
+		(line (pt 248 144)(pt 232 144))
+	)
+	(drawing
+		(rectangle (rect 16 16 232 176))
+	)
+)
+(symbol
+	(rect 808 576 1056 752)
+	(text "AddressDecoder" (rect 5 0 86 12)(font "Arial" ))
+	(text "inst3" (rect 8 160 31 172)(font "Arial" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "Address[31..0]" (rect 0 0 71 12)(font "Arial" ))
+		(text "Address[31..0]" (rect 21 27 92 39)(font "Arial" ))
+		(line (pt 0 32)(pt 16 32)(line_width 3))
+	)
+	(port
+		(pt 248 32)
+		(output)
+		(text "OnChipRomSelect_H" (rect 0 0 105 12)(font "Arial" ))
+		(text "OnChipRomSelect_H" (rect 139 27 227 39)(font "Arial" ))
+		(line (pt 248 32)(pt 232 32))
+	)
+	(port
+		(pt 248 48)
+		(output)
+		(text "OnChipRamSelect_H" (rect 0 0 105 12)(font "Arial" ))
+		(text "OnChipRamSelect_H" (rect 139 43 227 55)(font "Arial" ))
+		(line (pt 248 48)(pt 232 48))
+	)
+	(port
+		(pt 248 64)
+		(output)
+		(text "DramSelect_H" (rect 0 0 71 12)(font "Arial" ))
+		(text "DramSelect_H" (rect 167 59 227 71)(font "Arial" ))
+		(line (pt 248 64)(pt 232 64))
+	)
+	(port
+		(pt 248 80)
+		(output)
+		(text "IOSelect_H" (rect 0 0 56 12)(font "Arial" ))
+		(text "IOSelect_H" (rect 180 75 227 87)(font "Arial" ))
+		(line (pt 248 80)(pt 232 80))
+	)
+	(port
+		(pt 248 96)
+		(output)
+		(text "DMASelect_L" (rect 0 0 66 12)(font "Arial" ))
+		(text "DMASelect_L" (rect 172 91 227 103)(font "Arial" ))
+		(line (pt 248 96)(pt 232 96))
+	)
+	(port
+		(pt 248 112)
+		(output)
+		(text "GraphicsCS_L" (rect 0 0 70 12)(font "Arial" ))
+		(text "GraphicsCS_L" (rect 168 107 227 119)(font "Arial" ))
+		(line (pt 248 112)(pt 232 112))
+	)
+	(port
+		(pt 248 128)
+		(output)
+		(text "OffBoardMemory_H" (rect 0 0 100 12)(font "Arial" ))
+		(text "OffBoardMemory_H" (rect 143 123 227 135)(font "Arial" ))
+		(line (pt 248 128)(pt 232 128))
+	)
+	(port
+		(pt 248 144)
+		(output)
+		(text "CanBusSelect_H" (rect 0 0 83 12)(font "Arial" ))
+		(text "CanBusSelect_H" (rect 157 139 227 151)(font "Arial" ))
+		(line (pt 248 144)(pt 232 144))
+	)
+	(drawing
+		(rectangle (rect 16 16 232 160))
+	)
+)
 (connector
 	(pt 592 240)
 	(pt 1248 240)
@@ -3624,12 +3624,6 @@ agreement for further details.
 	(pt 512 24)
 )
 (connector
-	(text "Address[31..0]" (rect 762 592 833 604)(font "Arial" )(invisible))
-	(pt 792 608)
-	(pt 816 608)
-	(bus)
-)
-(connector
 	(pt 512 -56)
 	(pt 608 -56)
 	(bus)
@@ -3890,14 +3884,6 @@ agreement for further details.
 	(pt 776 328)
 )
 (connector
-	(pt 1264 440)
-	(pt 1264 704)
-)
-(connector
-	(pt 1264 704)
-	(pt 1064 704)
-)
-(connector
 	(pt -240 752)
 	(pt -104 752)
 )
@@ -3916,10 +3902,6 @@ agreement for further details.
 (connector
 	(pt 632 784)
 	(pt 112 784)
-)
-(connector
-	(pt 1064 640)
-	(pt 1160 640)
 )
 (connector
 	(pt 616 280)
@@ -3942,21 +3924,12 @@ agreement for further details.
 	(pt 1096 800)
 )
 (connector
-	(pt 1064 720)
-	(pt 1096 720)
-)
-(connector
 	(pt 112 816)
 	(pt 600 816)
 )
 (connector
 	(pt 600 816)
 	(pt 600 2728)
-)
-(connector
-	(pt 792 224)
-	(pt 792 608)
-	(bus)
 )
 (connector
 	(pt 1360 624)
@@ -4174,14 +4147,6 @@ agreement for further details.
 	(pt 1120 -632)
 )
 (connector
-	(pt 1136 672)
-	(pt 1136 -616)
-)
-(connector
-	(pt 1064 672)
-	(pt 1136 672)
-)
-(connector
 	(pt 72 256)
 	(pt 1200 256)
 	(bus)
@@ -4291,11 +4256,6 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(pt 792 608)
-	(pt 792 1144)
-	(bus)
-)
-(connector
 	(pt 792 1144)
 	(pt 792 1760)
 	(bus)
@@ -4393,22 +4353,6 @@ agreement for further details.
 (connector
 	(pt 1360 280)
 	(pt 2080 280)
-)
-(connector
-	(pt 1064 608)
-	(pt 1392 608)
-)
-(connector
-	(pt 1064 624)
-	(pt 1360 624)
-)
-(connector
-	(pt 1360 624)
-	(pt 1408 624)
-)
-(connector
-	(pt 1224 656)
-	(pt 1440 656)
 )
 (connector
 	(pt 152 392)
@@ -4597,10 +4541,6 @@ agreement for further details.
 	(pt 2232 592)
 )
 (connector
-	(pt 1096 592)
-	(pt 1096 720)
-)
-(connector
 	(pt 1440 656)
 	(pt 1440 560)
 )
@@ -4752,10 +4692,6 @@ agreement for further details.
 	(pt 2032 -16)
 	(pt 1760 -16)
 	(bus)
-)
-(connector
-	(pt 1160 640)
-	(pt 1312 640)
 )
 (connector
 	(pt 1312 640)
@@ -4916,14 +4852,6 @@ agreement for further details.
 	(pt 1376 720)
 	(pt 1376 944)
 	(bus)
-)
-(connector
-	(pt 1392 512)
-	(pt 1392 608)
-)
-(connector
-	(pt 1392 608)
-	(pt 1392 704)
 )
 (connector
 	(text "DataBusIn[15..0]" (rect 1936 599 1948 682)(font "Arial" )(vertical)(invisible))
@@ -5144,30 +5072,12 @@ agreement for further details.
 	(pt 1552 2880)
 )
 (connector
-	(pt 1856 2784)
-	(pt 1808 2784)
-)
-(connector
-	(text "DataBusIn[15..8]" (rect 1866 2784 1949 2796)(font "Arial" ))
-	(pt 1952 2800)
-	(pt 1808 2800)
-	(bus)
-)
-(connector
-	(pt 2064 2816)
-	(pt 1808 2816)
-)
-(connector
 	(pt 1544 2912)
 	(pt 1552 2912)
 )
 (connector
 	(pt 1528 2896)
 	(pt 1552 2896)
-)
-(connector
-	(pt 1888 2864)
-	(pt 1808 2864)
 )
 (connector
 	(pt 1544 2968)
@@ -5180,15 +5090,6 @@ agreement for further details.
 (connector
 	(pt 1528 2984)
 	(pt 1528 2896)
-)
-(connector
-	(pt 1952 2800)
-	(pt 1952 2896)
-	(bus)
-)
-(connector
-	(pt 1096 720)
-	(pt 1096 800)
 )
 (connector
 	(pt 1096 800)
@@ -5284,14 +5185,6 @@ agreement for further details.
 (connector
 	(pt 720 312)
 	(pt 1328 312)
-)
-(connector
-	(pt 1064 688)
-	(pt 1112 688)
-)
-(connector
-	(pt 1112 688)
-	(pt 1456 688)
 )
 (connector
 	(pt -272 2128)
@@ -5439,11 +5332,6 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(pt 1952 2416)
-	(pt 1952 2800)
-	(bus)
-)
-(connector
 	(pt 792 2144)
 	(pt 792 2416)
 	(bus)
@@ -5515,8 +5403,120 @@ agreement for further details.
 	(bus)
 )
 (connector
-	(pt 1064 656)
+	(pt 1800 2784)
+	(pt 1856 2784)
+)
+(connector
+	(text "DataBusIn[15..8]" (rect 1866 2784 1949 2796)(font "Arial" ))
+	(pt 1800 2800)
+	(pt 1952 2800)
+	(bus)
+)
+(connector
+	(pt 1952 2416)
+	(pt 1952 2800)
+	(bus)
+)
+(connector
+	(pt 1952 2800)
+	(pt 1952 2896)
+	(bus)
+)
+(connector
+	(pt 1800 2816)
+	(pt 2064 2816)
+)
+(connector
+	(pt 1800 2864)
+	(pt 1888 2864)
+)
+(connector
+	(text "Address[31..0]" (rect 754 592 825 604)(font "Arial" )(invisible))
+	(pt 792 608)
+	(pt 808 608)
+	(bus)
+)
+(connector
+	(pt 1264 440)
+	(pt 1264 704)
+)
+(connector
+	(pt 1136 -616)
+	(pt 1136 672)
+)
+(connector
+	(pt 792 224)
+	(pt 792 608)
+	(bus)
+)
+(connector
+	(pt 792 608)
+	(pt 792 1144)
+	(bus)
+)
+(connector
+	(pt 1360 624)
+	(pt 1408 624)
+)
+(connector
+	(pt 1160 640)
+	(pt 1312 640)
+)
+(connector
 	(pt 1224 656)
+	(pt 1440 656)
+)
+(connector
+	(pt 1112 688)
+	(pt 1456 688)
+)
+(connector
+	(pt 1096 592)
+	(pt 1096 720)
+)
+(connector
+	(pt 1096 720)
+	(pt 1096 800)
+)
+(connector
+	(pt 1392 512)
+	(pt 1392 608)
+)
+(connector
+	(pt 1392 608)
+	(pt 1392 704)
+)
+(connector
+	(pt 1056 608)
+	(pt 1392 608)
+)
+(connector
+	(pt 1056 624)
+	(pt 1360 624)
+)
+(connector
+	(pt 1056 640)
+	(pt 1160 640)
+)
+(connector
+	(pt 1056 656)
+	(pt 1224 656)
+)
+(connector
+	(pt 1056 672)
+	(pt 1136 672)
+)
+(connector
+	(pt 1056 688)
+	(pt 1112 688)
+)
+(connector
+	(pt 1056 704)
+	(pt 1264 704)
+)
+(connector
+	(pt 1056 720)
+	(pt 1096 720)
 )
 (junction (pt 1280 224))
 (junction (pt 1376 224))

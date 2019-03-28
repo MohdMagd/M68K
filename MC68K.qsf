@@ -374,6 +374,19 @@ set_location_assignment PIN_AK29 -to LCD_BLON
 
 set_location_assignment PIN_J12 -to CanBusSelect_H
 set_location_assignment PIN_AG26 -to LCD_Contrast_DE1
+set_global_assignment -name VERILOG_FILE can_ibo.v
+set_global_assignment -name VERILOG_FILE can_fifo.v
+set_global_assignment -name VERILOG_FILE can_defines.v
+set_global_assignment -name VERILOG_FILE can_crc.v
+set_global_assignment -name VERILOG_FILE can_btl.v
+set_global_assignment -name VERILOG_FILE can_bsp.v
+set_global_assignment -name VERILOG_FILE can_acf.v
+set_global_assignment -name VERILOG_FILE can_top.v
+set_global_assignment -name VERILOG_FILE can_registers.v
+set_global_assignment -name VERILOG_FILE can_register_syn.v
+set_global_assignment -name VERILOG_FILE can_register_asyn_syn.v
+set_global_assignment -name VERILOG_FILE can_register_asyn.v
+set_global_assignment -name VERILOG_FILE can_register.v
 set_global_assignment -name VERILOG_FILE simple_spi_top.v
 set_global_assignment -name VECTOR_WAVEFORM_FILE "Waveform68k-V15.0-DE1SoC.vwf"
 set_global_assignment -name VECTOR_WAVEFORM_FILE "simulation/qsim/Waveform68k-V15.0-DE1SoC-Output.vwf"
@@ -440,4 +453,5 @@ set_global_assignment -name VERILOG_FILE RamAddressMapper_Verilog.v
 set_global_assignment -name QIP_FILE VideoRamFrameBuffer.qip
 set_global_assignment -name QIP_FILE OnChipRom16KWord.qip
 set_global_assignment -name VHDL_FILE SPI_BUS_Decoder.vhd
+set_global_assignment -name BDF_FILE CanController.bdf
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
