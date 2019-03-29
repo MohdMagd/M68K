@@ -276,6 +276,11 @@
 **  17	8	25	    68	     1	      100	    0	      04	7f
 */
 
+#define SJW 1
+#define Presc 10
+#define TSEG1 16
+#define TSEG2 8
+
 
 // initialisation for Can controller 0
 void Init_CanBus_Controller0(void)
@@ -307,8 +312,8 @@ void Init_CanBus_Controller0(void)
 
     // Configure Bus Timing
     // Bit-rate = 100 kBit/s @ 25 MHz, bus is sample once
-    Can0_BusTiming0Reg = 1 | ;
-    Can0_BusTiming1Reg =  | ;
+    Can0_BusTiming0Reg = SJW | Presc;
+    Can0_BusTiming1Reg = TSEG2 | TSEG1;
 
     // Configure CAN outputs: float on TX1, Push/Pull on TX0, normal output mode
     Can0_OutControlReg = Tx1Float | Tx0PshPull | NormalMode;
@@ -326,8 +331,6 @@ void Init_CanBus_Controller0(void)
     ModeControlReg = ClrByte;
     } while((ModeControlReg & RM_RR_Bit ) != ClrByte);
     
-    Can0_InterruptEnReg = ENABLE;
-    Can0_InterruptReg = ENABLE;
 }
 
 // initialisation for Can controller 1
@@ -386,7 +389,7 @@ void CanBusTest(void)
 
         printf("\r\n") ;
 
-        // delay();                    // write a routine to delay say 1/2 second so we don't flood the network with messages too quickly
+        delay();                    // write a routine to delay say 1/2 second so we don't flood the network with messages too quickly
 
         CanBus1_Transmit() ;        // transmit a message via Controller 1
         CanBus0_Receive() ;         // receive a message via Controller 0 (and display it)
