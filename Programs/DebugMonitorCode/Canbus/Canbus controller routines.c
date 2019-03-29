@@ -1,6 +1,16 @@
 #include <stdio.h>
 
 /*********************************************************************************************
+**  RS232 port addresses
+*********************************************************************************************/
+
+#define RS232_Control     *(volatile unsigned char *)(0x00400040)
+#define RS232_Status      *(volatile unsigned char *)(0x00400040)
+#define RS232_TxData      *(volatile unsigned char *)(0x00400042)
+#define RS232_RxData      *(volatile unsigned char *)(0x00400042)
+#define RS232_Baud        *(volatile unsigned char *)(0x00400044)
+
+/*********************************************************************************************
 ** These addresses and definitions were taken from Appendix 7 of the Can Controller
 ** application note and adapted for the 68k assignment
 *********************************************************************************************/
@@ -318,6 +328,56 @@ void Init_CanBus_Controller0(void)
     // Configure CAN outputs: float on TX1, Push/Pull on TX0, normal output mode
     Can0_OutControlReg = Tx1Float | Tx0PshPull | NormalMode;
 
+    /* leave the reset mode/request i.e. switch to operating mode, 
+    the interrupts of the S87C654 are enabled but not the CAN interrupts of the SJA1000,
+    which can be done separately for the different tasks in a system */
+
+    /* clear Reset Mode bit, select dual Acceptance Filter Mode,
+    switch off Self Test Mode and Listen Only Mode, clear Sleep Mode (wake up) */
+
+    do /* wait until RM_RR_Bit is cleared */
+    {
+    Can0_ModeControlReg = ClrByte;
+    } while((Can0_ModeControlReg & RM_RR_Bit ) != ClrByte);
+    
+}
+
+// initialisation for Can controller 1
+void Init_CanBus_Controller1(void)
+{
+    // TODO - put your Canbus initialisation code for CanController 1 here
+    // See section 4.2.1 in the application note for details (PELICAN MODE)
+
+    Can1_InterruptReg = DISABLE; /* disable all interrupts */
+    /* set reset mode/request (Note: after power-on SJA1000 is in BasicCAN mode)*/
+    while(Can1_ModeControlReg & RM_RR_Bit == ClrByte){
+        // Set Request reset mode (other bits remain unchanged)
+        Can1_ModeControlReg = Can1_ModeControlReg | RM_RR_Bit;
+    }
+    // Configure Clock Divider Register
+    Can1_ClockDivideReg = CANMode_Bit | CBP_Bit | DivBy1;
+
+    // Disable Can Interrupts
+    Can1_InterruptEnReg = ClrIntEnSJA;
+
+    // Define Acceptance Code and Mask
+    Can1_AcceptCode0Reg = ClrByte;
+    Can1_AcceptCode1Reg = ClrByte;
+    Can1_AcceptCode2Reg = ClrByte;
+    Can1_AcceptCode3Reg = ClrByte;
+    Can1_AcceptMask0Reg = DontCare;
+    Can1_AcceptMask1Reg = DontCare;
+    Can1_AcceptMask2Reg = DontCare;
+    Can1_AcceptMask3Reg = DontCare;
+
+    // Configure Bus Timing
+    // Bit-rate = 100 kBit/s @ 25 MHz, bus is sample once
+    Can1_BusTiming0Reg = SJW | Presc;
+    Can1_BusTiming1Reg = TSEG2 | TSEG1;
+
+    // Configure CAN outputs: float on TX1, Push/Pull on TX0, normal output mode
+    Can0_OutControlReg = Tx1Float | Tx0PshPull | NormalMode;
+
 
     /* leave the reset mode/request i.e. switch to operating mode, 
     the interrupts of the S87C654 are enabled but not the CAN interrupts of the SJA1000,
@@ -328,17 +388,12 @@ void Init_CanBus_Controller0(void)
 
     do /* wait until RM_RR_Bit is cleared */
     {
-    ModeControlReg = ClrByte;
-    } while((ModeControlReg & RM_RR_Bit ) != ClrByte);
-    
-}
+    Can1_ModeControlReg = ClrByte;
+    } while((Can1_ModeControlReg & RM_RR_Bit ) != ClrByte);
 
-// initialisation for Can controller 1
-void Init_CanBus_Controller1(void)
-{
-    // TODO - put your Canbus initialisation code for CanController 1 here
-    // See section 4.2.1 in the application note for details (PELICAN MODE)
-
+    /* disable all interrupts */
+    Can0_InterruptReg = ClrIntEnSJA;
+    Can0_InterruptEnReg = ClrIntEnSJA;
 }
 
 // Transmit for sending a message via Can controller 0
@@ -346,6 +401,32 @@ void CanBus0_Transmit(void)
 {
     // TODO - put your Canbus transmit code for CanController 0 here
     // See section 4.2.2 in the application note for details (PELICAN MODE)
+
+    /* wait until the Transmit Buffer is released */
+    while((Can0_StatusReg & TBS_Bit ) != TBS_Bit);
+    /* Transmit Buffer is released, a message may be written into the buffer */
+    /* in this example a Standard Frame message shall be transmitted */
+    Can0_TxFrameInfo = 0x08; /* SFF (data), DLC=8 */
+    Can0_TxBuffer1 = 0xA5; /* ID1 = A0, (0000 0000) */
+    Can0_TxBuffer2 = 0x20; /* ID2 = A1, (0010 0000) */
+    Can0_TxBuffer3 = 0x51; /* data1 = DE */
+    Can0_TxBuffer4 = 0x52; /* data2 = ED */
+    Can0_TxBuffer5 = 0x53; /* data3 = BE */
+    Can0_TxBuffer6 = 0x54; /* data4 = EF */
+    Can0_TxBuffer7 = 0x55; /* data5 = DE */
+    Can0_TxBuffer8 = 0x56; /* data6 = AD */
+    Can0_TxBuffer9 = 0x57; /* data7 = BE */
+    Can0_TxBuffer10 = 0x58; /* data8 = EF */
+    printf("Can0 StatusReg = 0x%X\r\n", Can0_StatusReg);
+    printf("Can1 StatusReg = 0x%X\r\n", Can1_StatusReg);
+    printf("Can0_ModeControlReg = 0x%X\r\n", Can0_ModeControlReg);
+    printf("Can1_ModeControlReg = 0x%X\r\n", Can1_ModeControlReg);
+    /* Start the transmission */
+    Can0_CommandReg = TR_Bit ; /* Set Transmission Request bit */
+    printf("Can0 StatusReg = 0x%X -- Post Buffer fill up --\r\n", Can0_StatusReg);
+    printf("Can1 StatusReg = 0x%X -- Post Buffer fill up --\r\n", Can1_StatusReg);
+    printf("Can0_ModeControlReg = 0x%X\r\n", Can0_ModeControlReg);
+    printf("Can1_ModeControlReg = 0x%X\r\n", Can1_ModeControlReg);
 }
 
 // Transmit for sending a message via Can controller 1
@@ -353,6 +434,24 @@ void CanBus1_Transmit(void)
 {
     // TODO - put your Canbus transmit code for CanController 1 here
     // See section 4.2.2 in the application note for details (PELICAN MODE)
+
+    /* wait until the Transmit Buffer is released */
+    while((Can1_StatusReg & TBS_Bit ) != TBS_Bit);
+    /* Transmit Buffer is released, a message may be written into the buffer */
+    /* in this example a Standard Frame message shall be transmitted */
+    Can1_TxFrameInfo = 0x08; /* SFF (data), DLC=8 */
+    Can1_TxBuffer1 = 0xA5; /* ID1 = A0, (0000 0000) */
+    Can1_TxBuffer2 = 0x20; /* ID2 = A1, (0010 0000) */
+    Can1_TxBuffer3 = 0x51; /* data1 = DE */
+    Can1_TxBuffer4 = 0x52; /* data2 = ED */
+    Can1_TxBuffer5 = 0x53; /* data3 = BE */
+    Can1_TxBuffer6 = 0x54; /* data4 = EF */
+    Can1_TxBuffer7 = 0x55; /* data5 = DE */
+    Can1_TxBuffer8 = 0x56; /* data6 = AD */
+    Can1_TxBuffer9 = 0x57; /* data7 = BE */
+    Can1_TxBuffer10 = 0x58; /* data8 = EF */
+    /* Start the transmission */
+    Can1_CommandReg = TR_Bit ; /* Set Transmission Request bit */
 }
 
 // Receive for reading a received message via Can controller 0
@@ -360,6 +459,15 @@ void CanBus0_Receive(void)
 {
     // TODO - put your Canbus receive code for CanController 0 here
     // See section 4.2.4 in the application note for details (PELICAN MODE)
+    char recievedByte;
+
+    while((Can0_StatusReg & RBS_Bit) != RBS_Bit){
+        printf("Can0_StatusReg = 0x%X\r\n", Can0_StatusReg);
+    };
+    recievedByte = Can0_RxBuffer1;
+    Can0_CommandReg = RRB_Bit;
+
+    printf("\r\n Recieved Byte @ CanBus0 = %d\r\n", recievedByte);
 }
 
 // Receive for reading a received message via Can controller 1
@@ -367,37 +475,67 @@ void CanBus1_Receive(void)
 {
     // TODO - put your Canbus receive code for CanController 1 here
     // See section 4.2.4 in the application note for details (PELICAN MODE)
+    char recievedByte;
+
+    while((Can1_StatusReg & RBS_Bit) != RBS_Bit){
+        printf("Can0_StatusReg = 0x%X\r\n", Can0_StatusReg);
+        printf("Can1_StatusReg = 0x%X\r\n", Can1_StatusReg);
+    };
+    recievedByte = Can1_RxBuffer1;
+    Can1_CommandReg = RRB_Bit;
+
+    printf("\r\n Recieved Byte @ CanBus1 = %d\r\n", recievedByte);
 }
 
 
 void CanBusTest(void)
 {
     // initialise the two Can controllers
-
     Init_CanBus_Controller0();
     Init_CanBus_Controller1();
 
     printf("\r\n\r\n---- CANBUS Test ----\r\n") ;
-
     // simple application to alternately transmit and receive messages from each of two nodes
 
-    while(1)    {
-        delay();                    // write a routine to delay say 1/2 second so we don't flood the network with messages too quickly
+    // while(1)    {
+        // delay();                    // write a routine to delay say 1/2 second so we don't flood the network with messages too quickly
 
         CanBus0_Transmit() ;       // transmit a message via Controller 0
-        CanBus1_Receive() ;        // receive a message via Controller 1 (and display it)
+        printf("I am here 1 \r\n");
+        // CanBus1_Receive() ;        // receive a message via Controller 1 (and display it)
+        // printf("I am here 2 \r\n");
 
-        printf("\r\n") ;
+        // printf("\r\n") ;
 
-        delay();                    // write a routine to delay say 1/2 second so we don't flood the network with messages too quickly
+        //delay();                    // write a routine to delay say 1/2 second so we don't flood the network with messages too quickly
 
-        CanBus1_Transmit() ;        // transmit a message via Controller 1
-        CanBus0_Receive() ;         // receive a message via Controller 0 (and display it)
-        printf("\r\n") ;
+        // CanBus1_Transmit() ;        // transmit a message via Controller 1
+        // printf("I am here 3 \r\n");
+        // CanBus0_Receive() ;         // receive a message via Controller 0 (and display it)
+        // printf("I am here 4 \r\n");
+        // printf("\r\n") ;
+    // }
+}
 
-    }
+int _getch( void )
+{
+    char c ;
+    while((RS232_Status & (char)(0x01)) != (char)(0x01))    // wait for Rx bit in 6850 serial comms chip status register to be '1'
+        ;
+
+    return (RS232_RxData & (char)(0x7f));                   // read received character, mask off top bit and return as 7 bit ASCII character
+}
+
+int _putch( int c)
+{
+    while((RS232_Status & (char)(0x02)) != (char)(0x02))    // wait for Tx bit in status register or 6850 serial comms chip to be '1'
+        ;
+
+    RS232_TxData = (c & (char)(0x7f));                      // write to the data register to output the character (mask off bit 8 to keep it 7 bit ASCII)
+    return c ;                                              // putchar() expects the character to be returned
 }
 
 void main(void){
     CanBusTest();
+    while(1);
 }
