@@ -52,6 +52,7 @@
 ; void IIC_Init(void);
 ; void GenerateADCOutput(void);
 ; void DValueOfAInput(void);
+; void delay(int seconds);
 ; int _getch( void )
 ; {
        section   code
@@ -153,7 +154,7 @@ SequentialBlockWrite_4:
        move.l    #131071,D2
 SequentialBlockWrite_6:
 ; }
-; printf("Performing Sequential Block Write to EEPROM\r\n");
+; printf("Performing Sequential Block Write to EEPROM...\r\n");
        pea       @m68kus~1_3.L
        jsr       (A2)
        addq.w    #4,A7
@@ -451,18 +452,17 @@ WaitForWriteCycle_1:
        move.b    #160,4227078
 ; CR = start;
        move.b    #128,4227080
-; printf("Waiting for Internal Write!\r\n");
-       pea       @m68kus~1_10.L
-       jsr       _printf
+; // printf("Waiting for Internal Write!\r\n");
+; delay(1);
+       pea       1
+       jsr       _delay
        addq.w    #4,A7
        lea       _CheckForACK.L,A0
        move.l    A0,D0
        beq       WaitForWriteCycle_1
 ; } while (!CheckForACK);
-; printf("Internal Write Complete!\r\n");
-       pea       @m68kus~1_11.L
-       jsr       _printf
-       addq.w    #4,A7
+; // printf("Internal Write Complete!\r\n");
+; // delay(1);
 ; return;
        rts
 ; }
@@ -489,7 +489,7 @@ _SequentialBlockRead:
        cmp.l     #131071,D0
        ble.s     SequentialBlockRead_1
 ; printf("SequentialBlockRead: Size of Input Data Block cannot exceed 128kBytes\r\n");
-       pea       @m68kus~1_12.L
+       pea       @m68kus~1_10.L
        jsr       (A2)
        addq.w    #4,A7
 ; return;
@@ -500,7 +500,7 @@ SequentialBlockRead_1:
        cmp.l     #131071,D4
        ble.s     SequentialBlockRead_4
 ; printf("SequentialBlockRead: Entered Address Out of Range\r\n");
-       pea       @m68kus~1_13.L
+       pea       @m68kus~1_11.L
        jsr       (A2)
        addq.w    #4,A7
 ; return;
@@ -520,7 +520,7 @@ SequentialBlockRead_4:
 SequentialBlockRead_6:
 ; }
 ; printf("Starting Sequential Block Read...\r\n");
-       pea       @m68kus~1_14.L
+       pea       @m68kus~1_12.L
        jsr       (A2)
        addq.w    #4,A7
 ; initiateReadSequence(address);
@@ -539,7 +539,7 @@ SequentialBlockRead_6:
        tst.l     D0
        bne.s     SequentialBlockRead_8
 ; printf("Sequential Block Read Failed!\r\n");
-       pea       @m68kus~1_15.L
+       pea       @m68kus~1_13.L
        jsr       (A2)
        addq.w    #4,A7
 ; return;
@@ -565,7 +565,7 @@ SequentialBlockRead_8:
        tst.l     D0
        bne.s     SequentialBlockRead_12
 ; printf("Sequential Block Read Failed!\r\n");
-       pea       @m68kus~1_15.L
+       pea       @m68kus~1_13.L
        jsr       (A2)
        addq.w    #4,A7
 ; return;
@@ -574,7 +574,7 @@ SequentialBlockRead_12:
 ; }
 ; }
 ; printf("Sequential Block Read successful!\r\n");
-       pea       @m68kus~1_16.L
+       pea       @m68kus~1_14.L
        jsr       (A2)
        addq.w    #4,A7
 SequentialBlockRead_3:
@@ -621,7 +621,7 @@ utilSequentialBlockRead_5:
        bne.s     utilSequentialBlockRead_7
 ; printf("No ACK returned for read at address: 0x%X\r\n", utilAddress);
        move.l    D2,-(A7)
-       pea       @m68kus~1_17.L
+       pea       @m68kus~1_15.L
        jsr       _printf
        addq.w    #8,A7
 utilSequentialBlockRead_7:
@@ -631,7 +631,7 @@ utilSequentialBlockRead_7:
        beq.s     utilSequentialBlockRead_9
 ; printf("Sequential Read Error at address: 0x%X\r\n", utilAddress);
        move.l    D2,-(A7)
-       pea       @m68kus~1_18.L
+       pea       @m68kus~1_16.L
        jsr       _printf
        addq.w    #8,A7
 ; CR = stop;
@@ -681,7 +681,7 @@ _ReadPageFromChip:
        clr.l     D2
 ; char receivedByte;
 ; printf("Reading Page from EEPROM \r\n");
-       pea       @m68kus~1_19.L
+       pea       @m68kus~1_17.L
        jsr       (A2)
        addq.w    #4,A7
 ; initiateReadSequence(0x12000);
@@ -727,7 +727,7 @@ ReadPageFromChip_6:
        beq.s     ReadPageFromChip_8
 ; printf("Page Read Failed at Byte #%d\r\n", i);
        move.l    D2,-(A7)
-       pea       @m68kus~1_20.L
+       pea       @m68kus~1_18.L
        jsr       (A2)
        addq.w    #8,A7
 ; CR = stop;
@@ -743,7 +743,7 @@ ReadPageFromChip_3:
 ; CR = stop;
        move.b    #64,4227080
 ; printf("Page Read Successful\r\n");
-       pea       @m68kus~1_21.L
+       pea       @m68kus~1_19.L
        jsr       (A2)
        addq.w    #4,A7
 ReadPageFromChip_10:
@@ -760,7 +760,7 @@ _ReadByteFromChip:
        link      A6,#-4
 ; char receivedByte;
 ; printf("Reading Byte from EEPROM \r\n");
-       pea       @m68kus~1_22.L
+       pea       @m68kus~1_20.L
        jsr       _printf
        addq.w    #4,A7
 ; initiateReadSequence(0x1F000);
@@ -994,7 +994,7 @@ _GenerateADCOutput:
 ; char i=0;
        clr.b     D2
 ; printf("Writing continuous data to ADC\r\n");
-       pea       @m68kus~1_23.L
+       pea       @m68kus~1_21.L
        jsr       (A3)
        addq.w    #4,A7
 ; // Ensure TX is ready before sending control byte
@@ -1011,7 +1011,7 @@ _GenerateADCOutput:
        tst.l     D0
        bne.s     GenerateADCOutput_1
 ; printf("no ACK returned");
-       pea       @m68kus~1_24.L
+       pea       @m68kus~1_22.L
        jsr       (A3)
        addq.w    #4,A7
 GenerateADCOutput_1:
@@ -1026,7 +1026,7 @@ GenerateADCOutput_1:
        tst.l     D0
        bne.s     GenerateADCOutput_3
 ; printf("no ACK returned");
-       pea       @m68kus~1_24.L
+       pea       @m68kus~1_22.L
        jsr       (A3)
        addq.w    #4,A7
 GenerateADCOutput_3:
@@ -1048,7 +1048,7 @@ GenerateADCOutput_5:
        tst.l     D0
        bne.s     GenerateADCOutput_10
 ; printf("no ACK returned");
-       pea       @m68kus~1_24.L
+       pea       @m68kus~1_22.L
        jsr       (A3)
        addq.w    #4,A7
 GenerateADCOutput_10:
@@ -1070,7 +1070,7 @@ GenerateADCOutput_8:
        tst.l     D0
        bne.s     GenerateADCOutput_12
 ; printf("no ACK returned");
-       pea       @m68kus~1_24.L
+       pea       @m68kus~1_22.L
        jsr       (A3)
        addq.w    #4,A7
 GenerateADCOutput_12:
@@ -1092,7 +1092,7 @@ _DValueOfAInput:
        lea       _printf.L,A2
 ; int DecimalRx;
 ; printf("Generating digital value for analong input on pin AIN0 \r\n");
-       pea       @m68kus~1_25.L
+       pea       @m68kus~1_23.L
        jsr       (A2)
        addq.w    #4,A7
 ; // Ensure TX is ready before sending control byte
@@ -1109,7 +1109,7 @@ _DValueOfAInput:
        tst.l     D0
        bne.s     DValueOfAInput_1
 ; printf("no ACK returned");
-       pea       @m68kus~1_24.L
+       pea       @m68kus~1_22.L
        jsr       (A2)
        addq.w    #4,A7
 DValueOfAInput_1:
@@ -1127,7 +1127,7 @@ DValueOfAInput_1:
        cmp.l     #100,D0
        bge.s     DValueOfAInput_3
 ; printf("The digital value on pin Ain0 is: 0 V \r\n");
-       pea       @m68kus~1_26.L
+       pea       @m68kus~1_24.L
        jsr       (A2)
        addq.w    #4,A7
        bra.s     DValueOfAInput_4
@@ -1139,7 +1139,7 @@ DValueOfAInput_3:
        divu.w    #46,D1
        and.l     #255,D1
        move.l    D1,-(A7)
-       pea       @m68kus~1_27.L
+       pea       @m68kus~1_25.L
        jsr       (A2)
        addq.w    #8,A7
 DValueOfAInput_4:
@@ -1149,6 +1149,66 @@ DValueOfAInput_4:
        unlk      A6
        rts
 ; }
+; void delay(int seconds)
+; {   // this function needs to be finetuned for the specific microprocessor
+       xdef      _delay
+_delay:
+       link      A6,#-12
+       movem.l   D2/D3/D4,-(A7)
+; int i, j, k;
+; int wait_loop0 = 100;
+       move.l    #100,-8(A6)
+; int wait_loop1 = 3;
+       move.l    #3,-4(A6)
+; for(i = 0; i < seconds; i++)
+       clr.l     D4
+delay_1:
+       cmp.l     8(A6),D4
+       bge       delay_3
+; {
+; for(j = 0; j < wait_loop0; j++)
+       clr.l     D3
+delay_4:
+       cmp.l     -8(A6),D3
+       bge       delay_6
+; {
+; for(k = 0; k < wait_loop1; k++)
+       clr.l     D2
+delay_7:
+       cmp.l     -4(A6),D2
+       bge.s     delay_9
+; {   // waste function, volatile makes sure it is not being optimized out by compiler
+; int volatile t = 120 * j * i + k;
+       move.l    D3,-(A7)
+       pea       120
+       jsr       LMUL
+       move.l    (A7),D0
+       addq.w    #8,A7
+       move.l    D0,-(A7)
+       move.l    D4,-(A7)
+       jsr       LMUL
+       move.l    (A7),D0
+       addq.w    #8,A7
+       add.l     D2,D0
+       move.l    D0,-12(A6)
+; t = t + 5;
+       addq.l    #5,-12(A6)
+       addq.l    #1,D2
+       bra       delay_7
+delay_9:
+       addq.l    #1,D3
+       bra       delay_4
+delay_6:
+       addq.l    #1,D4
+       bra       delay_1
+delay_3:
+       movem.l   (A7)+,D2/D3/D4
+       unlk      A6
+       rts
+; }
+; }
+; }
+; }
 ; void main(void)
 ; {
        xdef      _main
@@ -1156,13 +1216,13 @@ _main:
        link      A6,#-4
        movem.l   D2/A2,-(A7)
        lea       _printf.L,A2
-; char sendByte = 0x78;
-       moveq     #120,D2
+; char sendByte = 0x72;
+       moveq     #114,D2
 ; char recievedByte;
 ; scanflush();     // flush any text that may have been typed ahead
        jsr       _scanflush
 ; printf("\r\nHello IIC Lab\r\n\r\n");
-       pea       @m68kus~1_28.L
+       pea       @m68kus~1_26.L
        jsr       (A2)
        addq.w    #4,A7
 ; IIC_Init();
@@ -1184,7 +1244,7 @@ _main:
        jsr       _SequentialBlockRead
        add.w     #12,A7
 ; printf("\r\n");
-       pea       @m68kus~1_29.L
+       pea       @m68kus~1_27.L
        jsr       (A2)
        addq.w    #4,A7
 ; WritePageToChip();
@@ -1192,7 +1252,7 @@ _main:
 ; ReadPageFromChip();
        jsr       _ReadPageFromChip
 ; printf("\r\n");
-       pea       @m68kus~1_29.L
+       pea       @m68kus~1_27.L
        jsr       (A2)
        addq.w    #4,A7
 ; WriteByteToChip(sendByte);
@@ -1212,7 +1272,7 @@ _main:
        ext.w     D2
        ext.l     D2
        move.l    D2,-(A7)
-       pea       @m68kus~1_30.L
+       pea       @m68kus~1_28.L
        jsr       (A2)
        add.w     #12,A7
 ; // GenerateADCOutput();
@@ -1241,7 +1301,7 @@ main_1:
        dc.b      80,101,114,102,111,114,109,105,110,103,32,83
        dc.b      101,113,117,101,110,116,105,97,108,32,66,108
        dc.b      111,99,107,32,87,114,105,116,101,32,116,111
-       dc.b      32,69,69,80,82,79,77,13,10,0
+       dc.b      32,69,69,80,82,79,77,46,46,46,13,10,0
 @m68kus~1_4:
        dc.b      83,101,113,117,101,110,116,105,97,108,32,66
        dc.b      108,111,99,107,32,87,114,105,116,101,32,67,111
@@ -1266,96 +1326,89 @@ main_1:
        dc.b      78,111,32,65,67,75,32,114,101,116,117,114,110
        dc.b      101,100,13,10,0
 @m68kus~1_10:
-       dc.b      87,97,105,116,105,110,103,32,102,111,114,32
-       dc.b      73,110,116,101,114,110,97,108,32,87,114,105
-       dc.b      116,101,33,13,10,0
-@m68kus~1_11:
-       dc.b      73,110,116,101,114,110,97,108,32,87,114,105
-       dc.b      116,101,32,67,111,109,112,108,101,116,101,33
-       dc.b      13,10,0
-@m68kus~1_12:
        dc.b      83,101,113,117,101,110,116,105,97,108,66,108
        dc.b      111,99,107,82,101,97,100,58,32,83,105,122,101
        dc.b      32,111,102,32,73,110,112,117,116,32,68,97,116
        dc.b      97,32,66,108,111,99,107,32,99,97,110,110,111
        dc.b      116,32,101,120,99,101,101,100,32,49,50,56,107
        dc.b      66,121,116,101,115,13,10,0
-@m68kus~1_13:
+@m68kus~1_11:
        dc.b      83,101,113,117,101,110,116,105,97,108,66,108
        dc.b      111,99,107,82,101,97,100,58,32,69,110,116,101
        dc.b      114,101,100,32,65,100,100,114,101,115,115,32
        dc.b      79,117,116,32,111,102,32,82,97,110,103,101,13
        dc.b      10,0
-@m68kus~1_14:
+@m68kus~1_12:
        dc.b      83,116,97,114,116,105,110,103,32,83,101,113
        dc.b      117,101,110,116,105,97,108,32,66,108,111,99
        dc.b      107,32,82,101,97,100,46,46,46,13,10,0
-@m68kus~1_15:
+@m68kus~1_13:
        dc.b      83,101,113,117,101,110,116,105,97,108,32,66
        dc.b      108,111,99,107,32,82,101,97,100,32,70,97,105
        dc.b      108,101,100,33,13,10,0
-@m68kus~1_16:
+@m68kus~1_14:
        dc.b      83,101,113,117,101,110,116,105,97,108,32,66
        dc.b      108,111,99,107,32,82,101,97,100,32,115,117,99
        dc.b      99,101,115,115,102,117,108,33,13,10,0
-@m68kus~1_17:
+@m68kus~1_15:
        dc.b      78,111,32,65,67,75,32,114,101,116,117,114,110
        dc.b      101,100,32,102,111,114,32,114,101,97,100,32
        dc.b      97,116,32,97,100,100,114,101,115,115,58,32,48
        dc.b      120,37,88,13,10,0
-@m68kus~1_18:
+@m68kus~1_16:
        dc.b      83,101,113,117,101,110,116,105,97,108,32,82
        dc.b      101,97,100,32,69,114,114,111,114,32,97,116,32
        dc.b      97,100,100,114,101,115,115,58,32,48,120,37,88
        dc.b      13,10,0
-@m68kus~1_19:
+@m68kus~1_17:
        dc.b      82,101,97,100,105,110,103,32,80,97,103,101,32
        dc.b      102,114,111,109,32,69,69,80,82,79,77,32,13,10
        dc.b      0
-@m68kus~1_20:
+@m68kus~1_18:
        dc.b      80,97,103,101,32,82,101,97,100,32,70,97,105
        dc.b      108,101,100,32,97,116,32,66,121,116,101,32,35
        dc.b      37,100,13,10,0
-@m68kus~1_21:
+@m68kus~1_19:
        dc.b      80,97,103,101,32,82,101,97,100,32,83,117,99
        dc.b      99,101,115,115,102,117,108,13,10,0
-@m68kus~1_22:
+@m68kus~1_20:
        dc.b      82,101,97,100,105,110,103,32,66,121,116,101
        dc.b      32,102,114,111,109,32,69,69,80,82,79,77,32,13
        dc.b      10,0
-@m68kus~1_23:
+@m68kus~1_21:
        dc.b      87,114,105,116,105,110,103,32,99,111,110,116
        dc.b      105,110,117,111,117,115,32,100,97,116,97,32
        dc.b      116,111,32,65,68,67,13,10,0
-@m68kus~1_24:
+@m68kus~1_22:
        dc.b      110,111,32,65,67,75,32,114,101,116,117,114,110
        dc.b      101,100,0
-@m68kus~1_25:
+@m68kus~1_23:
        dc.b      71,101,110,101,114,97,116,105,110,103,32,100
        dc.b      105,103,105,116,97,108,32,118,97,108,117,101
        dc.b      32,102,111,114,32,97,110,97,108,111,110,103
        dc.b      32,105,110,112,117,116,32,111,110,32,112,105
        dc.b      110,32,65,73,78,48,32,13,10,0
-@m68kus~1_26:
+@m68kus~1_24:
        dc.b      84,104,101,32,100,105,103,105,116,97,108,32
        dc.b      118,97,108,117,101,32,111,110,32,112,105,110
        dc.b      32,65,105,110,48,32,105,115,58,32,48,32,86,32
        dc.b      13,10,0
-@m68kus~1_27:
+@m68kus~1_25:
        dc.b      84,104,101,32,100,105,103,105,116,97,108,32
        dc.b      118,97,108,117,101,32,111,110,32,112,105,110
        dc.b      32,65,105,110,48,32,105,115,58,32,37,100,32
        dc.b      86,32,13,10,0
-@m68kus~1_28:
+@m68kus~1_26:
        dc.b      13,10,72,101,108,108,111,32,73,73,67,32,76,97
        dc.b      98,13,10,13,10,0
-@m68kus~1_29:
+@m68kus~1_27:
        dc.b      13,10,0
-@m68kus~1_30:
+@m68kus~1_28:
        dc.b      83,101,110,116,32,66,121,116,101,58,32,48,120
        dc.b      37,88,32,38,32,82,101,99,105,101,118,101,100
        dc.b      32,66,121,116,101,58,32,48,120,37,88,13,10,13
        dc.b      10,0
        xref      LDIV
+       xref      LMUL
        xref      _scanflush
        xref      _printf

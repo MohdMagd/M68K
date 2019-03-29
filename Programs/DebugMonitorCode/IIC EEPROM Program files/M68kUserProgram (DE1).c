@@ -56,6 +56,7 @@ int CheckForACK(void);
 void IIC_Init(void);
 void GenerateADCOutput(void);
 void DValueOfAInput(void);
+void delay(int seconds);
 
 int _getch( void )
 {
@@ -100,7 +101,7 @@ void SequentialBlockWrite(long address, long sizeOfBlock, char payloadByte){
         endAddress = 0x1FFFF;
     }
 
-    printf("Performing Sequential Block Write to EEPROM\r\n");
+    printf("Performing Sequential Block Write to EEPROM...\r\n");
 
     initiateWriteSequence(address);
     UtilSequentialBlockWrite(address, endAddress, payloadByte);
@@ -227,9 +228,8 @@ void WaitForWriteCycle(void){
     {
         TXR = 0xA0; // Write Control Byte (1010 0000)
         CR = start;
-        printf("Waiting for Internal Write!\r\n");
+        delay(1);
     } while (!CheckForACK);
-    printf("Internal Write Complete!\r\n");
     return;
 }
 
@@ -529,9 +529,28 @@ void DValueOfAInput(void){
     CR = stop;
 }
 
+void delay(int seconds)
+{   // this function needs to be finetuned for the specific microprocessor
+    int i, j, k;
+    int wait_loop0 = 100;
+    int wait_loop1 = 3;
+
+    for(i = 0; i < seconds; i++)
+    {
+        for(j = 0; j < wait_loop0; j++)
+        {
+            for(k = 0; k < wait_loop1; k++)
+            {   // waste function, volatile makes sure it is not being optimized out by compiler
+                int volatile t = 120 * j * i + k;
+                t = t + 5;
+            }
+        }
+    }
+}
+
 void main(void)
 {
-    char sendByte = 0x78;
+    char sendByte = 0x72;
     char recievedByte;
 
     scanflush();     // flush any text that may have been typed ahead
