@@ -282,6 +282,52 @@ void Init_CanBus_Controller0(void)
 {
     // TODO - put your Canbus initialisation code for CanController 0 here
     // See section 4.2.1 in the application note for details (PELICAN MODE)
+
+    Can0_InterruptReg = DISABLE; /* disable all interrupts */
+    /* set reset mode/request (Note: after power-on SJA1000 is in BasicCAN mode)*/
+    while(Can0_ModeControlReg & RM_RR_Bit == ClrByte){
+        // Set Request reset mode (other bits remain unchanged)
+        Can0_ModeControlReg = Can0_ModeControlReg | RM_RR_Bit;
+    }
+    // Configure Clock Divider Register
+    Can0_ClockDivideReg = CANMode_Bit | CBP_Bit | DivBy1;
+
+    // Disable Can Interrupts
+    Can0_InterruptEnReg = ClrIntEnSJA;
+
+    // Define Acceptance Code and Mask
+    Can0_AcceptCode0Reg = ClrByte;
+    Can0_AcceptCode1Reg = ClrByte;
+    Can0_AcceptCode2Reg = ClrByte;
+    Can0_AcceptCode3Reg = ClrByte;
+    Can0_AcceptMask0Reg = DontCare;
+    Can0_AcceptMask1Reg = DontCare;
+    Can0_AcceptMask2Reg = DontCare;
+    Can0_AcceptMask3Reg = DontCare;
+
+    // Configure Bus Timing
+    // Bit-rate = 100 kBit/s @ 25 MHz, bus is sample once
+    Can0_BusTiming0Reg = 1 | ;
+    Can0_BusTiming1Reg =  | ;
+
+    // Configure CAN outputs: float on TX1, Push/Pull on TX0, normal output mode
+    Can0_OutControlReg = Tx1Float | Tx0PshPull | NormalMode;
+
+
+    /* leave the reset mode/request i.e. switch to operating mode, 
+    the interrupts of the S87C654 are enabled but not the CAN interrupts of the SJA1000,
+    which can be done separately for the different tasks in a system */
+
+    /* clear Reset Mode bit, select dual Acceptance Filter Mode,
+    switch off Self Test Mode and Listen Only Mode, clear Sleep Mode (wake up) */
+
+    do /* wait until RM_RR_Bit is cleared */
+    {
+    ModeControlReg = ClrByte;
+    } while((ModeControlReg & RM_RR_Bit ) != ClrByte);
+    
+    Can0_InterruptEnReg = ENABLE;
+    Can0_InterruptReg = ENABLE;
 }
 
 // initialisation for Can controller 1
@@ -289,6 +335,7 @@ void Init_CanBus_Controller1(void)
 {
     // TODO - put your Canbus initialisation code for CanController 1 here
     // See section 4.2.1 in the application note for details (PELICAN MODE)
+
 }
 
 // Transmit for sending a message via Can controller 0
@@ -332,14 +379,14 @@ void CanBusTest(void)
     // simple application to alternately transmit and receive messages from each of two nodes
 
     while(1)    {
-        // delay();                    // write a routine to delay say 1/2 second so we don't flood the network with messages to0 quickly
+        delay();                    // write a routine to delay say 1/2 second so we don't flood the network with messages too quickly
 
         CanBus0_Transmit() ;       // transmit a message via Controller 0
         CanBus1_Receive() ;        // receive a message via Controller 1 (and display it)
 
         printf("\r\n") ;
 
-        // delay();                    // write a routine to delay say 1/2 second so we don't flood the network with messages to0 quickly
+        // delay();                    // write a routine to delay say 1/2 second so we don't flood the network with messages too quickly
 
         CanBus1_Transmit() ;        // transmit a message via Controller 1
         CanBus0_Receive() ;         // receive a message via Controller 0 (and display it)

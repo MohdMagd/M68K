@@ -339,9 +339,14 @@ CanBusTest_1:
 ; void main(void){
        xdef      _main
 _main:
-; CanBusTest();
-       jsr       _CanBusTest
-       rts
+; printf("\r\n Hello World!\r\n");
+       pea       @canbus~1_3.L
+       jsr       _printf
+       addq.w    #4,A7
+; while(1);
+main_1:
+       bra       main_1
+; // CanBusTest();
 ; }
        section   const
 @canbus~1_1:
@@ -349,4 +354,7 @@ _main:
        dc.b      32,84,101,115,116,32,45,45,45,45,13,10,0
 @canbus~1_2:
        dc.b      13,10,0
+@canbus~1_3:
+       dc.b      13,10,32,72,101,108,108,111,32,87,111,114,108
+       dc.b      100,33,13,10,0
        xref      _printf
