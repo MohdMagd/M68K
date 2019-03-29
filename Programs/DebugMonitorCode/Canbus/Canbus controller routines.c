@@ -298,7 +298,7 @@ void Init_CanBus_Controller0(void)
     // TODO - put your Canbus initialisation code for CanController 0 here
     // See section 4.2.1 in the application note for details (PELICAN MODE)
 
-    Can0_InterruptReg = DISABLE; /* disable all interrupts */
+    // Can0_InterruptReg = DISABLE; /* disable all interrupts */
     /* set reset mode/request (Note: after power-on SJA1000 is in BasicCAN mode)*/
     while(Can0_ModeControlReg & RM_RR_Bit == ClrByte){
         // Set Request reset mode (other bits remain unchanged)
@@ -310,20 +310,25 @@ void Init_CanBus_Controller0(void)
     // Disable Can Interrupts
     Can0_InterruptEnReg = ClrIntEnSJA;
 
-    // Define Acceptance Code and Mask
+    // Define Acceptance Code
     Can0_AcceptCode0Reg = ClrByte;
     Can0_AcceptCode1Reg = ClrByte;
     Can0_AcceptCode2Reg = ClrByte;
     Can0_AcceptCode3Reg = ClrByte;
+
+    // Define Mask
     Can0_AcceptMask0Reg = DontCare;
     Can0_AcceptMask1Reg = DontCare;
     Can0_AcceptMask2Reg = DontCare;
     Can0_AcceptMask3Reg = DontCare;
 
+    Can0_TxErrCountReg = ClrByte;
+    Can0_RxErrCountReg = ClrByte;
+
     // Configure Bus Timing
     // Bit-rate = 100 kBit/s @ 25 MHz, bus is sample once
-    Can0_BusTiming0Reg = SJW | Presc;
-    Can0_BusTiming1Reg = TSEG2 | TSEG1;
+    Can0_BusTiming0Reg = 0x04; // SJW | Presc;
+    Can0_BusTiming1Reg = 0x7f; // TSEG2 | TSEG1;
 
     // Configure CAN outputs: float on TX1, Push/Pull on TX0, normal output mode
     Can0_OutControlReg = Tx1Float | Tx0PshPull | NormalMode;
@@ -339,7 +344,8 @@ void Init_CanBus_Controller0(void)
     {
     Can0_ModeControlReg = ClrByte;
     } while((Can0_ModeControlReg & RM_RR_Bit ) != ClrByte);
-    
+
+    Can0_CommandReg = RRB_Bit | CDO_Bit;    
 }
 
 // initialisation for Can controller 1
@@ -348,7 +354,7 @@ void Init_CanBus_Controller1(void)
     // TODO - put your Canbus initialisation code for CanController 1 here
     // See section 4.2.1 in the application note for details (PELICAN MODE)
 
-    Can1_InterruptReg = DISABLE; /* disable all interrupts */
+    // Can1_InterruptReg = DISABLE; /* disable all interrupts */
     /* set reset mode/request (Note: after power-on SJA1000 is in BasicCAN mode)*/
     while(Can1_ModeControlReg & RM_RR_Bit == ClrByte){
         // Set Request reset mode (other bits remain unchanged)
@@ -370,13 +376,16 @@ void Init_CanBus_Controller1(void)
     Can1_AcceptMask2Reg = DontCare;
     Can1_AcceptMask3Reg = DontCare;
 
+    Can1_TxErrCountReg = ClrByte;
+    Can1_RxErrCountReg = ClrByte;
+
     // Configure Bus Timing
     // Bit-rate = 100 kBit/s @ 25 MHz, bus is sample once
-    Can1_BusTiming0Reg = SJW | Presc;
-    Can1_BusTiming1Reg = TSEG2 | TSEG1;
+    Can1_BusTiming0Reg = 0x04; // SJW | Presc;
+    Can1_BusTiming1Reg = 0x7f; // TSEG2 | TSEG1;
 
     // Configure CAN outputs: float on TX1, Push/Pull on TX0, normal output mode
-    Can0_OutControlReg = Tx1Float | Tx0PshPull | NormalMode;
+    Can1_OutControlReg = Tx1Float | Tx0PshPull | NormalMode;
 
 
     /* leave the reset mode/request i.e. switch to operating mode, 
@@ -391,9 +400,11 @@ void Init_CanBus_Controller1(void)
     Can1_ModeControlReg = ClrByte;
     } while((Can1_ModeControlReg & RM_RR_Bit ) != ClrByte);
 
+    Can1_CommandReg = RRB_Bit | CDO_Bit;
+
     /* disable all interrupts */
-    Can0_InterruptReg = ClrIntEnSJA;
-    Can0_InterruptEnReg = ClrIntEnSJA;
+    // Can0_InterruptReg = ClrIntEnSJA;
+    // Can0_InterruptEnReg = ClrIntEnSJA;
 }
 
 // Transmit for sending a message via Can controller 0
@@ -401,14 +412,14 @@ void CanBus0_Transmit(void)
 {
     // TODO - put your Canbus transmit code for CanController 0 here
     // See section 4.2.2 in the application note for details (PELICAN MODE)
-
+    unsigned int nodeAddress = 0x0355;
     /* wait until the Transmit Buffer is released */
     while((Can0_StatusReg & TBS_Bit ) != TBS_Bit);
     /* Transmit Buffer is released, a message may be written into the buffer */
     /* in this example a Standard Frame message shall be transmitted */
-    Can0_TxFrameInfo = 0x08; /* SFF (data), DLC=8 */
-    Can0_TxBuffer1 = 0xA5; /* ID1 = A0, (0000 0000) */
-    Can0_TxBuffer2 = 0x20; /* ID2 = A1, (0010 0000) */
+    Can0_TxFrameInfo = 0x04; /* SFF (data), DLC=8 */
+    Can0_TxBuffer1 = (nodeAddress >> 3); /* ID1 = A0, (0000 0000) */
+    Can0_TxBuffer2 =  (nodeAddress << 5); /* ID2 = A1, (0010 0000) */
     Can0_TxBuffer3 = 0x51; /* data1 = DE */
     Can0_TxBuffer4 = 0x52; /* data2 = ED */
     Can0_TxBuffer5 = 0x53; /* data3 = BE */
@@ -419,14 +430,8 @@ void CanBus0_Transmit(void)
     Can0_TxBuffer10 = 0x58; /* data8 = EF */
     printf("Can0 StatusReg = 0x%X\r\n", Can0_StatusReg);
     printf("Can1 StatusReg = 0x%X\r\n", Can1_StatusReg);
-    printf("Can0_ModeControlReg = 0x%X\r\n", Can0_ModeControlReg);
-    printf("Can1_ModeControlReg = 0x%X\r\n", Can1_ModeControlReg);
     /* Start the transmission */
     Can0_CommandReg = TR_Bit ; /* Set Transmission Request bit */
-    printf("Can0 StatusReg = 0x%X -- Post Buffer fill up --\r\n", Can0_StatusReg);
-    printf("Can1 StatusReg = 0x%X -- Post Buffer fill up --\r\n", Can1_StatusReg);
-    printf("Can0_ModeControlReg = 0x%X\r\n", Can0_ModeControlReg);
-    printf("Can1_ModeControlReg = 0x%X\r\n", Can1_ModeControlReg);
 }
 
 // Transmit for sending a message via Can controller 1
@@ -435,12 +440,14 @@ void CanBus1_Transmit(void)
     // TODO - put your Canbus transmit code for CanController 1 here
     // See section 4.2.2 in the application note for details (PELICAN MODE)
 
+    int Node_Address = 0x355;
+
     /* wait until the Transmit Buffer is released */
     while((Can1_StatusReg & TBS_Bit ) != TBS_Bit);
     /* Transmit Buffer is released, a message may be written into the buffer */
     /* in this example a Standard Frame message shall be transmitted */
     Can1_TxFrameInfo = 0x08; /* SFF (data), DLC=8 */
-    Can1_TxBuffer1 = 0xA5; /* ID1 = A0, (0000 0000) */
+    Can1_TxBuffer1 = 0x00; /* ID1 = A0, (0000 0000) */
     Can1_TxBuffer2 = 0x20; /* ID2 = A1, (0010 0000) */
     Can1_TxBuffer3 = 0x51; /* data1 = DE */
     Can1_TxBuffer4 = 0x52; /* data2 = ED */
@@ -488,6 +495,25 @@ void CanBus1_Receive(void)
 }
 
 
+void delay(int seconds)
+{   // this function needs to be finetuned for the specific microprocessor
+    int i, j, k;
+    int wait_loop0 = 10000;
+    int wait_loop1 = 6000;
+
+    for(i = 0; i < seconds; i++)
+    {
+        for(j = 0; j < wait_loop0; j++)
+        {
+            for(k = 0; k < wait_loop1; k++)
+            {   // waste function, volatile makes sure it is not being optimized out by compiler
+                int volatile t = 120 * j * i + k;
+                t = t + 5;
+            }
+        }
+    }
+}
+
 void CanBusTest(void)
 {
     // initialise the two Can controllers
@@ -497,17 +523,20 @@ void CanBusTest(void)
     printf("\r\n\r\n---- CANBUS Test ----\r\n") ;
     // simple application to alternately transmit and receive messages from each of two nodes
 
-    // while(1)    {
-        // delay();                    // write a routine to delay say 1/2 second so we don't flood the network with messages too quickly
+    // while(1)
+    // {
+        // delay(1);                    // write a routine to delay say 1/2 second so we don't flood the network with messages too quickly
+
+        printf("Hellooo!!\r\n");
 
         CanBus0_Transmit() ;       // transmit a message via Controller 0
         printf("I am here 1 \r\n");
-        // CanBus1_Receive() ;        // receive a message via Controller 1 (and display it)
-        // printf("I am here 2 \r\n");
+        CanBus1_Receive() ;        // receive a message via Controller 1 (and display it)
+        printf("I am here 2 \r\n");
 
-        // printf("\r\n") ;
+        printf("\r\n") ;
 
-        //delay();                    // write a routine to delay say 1/2 second so we don't flood the network with messages too quickly
+        // delay(1);                    // write a routine to delay say 1/2 second so we don't flood the network with messages too quickly
 
         // CanBus1_Transmit() ;        // transmit a message via Controller 1
         // printf("I am here 3 \r\n");

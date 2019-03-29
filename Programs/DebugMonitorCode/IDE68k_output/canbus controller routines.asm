@@ -262,8 +262,7 @@
 _Init_CanBus_Controller0:
 ; // TODO - put your Canbus initialisation code for CanController 0 here
 ; // See section 4.2.1 in the application note for details (PELICAN MODE)
-; Can0_InterruptReg = DISABLE; /* disable all interrupts */
-       clr.b     5242886
+; // Can0_InterruptReg = DISABLE; /* disable all interrupts */
 ; /* set reset mode/request (Note: after power-on SJA1000 is in BasicCAN mode)*/
 ; while(Can0_ModeControlReg & RM_RR_Bit == ClrByte){
 ; // Set Request reset mode (other bits remain unchanged)
@@ -275,7 +274,7 @@ _Init_CanBus_Controller0:
 ; // Disable Can Interrupts
 ; Can0_InterruptEnReg = ClrIntEnSJA;
        clr.b     5242888
-; // Define Acceptance Code and Mask
+; // Define Acceptance Code
 ; Can0_AcceptCode0Reg = ClrByte;
        clr.b     5242912
 ; Can0_AcceptCode1Reg = ClrByte;
@@ -284,6 +283,7 @@ _Init_CanBus_Controller0:
        clr.b     5242916
 ; Can0_AcceptCode3Reg = ClrByte;
        clr.b     5242918
+; // Define Mask
 ; Can0_AcceptMask0Reg = DontCare;
        move.b    #255,5242920
 ; Can0_AcceptMask1Reg = DontCare;
@@ -292,12 +292,16 @@ _Init_CanBus_Controller0:
        move.b    #255,5242924
 ; Can0_AcceptMask3Reg = DontCare;
        move.b    #255,5242926
+; Can0_TxErrCountReg = ClrByte;
+       clr.b     5242910
+; Can0_RxErrCountReg = ClrByte;
+       clr.b     5242908
 ; // Configure Bus Timing
 ; // Bit-rate = 100 kBit/s @ 25 MHz, bus is sample once
-; Can0_BusTiming0Reg = SJW | Presc;
-       move.b    #11,5242892
-; Can0_BusTiming1Reg = TSEG2 | TSEG1;
-       move.b    #24,5242894
+; Can0_BusTiming0Reg = 0x04; // SJW | Presc;
+       move.b    #4,5242892
+; Can0_BusTiming1Reg = 0x7f; // TSEG2 | TSEG1;
+       move.b    #127,5242894
 ; // Configure CAN outputs: float on TX1, Push/Pull on TX0, normal output mode
 ; Can0_OutControlReg = Tx1Float | Tx0PshPull | NormalMode;
        move.b    #26,5242896
@@ -314,8 +318,10 @@ Init_CanBus_Controller0_4:
        move.b    5242880,D0
        and.b     #1,D0
        bne       Init_CanBus_Controller0_4
-       rts
 ; } while((Can0_ModeControlReg & RM_RR_Bit ) != ClrByte);
+; Can0_CommandReg = RRB_Bit | CDO_Bit;    
+       move.b    #12,5242882
+       rts
 ; }
 ; // initialisation for Can controller 1
 ; void Init_CanBus_Controller1(void)
@@ -324,8 +330,7 @@ Init_CanBus_Controller0_4:
 _Init_CanBus_Controller1:
 ; // TODO - put your Canbus initialisation code for CanController 1 here
 ; // See section 4.2.1 in the application note for details (PELICAN MODE)
-; Can1_InterruptReg = DISABLE; /* disable all interrupts */
-       clr.b     5243398
+; // Can1_InterruptReg = DISABLE; /* disable all interrupts */
 ; /* set reset mode/request (Note: after power-on SJA1000 is in BasicCAN mode)*/
 ; while(Can1_ModeControlReg & RM_RR_Bit == ClrByte){
 ; // Set Request reset mode (other bits remain unchanged)
@@ -354,15 +359,19 @@ _Init_CanBus_Controller1:
        move.b    #255,5243436
 ; Can1_AcceptMask3Reg = DontCare;
        move.b    #255,5243438
+; Can1_TxErrCountReg = ClrByte;
+       clr.b     5243422
+; Can1_RxErrCountReg = ClrByte;
+       clr.b     5243420
 ; // Configure Bus Timing
 ; // Bit-rate = 100 kBit/s @ 25 MHz, bus is sample once
-; Can1_BusTiming0Reg = SJW | Presc;
-       move.b    #11,5243404
-; Can1_BusTiming1Reg = TSEG2 | TSEG1;
-       move.b    #24,5243406
+; Can1_BusTiming0Reg = 0x04; // SJW | Presc;
+       move.b    #4,5243404
+; Can1_BusTiming1Reg = 0x7f; // TSEG2 | TSEG1;
+       move.b    #127,5243406
 ; // Configure CAN outputs: float on TX1, Push/Pull on TX0, normal output mode
-; Can0_OutControlReg = Tx1Float | Tx0PshPull | NormalMode;
-       move.b    #26,5242896
+; Can1_OutControlReg = Tx1Float | Tx0PshPull | NormalMode;
+       move.b    #26,5243408
 ; /* leave the reset mode/request i.e. switch to operating mode, 
 ; the interrupts of the S87C654 are enabled but not the CAN interrupts of the SJA1000,
 ; which can be done separately for the different tasks in a system */
@@ -377,22 +386,23 @@ Init_CanBus_Controller1_4:
        and.b     #1,D0
        bne       Init_CanBus_Controller1_4
 ; } while((Can1_ModeControlReg & RM_RR_Bit ) != ClrByte);
-; /* disable all interrupts */
-; Can0_InterruptReg = ClrIntEnSJA;
-       clr.b     5242886
-; Can0_InterruptEnReg = ClrIntEnSJA;
-       clr.b     5242888
+; Can1_CommandReg = RRB_Bit | CDO_Bit;
+       move.b    #12,5243394
        rts
+; /* disable all interrupts */
+; // Can0_InterruptReg = ClrIntEnSJA;
+; // Can0_InterruptEnReg = ClrIntEnSJA;
 ; }
 ; // Transmit for sending a message via Can controller 0
 ; void CanBus0_Transmit(void)
 ; {
        xdef      _CanBus0_Transmit
 _CanBus0_Transmit:
-       move.l    A2,-(A7)
-       lea       _printf.L,A2
+       move.l    D2,-(A7)
 ; // TODO - put your Canbus transmit code for CanController 0 here
 ; // See section 4.2.2 in the application note for details (PELICAN MODE)
+; unsigned int nodeAddress = 0x0355;
+       move.l    #853,D2
 ; /* wait until the Transmit Buffer is released */
 ; while((Can0_StatusReg & TBS_Bit ) != TBS_Bit);
 CanBus0_Transmit_1:
@@ -404,12 +414,16 @@ CanBus0_Transmit_1:
 CanBus0_Transmit_3:
 ; /* Transmit Buffer is released, a message may be written into the buffer */
 ; /* in this example a Standard Frame message shall be transmitted */
-; Can0_TxFrameInfo = 0x08; /* SFF (data), DLC=8 */
-       move.b    #8,5242912
-; Can0_TxBuffer1 = 0xA5; /* ID1 = A0, (0000 0000) */
-       move.b    #165,5242914
-; Can0_TxBuffer2 = 0x20; /* ID2 = A1, (0010 0000) */
-       move.b    #32,5242916
+; Can0_TxFrameInfo = 0x04; /* SFF (data), DLC=8 */
+       move.b    #4,5242912
+; Can0_TxBuffer1 = (nodeAddress >> 3); /* ID1 = A0, (0000 0000) */
+       move.l    D2,D0
+       lsr.l     #3,D0
+       move.b    D0,5242914
+; Can0_TxBuffer2 =  (nodeAddress << 5); /* ID2 = A1, (0010 0000) */
+       move.l    D2,D0
+       lsl.l     #5,D0
+       move.b    D0,5242916
 ; Can0_TxBuffer3 = 0x51; /* data1 = DE */
        move.b    #81,5242918
 ; Can0_TxBuffer4 = 0x52; /* data2 = ED */
@@ -431,61 +445,19 @@ CanBus0_Transmit_3:
        and.l     #255,D1
        move.l    D1,-(A7)
        pea       @canbus~1_1.L
-       jsr       (A2)
+       jsr       _printf
        addq.w    #8,A7
 ; printf("Can1 StatusReg = 0x%X\r\n", Can1_StatusReg);
        move.b    5243396,D1
        and.l     #255,D1
        move.l    D1,-(A7)
        pea       @canbus~1_2.L
-       jsr       (A2)
-       addq.w    #8,A7
-; printf("Can0_ModeControlReg = 0x%X\r\n", Can0_ModeControlReg);
-       move.b    5242880,D1
-       and.l     #255,D1
-       move.l    D1,-(A7)
-       pea       @canbus~1_3.L
-       jsr       (A2)
-       addq.w    #8,A7
-; printf("Can1_ModeControlReg = 0x%X\r\n", Can1_ModeControlReg);
-       move.b    5243392,D1
-       and.l     #255,D1
-       move.l    D1,-(A7)
-       pea       @canbus~1_4.L
-       jsr       (A2)
+       jsr       _printf
        addq.w    #8,A7
 ; /* Start the transmission */
 ; Can0_CommandReg = TR_Bit ; /* Set Transmission Request bit */
        move.b    #1,5242882
-; printf("Can0 StatusReg = 0x%X -- Post Buffer fill up --\r\n", Can0_StatusReg);
-       move.b    5242884,D1
-       and.l     #255,D1
-       move.l    D1,-(A7)
-       pea       @canbus~1_5.L
-       jsr       (A2)
-       addq.w    #8,A7
-; printf("Can1 StatusReg = 0x%X -- Post Buffer fill up --\r\n", Can1_StatusReg);
-       move.b    5243396,D1
-       and.l     #255,D1
-       move.l    D1,-(A7)
-       pea       @canbus~1_6.L
-       jsr       (A2)
-       addq.w    #8,A7
-; printf("Can0_ModeControlReg = 0x%X\r\n", Can0_ModeControlReg);
-       move.b    5242880,D1
-       and.l     #255,D1
-       move.l    D1,-(A7)
-       pea       @canbus~1_3.L
-       jsr       (A2)
-       addq.w    #8,A7
-; printf("Can1_ModeControlReg = 0x%X\r\n", Can1_ModeControlReg);
-       move.b    5243392,D1
-       and.l     #255,D1
-       move.l    D1,-(A7)
-       pea       @canbus~1_4.L
-       jsr       (A2)
-       addq.w    #8,A7
-       move.l    (A7)+,A2
+       move.l    (A7)+,D2
        rts
 ; }
 ; // Transmit for sending a message via Can controller 1
@@ -493,8 +465,11 @@ CanBus0_Transmit_3:
 ; {
        xdef      _CanBus1_Transmit
 _CanBus1_Transmit:
+       link      A6,#-4
 ; // TODO - put your Canbus transmit code for CanController 1 here
 ; // See section 4.2.2 in the application note for details (PELICAN MODE)
+; int Node_Address = 0x355;
+       move.l    #853,-4(A6)
 ; /* wait until the Transmit Buffer is released */
 ; while((Can1_StatusReg & TBS_Bit ) != TBS_Bit);
 CanBus1_Transmit_1:
@@ -508,8 +483,8 @@ CanBus1_Transmit_3:
 ; /* in this example a Standard Frame message shall be transmitted */
 ; Can1_TxFrameInfo = 0x08; /* SFF (data), DLC=8 */
        move.b    #8,5243424
-; Can1_TxBuffer1 = 0xA5; /* ID1 = A0, (0000 0000) */
-       move.b    #165,5243426
+; Can1_TxBuffer1 = 0x00; /* ID1 = A0, (0000 0000) */
+       clr.b     5243426
 ; Can1_TxBuffer2 = 0x20; /* ID2 = A1, (0010 0000) */
        move.b    #32,5243428
 ; Can1_TxBuffer3 = 0x51; /* data1 = DE */
@@ -531,6 +506,7 @@ CanBus1_Transmit_3:
 ; /* Start the transmission */
 ; Can1_CommandReg = TR_Bit ; /* Set Transmission Request bit */
        move.b    #1,5243394
+       unlk      A6
        rts
 ; }
 ; // Receive for reading a received message via Can controller 0
@@ -552,7 +528,7 @@ CanBus0_Receive_1:
        move.b    5242884,D1
        and.l     #255,D1
        move.l    D1,-(A7)
-       pea       @canbus~1_7.L
+       pea       @canbus~1_3.L
        jsr       _printf
        addq.w    #8,A7
        bra       CanBus0_Receive_1
@@ -567,7 +543,7 @@ CanBus0_Receive_3:
        ext.w     D1
        ext.l     D1
        move.l    D1,-(A7)
-       pea       @canbus~1_8.L
+       pea       @canbus~1_4.L
        jsr       _printf
        addq.w    #8,A7
        unlk      A6
@@ -594,14 +570,14 @@ CanBus1_Receive_1:
        move.b    5242884,D1
        and.l     #255,D1
        move.l    D1,-(A7)
-       pea       @canbus~1_7.L
+       pea       @canbus~1_3.L
        jsr       (A2)
        addq.w    #8,A7
 ; printf("Can1_StatusReg = 0x%X\r\n", Can1_StatusReg);
        move.b    5243396,D1
        and.l     #255,D1
        move.l    D1,-(A7)
-       pea       @canbus~1_9.L
+       pea       @canbus~1_5.L
        jsr       (A2)
        addq.w    #8,A7
        bra       CanBus1_Receive_1
@@ -616,40 +592,115 @@ CanBus1_Receive_3:
        ext.w     D1
        ext.l     D1
        move.l    D1,-(A7)
-       pea       @canbus~1_10.L
+       pea       @canbus~1_6.L
        jsr       (A2)
        addq.w    #8,A7
        move.l    (A7)+,A2
        unlk      A6
        rts
 ; }
+; void delay(int seconds)
+; {   // this function needs to be finetuned for the specific microprocessor
+       xdef      _delay
+_delay:
+       link      A6,#-12
+       movem.l   D2/D3/D4,-(A7)
+; int i, j, k;
+; int wait_loop0 = 10000;
+       move.l    #10000,-8(A6)
+; int wait_loop1 = 6000;
+       move.l    #6000,-4(A6)
+; for(i = 0; i < seconds; i++)
+       clr.l     D4
+delay_1:
+       cmp.l     8(A6),D4
+       bge       delay_3
+; {
+; for(j = 0; j < wait_loop0; j++)
+       clr.l     D3
+delay_4:
+       cmp.l     -8(A6),D3
+       bge       delay_6
+; {
+; for(k = 0; k < wait_loop1; k++)
+       clr.l     D2
+delay_7:
+       cmp.l     -4(A6),D2
+       bge.s     delay_9
+; {   // waste function, volatile makes sure it is not being optimized out by compiler
+; int volatile t = 120 * j * i + k;
+       move.l    D3,-(A7)
+       pea       120
+       jsr       LMUL
+       move.l    (A7),D0
+       addq.w    #8,A7
+       move.l    D0,-(A7)
+       move.l    D4,-(A7)
+       jsr       LMUL
+       move.l    (A7),D0
+       addq.w    #8,A7
+       add.l     D2,D0
+       move.l    D0,-12(A6)
+; t = t + 5;
+       addq.l    #5,-12(A6)
+       addq.l    #1,D2
+       bra       delay_7
+delay_9:
+       addq.l    #1,D3
+       bra       delay_4
+delay_6:
+       addq.l    #1,D4
+       bra       delay_1
+delay_3:
+       movem.l   (A7)+,D2/D3/D4
+       unlk      A6
+       rts
+; }
+; }
+; }
+; }
 ; void CanBusTest(void)
 ; {
        xdef      _CanBusTest
 _CanBusTest:
+       move.l    A2,-(A7)
+       lea       _printf.L,A2
 ; // initialise the two Can controllers
 ; Init_CanBus_Controller0();
        jsr       _Init_CanBus_Controller0
 ; Init_CanBus_Controller1();
        jsr       _Init_CanBus_Controller1
 ; printf("\r\n\r\n---- CANBUS Test ----\r\n") ;
-       pea       @canbus~1_11.L
-       jsr       _printf
+       pea       @canbus~1_7.L
+       jsr       (A2)
        addq.w    #4,A7
 ; // simple application to alternately transmit and receive messages from each of two nodes
-; // while(1)    {
-; // delay();                    // write a routine to delay say 1/2 second so we don't flood the network with messages too quickly
+; // while(1)
+; // {
+; // delay(1);                    // write a routine to delay say 1/2 second so we don't flood the network with messages too quickly
+; printf("Hellooo!!\r\n");
+       pea       @canbus~1_8.L
+       jsr       (A2)
+       addq.w    #4,A7
 ; CanBus0_Transmit() ;       // transmit a message via Controller 0
        jsr       _CanBus0_Transmit
 ; printf("I am here 1 \r\n");
-       pea       @canbus~1_12.L
-       jsr       _printf
+       pea       @canbus~1_9.L
+       jsr       (A2)
        addq.w    #4,A7
+; CanBus1_Receive() ;        // receive a message via Controller 1 (and display it)
+       jsr       _CanBus1_Receive
+; printf("I am here 2 \r\n");
+       pea       @canbus~1_10.L
+       jsr       (A2)
+       addq.w    #4,A7
+; printf("\r\n") ;
+       pea       @canbus~1_11.L
+       jsr       (A2)
+       addq.w    #4,A7
+       move.l    (A7)+,A2
        rts
-; // CanBus1_Receive() ;        // receive a message via Controller 1 (and display it)
-; // printf("I am here 2 \r\n");
-; // printf("\r\n") ;
-; //delay();                    // write a routine to delay say 1/2 second so we don't flood the network with messages too quickly
+; // delay(1);                    // write a routine to delay say 1/2 second so we don't flood the network with messages too quickly
 ; // CanBus1_Transmit() ;        // transmit a message via Controller 1
 ; // printf("I am here 3 \r\n");
 ; // CanBus0_Receive() ;         // receive a message via Controller 0 (and display it)
@@ -719,41 +770,31 @@ main_1:
        dc.b      67,97,110,49,32,83,116,97,116,117,115,82,101
        dc.b      103,32,61,32,48,120,37,88,13,10,0
 @canbus~1_3:
-       dc.b      67,97,110,48,95,77,111,100,101,67,111,110,116
-       dc.b      114,111,108,82,101,103,32,61,32,48,120,37,88
-       dc.b      13,10,0
-@canbus~1_4:
-       dc.b      67,97,110,49,95,77,111,100,101,67,111,110,116
-       dc.b      114,111,108,82,101,103,32,61,32,48,120,37,88
-       dc.b      13,10,0
-@canbus~1_5:
-       dc.b      67,97,110,48,32,83,116,97,116,117,115,82,101
-       dc.b      103,32,61,32,48,120,37,88,32,45,45,32,80,111
-       dc.b      115,116,32,66,117,102,102,101,114,32,102,105
-       dc.b      108,108,32,117,112,32,45,45,13,10,0
-@canbus~1_6:
-       dc.b      67,97,110,49,32,83,116,97,116,117,115,82,101
-       dc.b      103,32,61,32,48,120,37,88,32,45,45,32,80,111
-       dc.b      115,116,32,66,117,102,102,101,114,32,102,105
-       dc.b      108,108,32,117,112,32,45,45,13,10,0
-@canbus~1_7:
        dc.b      67,97,110,48,95,83,116,97,116,117,115,82,101
        dc.b      103,32,61,32,48,120,37,88,13,10,0
-@canbus~1_8:
+@canbus~1_4:
        dc.b      13,10,32,82,101,99,105,101,118,101,100,32,66
        dc.b      121,116,101,32,64,32,67,97,110,66,117,115,48
        dc.b      32,61,32,37,100,13,10,0
-@canbus~1_9:
+@canbus~1_5:
        dc.b      67,97,110,49,95,83,116,97,116,117,115,82,101
        dc.b      103,32,61,32,48,120,37,88,13,10,0
-@canbus~1_10:
+@canbus~1_6:
        dc.b      13,10,32,82,101,99,105,101,118,101,100,32,66
        dc.b      121,116,101,32,64,32,67,97,110,66,117,115,49
        dc.b      32,61,32,37,100,13,10,0
-@canbus~1_11:
+@canbus~1_7:
        dc.b      13,10,13,10,45,45,45,45,32,67,65,78,66,85,83
        dc.b      32,84,101,115,116,32,45,45,45,45,13,10,0
-@canbus~1_12:
+@canbus~1_8:
+       dc.b      72,101,108,108,111,111,111,33,33,13,10,0
+@canbus~1_9:
        dc.b      73,32,97,109,32,104,101,114,101,32,49,32,13
        dc.b      10,0
+@canbus~1_10:
+       dc.b      73,32,97,109,32,104,101,114,101,32,50,32,13
+       dc.b      10,0
+@canbus~1_11:
+       dc.b      13,10,0
+       xref      LMUL
        xref      _printf
